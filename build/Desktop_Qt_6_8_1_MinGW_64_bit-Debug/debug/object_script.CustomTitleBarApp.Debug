@@ -1,0 +1,13 @@
+debug/basewindow.o
+debug/customtitlebar.o
+debug/main.o
+debug/myform.o
+debug/tilemapmanager.o
+debug/tileworker.o
+debug/qrc_image.o
+debug/qrc_style.o
+debug/moc_basewindow.o
+debug/moc_customtitlebar.o
+debug/moc_myform.o
+debug/moc_tilemapmanager.o
+debug/moc_tileworker.o

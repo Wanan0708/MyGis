@@ -1,0 +1,13 @@
+release/basewindow.o
+release/customtitlebar.o
+release/main.o
+release/myform.o
+release/tilemapmanager.o
+release/tileworker.o
+release/qrc_image.o
+release/qrc_style.o
+release/moc_basewindow.o
+release/moc_customtitlebar.o
+release/moc_myform.o
+release/moc_tilemapmanager.o
+release/moc_tileworker.o

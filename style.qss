@@ -1,0 +1,189 @@
+/* styles.qss */
+
+/* 整个主窗口容器：白色背景 + 圆角 */
+QWidget#centralWidgetContainer {
+    background-color: #FFFEFE;
+    border-radius: 5px;
+}
+
+/* 标题栏：顶部圆角，但底部不加（由容器统一处理） */
+CustomTitleBar {
+    background-color: #F8F8F8;
+    color: orange;
+    border: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+CustomTitleBar > QLabel {
+    font-weight: bold;
+    padding-left: 8px;
+    color: orange;
+    background-color: transparent;
+}
+
+CustomTitleBar > QPushButton {
+    border: none;
+    background: transparent;
+    color: orange;
+    font-size: 16px;
+    background-color: transparent;
+}
+
+CustomTitleBar > QPushButton:hover {
+    background-color: #FDEBEB;
+}
+
+/* 功能区样式 */
+QWidget#functionalArea {
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+}
+
+QWidget#functionalArea QPushButton {
+    padding: 4px 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QWidget#functionalArea QPushButton:hover {
+    background-color: #45a049;
+}
+
+QWidget#functionalArea QPushButton:pressed {
+    background-color: #3d8b40;
+}
+
+/* 文件操作按钮样式 */
+QWidget#functionalArea QPushButton#newButton {
+    background-color: #2196F3;
+}
+
+QWidget#functionalArea QPushButton#newButton:hover {
+    background-color: #1976D2;
+}
+
+QWidget#functionalArea QPushButton#openButton {
+    background-color: #FF9800;
+}
+
+QWidget#functionalArea QPushButton#openButton:hover {
+    background-color: #F57C00;
+}
+
+QWidget#functionalArea QPushButton#saveButton {
+    background-color: #4CAF50;
+}
+
+QWidget#functionalArea QPushButton#saveButton:hover {
+    background-color: #388E3C;
+}
+
+QWidget#functionalArea QPushButton#saveAsButton {
+    background-color: #4CAF50;
+}
+
+QWidget#functionalArea QPushButton#saveAsButton:hover {
+    background-color: #388E3C;
+}
+
+QWidget#functionalArea QPushButton#undoButton {
+    background-color: #9C27B0;
+}
+
+QWidget#functionalArea QPushButton#undoButton:hover {
+    background-color: #7B1FA2;
+}
+
+QWidget#functionalArea QPushButton#redoButton {
+    background-color: #9C27B0;
+}
+
+QWidget#functionalArea QPushButton#redoButton:hover {
+    background-color: #7B1FA2;
+}
+
+/* 地图控制按钮样式 */
+QWidget#functionalArea QPushButton#loadMapButton {
+    background-color: #009688;
+}
+
+QWidget#functionalArea QPushButton#loadMapButton:hover {
+    background-color: #00796B;
+}
+
+QWidget#functionalArea QPushButton#zoomInButton {
+    background-color: #3F51B5;
+}
+
+QWidget#functionalArea QPushButton#zoomInButton:hover {
+    background-color: #303F9F;
+}
+
+QWidget#functionalArea QPushButton#zoomOutButton {
+    background-color: #3F51B5;
+}
+
+QWidget#functionalArea QPushButton#zoomOutButton:hover {
+    background-color: #303F9F;
+}
+
+QWidget#functionalArea QPushButton#panButton {
+    background-color: #795548;
+}
+
+QWidget#functionalArea QPushButton#panButton:hover {
+    background-color: #5D4037;
+}
+
+QWidget#functionalArea QPushButton#panButton:checked {
+    background-color: #FF5722;
+}
+
+QWidget#functionalArea QLabel {
+    color: #333;
+}
+
+QWidget#functionalArea QLabel#headerLabel {
+    color: #2e2e2e;
+    font-weight: bold;
+}
+
+QWidget#functionalArea QLabel#statusLabel {
+    color: #666;
+    font-style: italic;
+}
+
+/* 内容区域：不再需要圆角！由外层容器统一处理 */
+QWidget#contentContainer {
+    /* background-color: white; */ /* 可省略，继承父背景 */
+    /* 移除 border-radius */
+}
+
+/* 列表视图样式 */
+QListView {
+    border: none;
+    background-color: white;
+}
+
+QListView::item {
+    padding: 4px;
+}
+
+QListView::item:hover {
+    background-color: #f0f0f0;
+}
+
+QListView::item:selected {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* 图形视图样式 */
+QGraphicsView {
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+}

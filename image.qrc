@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>image/OrangeCat.png</file>
+        <file>image/close.png</file>
+        <file>image/maximize.png</file>
+        <file>image/minimize.png</file>
+        <file>image/restore.png</file>
+    </qresource>
+</RCC>
