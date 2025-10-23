@@ -54,7 +54,8 @@
          <height>150</height>
         </size>
        </property>
-       <widget class="QPushButton" name="newButton">
+       <!-- Removed: newButton -->
+       <!-- <widget class="QPushButton" name="newButton">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -66,8 +67,9 @@
         <property name="text">
          <string>New</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="openButton">
+       </widget> -->
+       <!-- Removed: openButton -->
+       <!-- <widget class="QPushButton" name="openButton">
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -79,8 +81,9 @@
         <property name="text">
          <string>Open</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="saveButton">
+       </widget> -->
+       <!-- Removed: saveButton -->
+       <!-- <widget class="QPushButton" name="saveButton">
         <property name="geometry">
          <rect>
           <x>190</x>
@@ -92,8 +95,9 @@
         <property name="text">
          <string>Save</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="saveAsButton">
+       </widget> -->
+       <!-- Removed: saveAsButton -->
+       <!-- <widget class="QPushButton" name="saveAsButton">
         <property name="geometry">
          <rect>
           <x>280</x>
@@ -105,8 +109,9 @@
         <property name="text">
          <string>Save As</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="undoButton">
+       </widget> -->
+       <!-- Removed: undoButton -->
+       <!-- <widget class="QPushButton" name="undoButton">
         <property name="geometry">
          <rect>
           <x>370</x>
@@ -118,8 +123,9 @@
         <property name="text">
          <string>Undo</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="redoButton">
+       </widget> -->
+        <!-- Removed: redoButton -->
+       <!-- <widget class="QPushButton" name="redoButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -131,7 +137,7 @@
         <property name="text">
          <string>Redo</string>
         </property>
-       </widget>
+       </widget> -->
        <widget class="QLabel" name="statusLabel">
         <property name="geometry">
          <rect>
@@ -180,7 +186,8 @@
          </font>
         </property>
        </widget>
-       <widget class="QPushButton" name="loadMapButton">
+       <!-- Removed: loadMapButton -->
+       <!-- <widget class="QPushButton" name="loadMapButton">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -192,8 +199,9 @@
         <property name="text">
          <string>Load Map</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="zoomInButton">
+       </widget> -->
+       <!-- Removed: zoomInButton -->
+       <!-- <widget class="QPushButton" name="zoomInButton">
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -205,8 +213,9 @@
         <property name="text">
          <string>Zoom In</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="zoomOutButton">
+       </widget> -->
+       <!-- Removed: zoomOutButton -->
+       <!-- <widget class="QPushButton" name="zoomOutButton">
         <property name="geometry">
          <rect>
           <x>190</x>
@@ -218,8 +227,9 @@
         <property name="text">
          <string>Zoom Out</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="panButton">
+       </widget> -->
+       <!-- Removed: panButton -->
+       <!-- <widget class="QPushButton" name="panButton">
         <property name="geometry">
          <rect>
           <x>280</x>
@@ -231,8 +241,9 @@
         <property name="text">
          <string>Pan</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="loadTileMapButton">
+       </widget> -->
+       <!-- Removed: loadTileMapButton -->
+       <!-- <widget class="QPushButton" name="loadTileMapButton">
         <property name="geometry">
          <rect>
           <x>370</x>
@@ -244,8 +255,9 @@
         <property name="text">
          <string>Load Tile Map</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="zoomInTileMapButton">
+       </widget> -->
+       <!-- Removed: zoomInTileMapButton -->
+       <!-- <widget class="QPushButton" name="zoomInTileMapButton">
         <property name="geometry">
          <rect>
           <x>480</x>
@@ -257,8 +269,9 @@
         <property name="text">
          <string>Zoom In TM</string>
         </property>
-       </widget>
-       <widget class="QPushButton" name="zoomOutTileMapButton">
+       </widget> -->
+       <!-- Removed: zoomOutTileMapButton -->
+       <!-- <widget class="QPushButton" name="zoomOutTileMapButton">
         <property name="geometry">
          <rect>
           <x>570</x>
@@ -270,7 +283,7 @@
         <property name="text">
          <string>Zoom Out TM</string>
         </property>
-       </widget>
+       </widget> -->
       </widget>
      </item>
      <item>

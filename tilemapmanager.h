@@ -55,6 +55,8 @@ public:
     void setDragging(bool dragging) { m_isDragging = dragging; }
     QPointF getCenterScenePos() const; // 获取当前中心的场景像素坐标
     int getTileSize() const { return m_tileSize; }
+    // 日志控制
+    void setVerboseLogging(bool enable) { m_verboseLogging = enable; }
     // 可开关设置
     void setEnableGenerationDiscard(bool enabled) { m_enableGenerationDiscard = enabled; }
     void setPrefetchRing(int ring) { m_prefetchRing = ring; }
@@ -129,12 +131,16 @@ private:
     void latLonToTile(double lat, double lon, int zoom, int &tileX, int &tileY);
     void tileToLatLon(int tileX, int tileY, int zoom, double &lat, double &lon);
     void sceneToLatLon(double sceneX, double sceneY, int zoom, double &lat, double &lon);
+    int getDynamicMinZoom() const; // 动态最小缩放级别，确保地图不小于视口
     QString getTilePath(int x, int y, int z);
     bool tileExists(int x, int y, int z);
     void saveTile(int x, int y, int z, const QByteArray &data);
     QPixmap loadTile(int x, int y, int z);
     QString getTileUrl(int x, int y, int z);
     void downloadTile(int x, int y, int z);
+public:
+    // 供调度层最小对接：显式入队某个瓦片
+    void enqueueDownload(int x, int y, int z) { downloadTile(x, y, z); }
     void loadTiles();
     void calculateVisibleTiles(bool allowDownload = true);
     void cleanupTiles();
@@ -157,6 +163,7 @@ private:
     QTimer *m_insertTimer = nullptr;
     mutable double m_lastUpdateSceneX = -1;
     mutable double m_lastUpdateSceneY = -1;
+    bool m_verboseLogging = false; // 详细日志开关
 
 private slots:
     void processNextBatch();
@@ -170,6 +177,8 @@ signals:
     void downloadFinished();
     void localTilesFound(int zoomLevel, int tileCount);
     void noLocalTilesFound();
+    // 新增：单瓦片写入缓存完成（供调度层统计进度）
+    void tileCached(int x, int y, int z, bool success);
     void requestDownloadTile(int x, int y, int z, const QString &url, const QString &filePath);
     void requestLoadTile(int x, int y, int z, const QString &filePath);
     void zoomChanged(int oldZoom, int newZoom, double mouseLat, double mouseLon);  // 缩放完成，传递鼠标地理坐标

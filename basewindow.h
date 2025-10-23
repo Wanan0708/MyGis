@@ -17,6 +17,7 @@ public:
 
 protected:
     bool event(QEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
     // 边框缩放
     enum ResizeDirection {

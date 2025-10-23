@@ -16,7 +16,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QProgressBar>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -29,22 +28,9 @@ public:
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout_2;
     QWidget *functionalArea;
-    QPushButton *newButton;
-    QPushButton *openButton;
-    QPushButton *saveButton;
-    QPushButton *saveAsButton;
-    QPushButton *undoButton;
-    QPushButton *redoButton;
     QLabel *statusLabel;
     QProgressBar *progressBar;
     QLabel *headerLabel;
-    QPushButton *loadMapButton;
-    QPushButton *zoomInButton;
-    QPushButton *zoomOutButton;
-    QPushButton *panButton;
-    QPushButton *loadTileMapButton;
-    QPushButton *zoomInTileMapButton;
-    QPushButton *zoomOutTileMapButton;
     QSplitter *splitter;
     QListView *listView;
     QGraphicsView *graphicsView;
@@ -70,24 +56,6 @@ public:
         functionalArea->setSizePolicy(sizePolicy);
         functionalArea->setMinimumSize(QSize(0, 150));
         functionalArea->setMaximumSize(QSize(16777215, 150));
-        newButton = new QPushButton(functionalArea);
-        newButton->setObjectName("newButton");
-        newButton->setGeometry(QRect(10, 10, 80, 24));
-        openButton = new QPushButton(functionalArea);
-        openButton->setObjectName("openButton");
-        openButton->setGeometry(QRect(100, 10, 80, 24));
-        saveButton = new QPushButton(functionalArea);
-        saveButton->setObjectName("saveButton");
-        saveButton->setGeometry(QRect(190, 10, 80, 24));
-        saveAsButton = new QPushButton(functionalArea);
-        saveAsButton->setObjectName("saveAsButton");
-        saveAsButton->setGeometry(QRect(280, 10, 80, 24));
-        undoButton = new QPushButton(functionalArea);
-        undoButton->setObjectName("undoButton");
-        undoButton->setGeometry(QRect(370, 10, 80, 24));
-        redoButton = new QPushButton(functionalArea);
-        redoButton->setObjectName("redoButton");
-        redoButton->setGeometry(QRect(460, 10, 80, 24));
         statusLabel = new QLabel(functionalArea);
         statusLabel->setObjectName("statusLabel");
         statusLabel->setGeometry(QRect(10, 40, 500, 20));
@@ -102,27 +70,6 @@ public:
         QFont font;
         font.setBold(true);
         headerLabel->setFont(font);
-        loadMapButton = new QPushButton(functionalArea);
-        loadMapButton->setObjectName("loadMapButton");
-        loadMapButton->setGeometry(QRect(10, 120, 80, 24));
-        zoomInButton = new QPushButton(functionalArea);
-        zoomInButton->setObjectName("zoomInButton");
-        zoomInButton->setGeometry(QRect(100, 120, 80, 24));
-        zoomOutButton = new QPushButton(functionalArea);
-        zoomOutButton->setObjectName("zoomOutButton");
-        zoomOutButton->setGeometry(QRect(190, 120, 80, 24));
-        panButton = new QPushButton(functionalArea);
-        panButton->setObjectName("panButton");
-        panButton->setGeometry(QRect(280, 120, 80, 24));
-        loadTileMapButton = new QPushButton(functionalArea);
-        loadTileMapButton->setObjectName("loadTileMapButton");
-        loadTileMapButton->setGeometry(QRect(370, 120, 100, 24));
-        zoomInTileMapButton = new QPushButton(functionalArea);
-        zoomInTileMapButton->setObjectName("zoomInTileMapButton");
-        zoomInTileMapButton->setGeometry(QRect(480, 120, 80, 24));
-        zoomOutTileMapButton = new QPushButton(functionalArea);
-        zoomOutTileMapButton->setObjectName("zoomOutTileMapButton");
-        zoomOutTileMapButton->setGeometry(QRect(570, 120, 80, 24));
 
         verticalLayout_2->addWidget(functionalArea);
 
@@ -161,21 +108,8 @@ public:
     void retranslateUi(QWidget *MyForm)
     {
         MyForm->setWindowTitle(QCoreApplication::translate("MyForm", "Form", nullptr));
-        newButton->setText(QCoreApplication::translate("MyForm", "New", nullptr));
-        openButton->setText(QCoreApplication::translate("MyForm", "Open", nullptr));
-        saveButton->setText(QCoreApplication::translate("MyForm", "Save", nullptr));
-        saveAsButton->setText(QCoreApplication::translate("MyForm", "Save As", nullptr));
-        undoButton->setText(QCoreApplication::translate("MyForm", "Undo", nullptr));
-        redoButton->setText(QCoreApplication::translate("MyForm", "Redo", nullptr));
         statusLabel->setText(QCoreApplication::translate("MyForm", "Ready", nullptr));
         headerLabel->setText(QCoreApplication::translate("MyForm", "Map Controls:", nullptr));
-        loadMapButton->setText(QCoreApplication::translate("MyForm", "Load Map", nullptr));
-        zoomInButton->setText(QCoreApplication::translate("MyForm", "Zoom In", nullptr));
-        zoomOutButton->setText(QCoreApplication::translate("MyForm", "Zoom Out", nullptr));
-        panButton->setText(QCoreApplication::translate("MyForm", "Pan", nullptr));
-        loadTileMapButton->setText(QCoreApplication::translate("MyForm", "Load Tile Map", nullptr));
-        zoomInTileMapButton->setText(QCoreApplication::translate("MyForm", "Zoom In TM", nullptr));
-        zoomOutTileMapButton->setText(QCoreApplication::translate("MyForm", "Zoom Out TM", nullptr));
     } // retranslateUi
 
 };

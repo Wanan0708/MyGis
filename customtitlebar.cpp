@@ -83,9 +83,15 @@ void CustomTitleBar::mouseMoveEvent(QMouseEvent *event) {
             if (!screen) screen = QGuiApplication::primaryScreen();
             QRect screenGeo = screen->availableGeometry();
 
-            // 限制窗口不完全移出屏幕
-            targetPos.setX(qBound(screenGeo.left(), targetPos.x(), screenGeo.right() - width()));
-            targetPos.setY(qBound(screenGeo.top(), targetPos.y(), screenGeo.bottom() - height()));
+            // 最小可见区域：允许窗口部分出屏，但保留 kMinVisibleMargin 在屏内
+            int minVisible = kMinVisibleMargin;
+            int minX = screenGeo.left() - width() + minVisible;
+            int maxX = screenGeo.right() - minVisible;
+            int minY = screenGeo.top(); // 标题栏一般要求在屏内，避免拖不回
+            int maxY = screenGeo.bottom() - 1; // 底部可部分出屏
+
+            targetPos.setX(qBound(minX, targetPos.x(), maxX));
+            targetPos.setY(qBound(minY, targetPos.y(), maxY));
 
             window()->move(targetPos);
             event->accept();

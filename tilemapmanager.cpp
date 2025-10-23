@@ -59,6 +59,8 @@ void TileMapManager::flushPendingInserts()
 #include <QTime>             // 添加这个头文件
 #include <cmath>
 #include <QTimer>
+#include <QTextStream>
+#include <QMutex>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -70,18 +72,26 @@ uint qHash(const TileKey &key, uint /*seed*/)
     return qHash(key.x) ^ qHash(key.y) ^ qHash(key.z);
 }
 
-// 日志记录函数
+// 日志记录函数（懒打开、线程安全、复用文件句柄）
 void logMessage(const QString &message)
 {
-    // 记录日志到文件
-    QFile logFile("tilemap_debug.log");
-    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-        QTextStream out(&logFile);
-        out << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << " - " << message << "\n";
-        logFile.close();
+    static QMutex logMutex;
+    QMutexLocker locker(&logMutex);
+    static QFile *logFile = nullptr;
+    static QTextStream *logStream = nullptr;
+    if (!logFile) {
+        logFile = new QFile("tilemap_debug.log");
+        if (logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+            logStream = new QTextStream(logFile);
+        } else {
+            delete logFile; logFile = nullptr;
+        }
     }
-    
-    // 同时输出到控制台
+    if (logStream) {
+        (*logStream) << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz")
+                     << " - " << message << "\n";
+        logStream->flush();
+    }
     qDebug() << "[TileMapManager]" << message;
 }
 
@@ -110,7 +120,7 @@ TileMapManager::TileMapManager(QObject *parent)
     , m_maxConcurrentRequests(10)  // 增加同时处理的请求数量到5，提高下载效率
     , m_currentRequests(0)
 {
-    logMessage("TileMapManager constructor started");
+    if (m_verboseLogging) logMessage("TileMapManager constructor started");
     
     // 注册元类型
     qRegisterMetaType<QPixmap>("QPixmap");
@@ -129,21 +139,23 @@ TileMapManager::TileMapManager(QObject *parent)
     }
     
     m_cacheDir = projectRoot + "/tilemap";
-    logMessage(QString("Current working directory: %1").arg(QDir::currentPath()));
-    logMessage(QString("Project root directory: %1").arg(projectRoot));
-    logMessage(QString("Cache directory: %1").arg(m_cacheDir));
+    if (m_verboseLogging) {
+        logMessage(QString("Current working directory: %1").arg(QDir::currentPath()));
+        logMessage(QString("Project root directory: %1").arg(projectRoot));
+        logMessage(QString("Cache directory: %1").arg(m_cacheDir));
+    }
     
     // 确保缓存目录存在
     QDir cacheDir(m_cacheDir);
     if (!cacheDir.exists()) {
-        logMessage("Creating cache directory");
+        if (m_verboseLogging) logMessage("Creating cache directory");
         if (!cacheDir.mkpath(".")) {
-            logMessage("Failed to create cache directory!");
+            if (m_verboseLogging) logMessage("Failed to create cache directory!");
         } else {
-            logMessage("Cache directory created successfully");
+            if (m_verboseLogging) logMessage("Cache directory created successfully");
         }
     } else {
-        logMessage("Cache directory already exists");
+        if (m_verboseLogging) logMessage("Cache directory already exists");
     }
     
     // 设置处理定时器
@@ -158,8 +170,8 @@ TileMapManager::TileMapManager(QObject *parent)
     startWorkerThread();
     
     // 检查网络访问功能
-    logMessage(QString("Network manager is accessible: %1").arg(m_networkManager != nullptr));
-    logMessage("TileMapManager constructor finished");
+    if (m_verboseLogging) logMessage(QString("Network manager is accessible: %1").arg(m_networkManager != nullptr));
+    if (m_verboseLogging) logMessage("TileMapManager constructor finished");
 }
 
 TileMapManager::~TileMapManager()
@@ -246,9 +258,9 @@ void TileMapManager::setZoomAtMousePosition(int zoom, double sceneX, double scen
     if (!m_scene) return;
     
     int oldZoom = m_zoom;
-    int newZoom = qBound(1, zoom, 19);
+    int newZoom = qBound(qMax(3, getDynamicMinZoom()), zoom, 10);
     
-    logMessage(QString("=== ZOOM %1->%2 === Mouse:(%3,%4) Viewport:%5x%6")
+    if (m_verboseLogging) logMessage(QString("=== ZOOM %1->%2 === Mouse:(%3,%4) Viewport:%5x%6")
         .arg(oldZoom).arg(newZoom).arg(mouseViewportX).arg(mouseViewportY).arg(viewportWidth).arg(viewportHeight));
     
     // 关键修复：不使用场景坐标，直接用视口相对位置计算
@@ -305,7 +317,7 @@ void TileMapManager::setZoomAtMousePosition(int zoom, double sceneX, double scen
     double lat_rad_new = atan(sinh(M_PI * (1.0 - 2.0 * centerTileY_new / n_new)));
     m_centerLat = lat_rad_new * 180.0 / M_PI;
     
-    logMessage(QString("  Offset:(%1,%2) MouseGEO:(%3,%4) -> NewCenter:(%5,%6)")
+    if (m_verboseLogging) logMessage(QString("  Offset:(%1,%2) MouseGEO:(%3,%4) -> NewCenter:(%5,%6)")
         .arg(mouseOffsetX_tiles, 0, 'f', 3)
         .arg(mouseOffsetY_tiles, 0, 'f', 3)
         .arg(mouseLat_old, 0, 'f', 4)
@@ -379,7 +391,7 @@ void TileMapManager::sceneToLatLon(double sceneX, double sceneY, int zoom, doubl
     double latRad = atan(sinh(M_PI * (1 - 2 * tileY / n)));
     lat = latRad * 180.0 / M_PI;
     
-    logMessage(QString("sceneToLatLon(abs): scene(%1,%2) -> tile(%3,%4) -> geo(%5,%6)")
+    if (m_verboseLogging) logMessage(QString("sceneToLatLon(abs): scene(%1,%2) -> tile(%3,%4) -> geo(%5,%6)")
                .arg(sceneX, 0, 'f', 2).arg(sceneY, 0, 'f', 2)
                .arg(tileX, 0, 'f', 4).arg(tileY, 0, 'f', 4)
                .arg(lat, 0, 'f', 6).arg(lon, 0, 'f', 6));
@@ -478,10 +490,26 @@ void TileMapManager::setViewSize(int width, int height)
     }
 }
 
+int TileMapManager::getDynamicMinZoom() const
+{
+    // 计算使地图宽高均不小于视口的最小缩放级别
+    if (m_tileSize <= 0) return 2;
+    double tilesNeededX = (double)m_viewWidth / m_tileSize;
+    double tilesNeededY = (double)m_viewHeight / m_tileSize;
+    double tilesNeeded = qMax(tilesNeededX, tilesNeededY);
+    // 2^zoom >= tilesNeeded => zoom >= ceil(log2(tilesNeeded))
+    int minZoom = 0;
+    if (tilesNeeded > 1.0) {
+        minZoom = (int)std::ceil(std::log2(tilesNeeded));
+    }
+    // 至少为2，避免z=0/1 过小
+    return qMax(2, minZoom);
+}
+
 void TileMapManager::setZoom(int zoom)
 {
     int oldZoom = m_zoom;
-    m_zoom = qBound(0, zoom, 19);  // 限制缩放级别在0-19之间
+    m_zoom = qBound(qMax(3, getDynamicMinZoom()), zoom, 10);  // 限制为3-10
     
     // 在设置新的缩放级别后，先清理不需要的瓦片
     cleanupTiles();
@@ -680,6 +708,7 @@ void TileMapManager::onTileDownloaded(int x, int y, int z, const QByteArray &dat
         qDebug() << "Tile downloaded successfully, saving data size:" << data.size();
         // 保存瓦片到本地
         saveTile(x, y, z, data);
+        emit tileCached(x, y, z, true);
         
         // 只有在非区域下载模式下，且瓦片是当前缩放级别时，才添加到场景
         // 区域下载时不添加到场景，等用户切换到对应层级时再加载
@@ -692,6 +721,7 @@ void TileMapManager::onTileDownloaded(int x, int y, int z, const QByteArray &dat
         }
     } else {
         qDebug() << "Tile download failed:" << errorString;
+        emit tileCached(x, y, z, false);
     }
     
     // 只有在区域下载模式下才发送进度信号
@@ -742,8 +772,11 @@ void TileMapManager::onTileLoaded(int x, int y, int z, const QPixmap &pixmap, bo
         if (m_scene) {
             enqueueInsert(x, y, z, pixmap);
         }
+        // 本地加载也视为已缓存，通知调度层更新进度
+        emit tileCached(x, y, z, true);
     } else {
         qDebug() << "Tile load failed:" << errorString;
+        emit tileCached(x, y, z, false);
     }
     
     // 注意：优化后，区域下载时已存在的瓦片不会进入队列，所以这里不需要处理进度
@@ -846,8 +879,8 @@ void TileMapManager::latLonToTile(double lat, double lon, int zoom, int &tileX, 
     tileX = (int)((lon + 180.0) / 360.0 * n);
     tileY = (int)((1.0 - log(tan(latRad) + (1.0 / cos(latRad))) / M_PI) / 2.0 * n);
     
-    // 添加调试信息
-    logMessage(QString("latLonToTile: lat=%1, lon=%2, zoom=%3 -> tileX=%4, tileY=%5").arg(lat).arg(lon).arg(zoom).arg(tileX).arg(tileY));
+    // 添加调试信息（可选）
+    if (m_verboseLogging) logMessage(QString("latLonToTile: lat=%1, lon=%2, zoom=%3 -> tileX=%4, tileY=%5").arg(lat).arg(lon).arg(zoom).arg(tileX).arg(tileY));
 }
 
 void TileMapManager::tileToLatLon(int tileX, int tileY, int zoom, double &lat, double &lon)
@@ -876,14 +909,14 @@ void TileMapManager::saveTile(int x, int y, int z, const QByteArray &data)
 {
     // 保存瓦片到本地缓存
     QString tilePath = getTilePath(x, y, z);
-    qDebug() << "Saving tile to:" << tilePath;
+    if (m_verboseLogging) qDebug() << "Saving tile to:" << tilePath;
     
     // 创建目录
     QDir dir(QFileInfo(tilePath).path());
     if (!dir.exists()) {
-        qDebug() << "Creating directory:" << QFileInfo(tilePath).path();
+        if (m_verboseLogging) qDebug() << "Creating directory:" << QFileInfo(tilePath).path();
         if (!dir.mkpath(".")) {
-            qDebug() << "Failed to create directory for tile!";
+            if (m_verboseLogging) qDebug() << "Failed to create directory for tile!";
             return;
         }
     }
@@ -893,14 +926,14 @@ void TileMapManager::saveTile(int x, int y, int z, const QByteArray &data)
     if (file.open(QIODevice::WriteOnly)) {
         qint64 written = file.write(data);
         file.close();
-        qDebug() << "Saved tile, bytes written:" << written;
+        if (m_verboseLogging) qDebug() << "Saved tile, bytes written:" << written;
         
         // 验证文件是否成功写入
         if (written != data.size()) {
-            qDebug() << "Warning: Written bytes" << written << "not equal to data size" << data.size();
+            if (m_verboseLogging) qDebug() << "Warning: Written bytes" << written << "not equal to data size" << data.size();
         }
     } else {
-        qDebug() << "Failed to save tile:" << file.errorString() << "Path:" << tilePath;
+        if (m_verboseLogging) qDebug() << "Failed to save tile:" << file.errorString() << "Path:" << tilePath;
     }
 }
 
@@ -929,9 +962,9 @@ QString TileMapManager::getTileUrl(int x, int y, int z)
         QString server = servers[serverIndex];
         url.replace("{server}", server);
         serverIndex = (serverIndex + 1) % servers.size();
-        qDebug() << "Generated tile URL:" << url << "using server:" << server;
+        if (m_verboseLogging) qDebug() << "Generated tile URL:" << url << "using server:" << server;
     } else {
-        qDebug() << "Generated tile URL:" << url;
+        if (m_verboseLogging) qDebug() << "Generated tile URL:" << url;
     }
     
     return url;
@@ -939,15 +972,13 @@ QString TileMapManager::getTileUrl(int x, int y, int z)
 
 void TileMapManager::downloadTile(int x, int y, int z)
 {
-    qDebug() << "TileMapManager::downloadTile called for tile:" << x << y << z;
+    if (m_verboseLogging) qDebug() << "TileMapManager::downloadTile called for tile:" << x << y << z;
     
     // 检查瓦片是否已存在
     if (tileExists(x, y, z)) {
-        qDebug() << "Tile already exists, loading from file:" << x << "," << y << "," << z;
-        // 请求从文件加载
-        QString filePath = getTilePath(x, y, z);
-        m_currentRequests++;
-        emit requestLoadTile(x, y, z, filePath);
+        if (m_verboseLogging) qDebug() << "Tile already exists locally, count as completed:" << x << "," << y << "," << z;
+        // 对于批量下载/调度场景：本地已存在则直接记为完成，不再加载
+        emit tileCached(x, y, z, true);
         return;
     }
     
@@ -955,25 +986,27 @@ void TileMapManager::downloadTile(int x, int y, int z)
     QString url = getTileUrl(x, y, z);
     QString filePath = getTilePath(x, y, z);
     m_currentRequests++;
-    qDebug() << "Emitting requestDownloadTile for tile:" << x << y << z << "URL:" << url;
+    if (m_verboseLogging) qDebug() << "Emitting requestDownloadTile for tile:" << x << y << z << "URL:" << url;
     emit requestDownloadTile(x, y, z, url, filePath);
 }
 
 void TileMapManager::calculateVisibleTiles(bool allowDownload)
 {
     if (!m_scene) {
-        qDebug() << "calculateVisibleTiles: scene is null";
+    if (m_verboseLogging) qDebug() << "calculateVisibleTiles: scene is null";
         return;
     }
     
-    qDebug() << "=== calculateVisibleTiles ===";
-    qDebug() << "Zoom:" << m_zoom << "Center:" << m_centerLat << "," << m_centerLon;
-    qDebug() << "Viewport tiles:" << m_viewportTilesX << "x" << m_viewportTilesY;
+    if (m_verboseLogging) {
+        qDebug() << "=== calculateVisibleTiles ===";
+        qDebug() << "Zoom:" << m_zoom << "Center:" << m_centerLat << "," << m_centerLon;
+        qDebug() << "Viewport tiles:" << m_viewportTilesX << "x" << m_viewportTilesY;
+    }
     
     // 计算中心点的瓦片坐标
     int centerTileX, centerTileY;
     latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
-    qDebug() << "Center tile coordinates:" << centerTileX << "," << centerTileY;
+    if (m_verboseLogging) qDebug() << "Center tile coordinates:" << centerTileX << "," << centerTileY;
     
     // 计算这个缩放级别的最大瓦片数
     int maxTilesAtZoom = (1 << m_zoom);  // 2^zoom
@@ -988,7 +1021,7 @@ void TileMapManager::calculateVisibleTiles(bool allowDownload)
         startY = 0;
         endX = maxTilesAtZoom - 1;
         endY = maxTilesAtZoom - 1;
-        qDebug() << "Small map mode: loading all tiles (0,0) to" << endX << "," << endY;
+        if (m_verboseLogging) qDebug() << "Small map mode: loading all tiles (0,0) to" << endX << "," << endY;
     } else {
         // 正常模式：以中心点为基准加载周围的瓦片（确保窗口大小不超过viewportTiles）
         startX = centerTileX - m_viewportTilesX / 2;
@@ -1004,17 +1037,17 @@ void TileMapManager::calculateVisibleTiles(bool allowDownload)
         if (endY > maxTile) { int diff = endY - maxTile; startY = qMax(0, startY - diff); endY = maxTile; }
     }
     
-    qDebug() << "Tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
+    if (m_verboseLogging) qDebug() << "Tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
     
     // 计算需要加载的瓦片总数
     int totalTilesToLoad = (endX - startX + 1) * (endY - startY + 1);
-    qDebug() << "Total tiles in range:" << totalTilesToLoad;
+    if (m_verboseLogging) qDebug() << "Total tiles in range:" << totalTilesToLoad;
     
     // 安全检查：避免一次性加载过多瓦片
     // 注意：不要修改 m_viewportTilesX/Y，那是根据视口大小固定的！
     const int MAX_TILES_PER_LOAD = 500;  // 限制每次最多加载500张瓦片
     if (totalTilesToLoad > MAX_TILES_PER_LOAD) {
-        qDebug() << "WARNING: Too many tiles to load (" << totalTilesToLoad << "), limiting to" << MAX_TILES_PER_LOAD;
+        if (m_verboseLogging) qDebug() << "WARNING: Too many tiles to load (" << totalTilesToLoad << "), limiting to" << MAX_TILES_PER_LOAD;
         
         // 使用局部变量，不修改全局的viewportTiles
         int reduceBy = (int)sqrt(totalTilesToLoad / (double)MAX_TILES_PER_LOAD);
@@ -1035,7 +1068,7 @@ void TileMapManager::calculateVisibleTiles(bool allowDownload)
         if (endX > maxTile) { int diff = endX - maxTile; startX = qMax(0, startX - diff); endX = maxTile; }
         if (endY > maxTile) { int diff = endY - maxTile; startY = qMax(0, startY - diff); endY = maxTile; }
         
-        qDebug() << "Adjusted tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
+        if (m_verboseLogging) qDebug() << "Adjusted tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
     }
     
     // 统计需要下载的瓦片数量
@@ -1094,9 +1127,11 @@ void TileMapManager::calculateVisibleTiles(bool allowDownload)
         }
     }
     
-    qDebug() << "Total tiles to download:" << tilesToDownload;
-    qDebug() << "Total tiles loaded:" << tilesLoaded;
-    qDebug() << "Tile offset:" << offsetX << "," << offsetY;
+    if (m_verboseLogging) {
+        qDebug() << "Total tiles to download:" << tilesToDownload;
+        qDebug() << "Total tiles loaded:" << tilesLoaded;
+        qDebug() << "Tile offset:" << offsetX << "," << offsetY;
+    }
     
     // 只有在区域下载模式下才发送下载进度信号
     if (m_regionDownloadTotal > 0) {
@@ -1135,7 +1170,7 @@ void TileMapManager::cleanupTiles()
         }
     }
     
-    qDebug() << "Cleanup: removing" << keysToRemove.size() << "tiles, keeping" << m_tileItems.size() - keysToRemove.size();
+    if (m_verboseLogging) qDebug() << "Cleanup: removing" << keysToRemove.size() << "tiles, keeping" << m_tileItems.size() - keysToRemove.size();
     
     // 移除瓦片（批量操作，减少单个删除的开销）
     for (const TileKey &key : keysToRemove) {
@@ -1149,14 +1184,14 @@ void TileMapManager::cleanupTiles()
         }
     }
     
-    qDebug() << "Cleanup complete. Remaining tiles:" << m_tileItems.size();
+    if (m_verboseLogging) qDebug() << "Cleanup complete. Remaining tiles:" << m_tileItems.size();
 }
 
 void TileMapManager::repositionTiles()
 {
     if (!m_scene) return;
     
-    qDebug() << "Repositioning tiles for zoom:" << m_zoom;
+    if (m_verboseLogging) qDebug() << "Repositioning tiles for zoom:" << m_zoom;
     
     // 使用与 calculateVisibleTiles 和 sceneToLatLon 完全相同的逻辑
     int maxTilesAtZoom = (1 << m_zoom);
@@ -1207,12 +1242,12 @@ void TileMapManager::repositionTiles()
                 double tileX = key.x * m_tileSize;
                 double tileY = key.y * m_tileSize;
                 item->setPos(tileX, tileY);
-                qDebug() << "Repositioned tile (" << key.x << "," << key.y << ") to scene(" << tileX << "," << tileY << ")";
+                if (m_verboseLogging) qDebug() << "Repositioned tile (" << key.x << "," << key.y << ") to scene(" << tileX << "," << tileY << ")";
             }
         }
     }
     
-    qDebug() << "Reposition complete (absolute).";
+    if (m_verboseLogging) qDebug() << "Reposition complete (absolute).";
 }
 
 void TileMapManager::checkLocalTiles()

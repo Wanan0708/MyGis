@@ -4,6 +4,10 @@ debug/main.o
 debug/myform.o
 debug/tilemapmanager.o
 debug/tileworker.o
+debug/mapmanagersettings.o
+debug/manifeststore.o
+debug/downloadscheduler.o
+debug/mapmanagerdialog.o
 debug/qrc_image.o
 debug/qrc_style.o
 debug/moc_basewindow.o
@@ -11,3 +15,5 @@ debug/moc_customtitlebar.o
 debug/moc_myform.o
 debug/moc_tilemapmanager.o
 debug/moc_tileworker.o
+debug/moc_downloadscheduler.o
+debug/moc_mapmanagerdialog.o

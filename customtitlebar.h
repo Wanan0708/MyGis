@@ -36,6 +36,7 @@ private:
 
     bool m_isMaximized = false;
     QPoint m_dragPos;
+    const int kMinVisibleMargin = 80; // 最小可见边距（像素）
 };
 
 #endif // CUSTOMTITLEBAR_H

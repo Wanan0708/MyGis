@@ -16,7 +16,23 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDateTime>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QApplication>
+#include <QStyle>
+#include <QWidgetAction>
+#include <QPushButton>
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QFontMetrics>
+#include <QVBoxLayout>
+#include <QPainter>
 #include <cmath>
+#include "mapmanagerdialog.h"
+#include "downloadscheduler.h"
+#include "manifeststore.h"
+#include "mapmanagersettings.h"
 
 MyForm::MyForm(QWidget *parent)
     : QWidget(parent)
@@ -42,6 +58,25 @@ MyForm::MyForm(QWidget *parent)
     setupMapArea();
     logMessage("=== MyForm constructor finished ===");
 }
+// 工具：绘制加号/减号图标
+static QIcon makePlusMinusIcon(bool isPlus, const QColor &color = QColor(255,255,255))
+{
+    const int sz = 18;
+    QPixmap pm(sz, sz);
+    pm.fill(Qt::transparent);
+    QPainter p(&pm);
+    p.setRenderHint(QPainter::Antialiasing, true);
+    QPen pen(color, 2.2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    p.setPen(pen);
+    // 水平线
+    p.drawLine(QPointF(3, sz/2.0), QPointF(sz-3, sz/2.0));
+    if (isPlus) {
+        // 垂直线
+        p.drawLine(QPointF(sz/2.0, 3), QPointF(sz/2.0, sz-3));
+    }
+    p.end();
+    return QIcon(pm);
+}
 
 MyForm::~MyForm()
 {
@@ -53,6 +88,11 @@ void MyForm::showEvent(QShowEvent *event)
     // 窗口显示后设置splitter比例
     QWidget::showEvent(event);
     setupSplitter();
+    // 确保浮动工具条创建并定位（放到下一个事件循环，确保viewport已布局）
+    QTimer::singleShot(0, this, [this]() {
+        if (!gvOverlay) createGraphicsOverlay();
+        positionGraphicsOverlay();
+    });
 }
 
 void MyForm::resizeEvent(QResizeEvent *event)
@@ -66,6 +106,8 @@ void MyForm::resizeEvent(QResizeEvent *event)
         QSize viewSize = ui->graphicsView->viewport()->size();
         tileMapManager->setViewSize(viewSize.width(), viewSize.height());
     }
+    // 重新定位右上角浮动工具条
+    positionGraphicsOverlay();
 }
 
 void MyForm::setupSplitter()
@@ -87,24 +129,7 @@ void MyForm::setupFunctionalArea() {
     // 为功能区设置对象名称，以便应用样式
     ui->functionalArea->setObjectName("functionalArea");
     
-    // 显式连接信号槽，避免重复连接
-    connect(ui->newButton, &QPushButton::clicked, this, &MyForm::handleNewButtonClicked);
-    connect(ui->openButton, &QPushButton::clicked, this, &MyForm::handleOpenButtonClicked);
-    connect(ui->saveButton, &QPushButton::clicked, this, &MyForm::handleSaveButtonClicked);
-    connect(ui->saveAsButton, &QPushButton::clicked, this, &MyForm::handleSaveAsButtonClicked);
-    connect(ui->undoButton, &QPushButton::clicked, this, &MyForm::handleUndoButtonClicked);
-    connect(ui->redoButton, &QPushButton::clicked, this, &MyForm::handleRedoButtonClicked);
-    
-    // 地图控制按钮连接
-    connect(ui->loadMapButton, &QPushButton::clicked, this, &MyForm::handleLoadMapButtonClicked);
-    connect(ui->zoomInButton, &QPushButton::clicked, this, &MyForm::handleZoomInButtonClicked);
-    connect(ui->zoomOutButton, &QPushButton::clicked, this, &MyForm::handleZoomOutButtonClicked);
-    connect(ui->panButton, &QPushButton::clicked, this, &MyForm::handlePanButtonClicked);
-    
-    // 添加瓦片地图控制按钮连接
-    connect(ui->loadTileMapButton, &QPushButton::clicked, this, &MyForm::handleLoadTileMapButtonClicked);
-    connect(ui->zoomInTileMapButton, &QPushButton::clicked, this, &MyForm::handleZoomInTileMapButtonClicked);
-    connect(ui->zoomOutTileMapButton, &QPushButton::clicked, this, &MyForm::handleZoomOutTileMapButtonClicked);
+    // 地图控制按钮已移除：Zoom In/Out 与 Pan 改由 graphics 浮层提供
     
     // 初始化进度条
     progressBar = ui->progressBar;
@@ -115,6 +140,209 @@ void MyForm::setupFunctionalArea() {
     // 连接区域下载进度信号（在tileMapManager创建后再连接）
     // 初始化状态
     updateStatus("Ready");
+
+    // 添加菜单栏，将常用按钮动作放入菜单
+    QMenuBar *menuBar = new QMenuBar(ui->functionalArea);
+    menuBar->setNativeMenuBar(false);
+    menuBar->setObjectName("mainMenuBar");
+    QMenu *menu = new QMenu(tr("文件"), menuBar);
+    menu->setObjectName("fileMenu");
+
+    QAction *actNew = new QAction(tr("新建"), menu);
+    QAction *actOpen = new QAction(tr("打开"), menu);
+    QAction *actSave = new QAction(tr("保存"), menu);
+    QAction *actSaveAs = new QAction(tr("另存为"), menu);
+    QAction *actUndo = new QAction(tr("撤销"), menu);
+    QAction *actRedo = new QAction(tr("重做"), menu);
+    QAction *actMapMgr = new QAction(tr("地图管理"), menu);
+
+    actNew->setShortcut(QKeySequence::New);
+    actOpen->setShortcut(QKeySequence::Open);
+    actSave->setShortcut(QKeySequence::Save);
+    actSaveAs->setShortcut(QKeySequence::SaveAs);
+    actUndo->setShortcut(QKeySequence::Undo);
+    actRedo->setShortcut(QKeySequence::Redo);
+
+    // 预估列宽：图标列固定，文本列和快捷键列取最大值，确保完整显示
+    QVector<QAction*> allActs{actNew, actOpen, actSave, actSaveAs, actUndo, actRedo};
+    QFontMetrics fm(menu->font());
+    int maxTextW = 0;
+    int maxScW = 0;
+    for (QAction *a : allActs) {
+        // 使用 boundingRect 宽度，避免 advance 低估字形外沿
+        maxTextW = qMax(maxTextW, fm.boundingRect(a->text()).width());
+        maxScW = qMax(maxScW, fm.boundingRect(a->shortcut().toString(QKeySequence::NativeText)).width());
+    }
+    const int iconColW = 20;        // 图标列宽（更紧凑）
+    const int gap = 6;              // 列间距（更紧凑）
+    const int paddingLR = 8;        // 行内左右内边距（视感留白）
+    int panel = menu->style()->pixelMetric(QStyle::PM_MenuPanelWidth, nullptr, menu);
+    int hmargin = menu->style()->pixelMetric(QStyle::PM_MenuHMargin, nullptr, menu);
+    QMargins cm = menu->contentsMargins();
+    // 额外边距：样式面板+左右边距+控件自身内容边距+样式表边框(2px) + 额外保护像素
+    int extra = 2 * (panel + hmargin) + cm.left() + cm.right() + 2 + 2;
+    int computedMenuW = iconColW + gap + maxTextW + gap + maxScW + (2 * paddingLR) + extra; // 内容+内边距+系统边距
+    menu->setMinimumWidth(computedMenuW);
+
+    // 自定义 QWidgetAction 项（图标左、文本中左对齐、快捷键右）
+    auto addMenuItem = [&](QAction *act, const std::function<void()> &onClick) {
+        QWidgetAction *wa = new QWidgetAction(menu);
+        QPushButton *btn = new QPushButton; // 使用按钮承载，便于 hover/press 效果和点击信号
+        btn->setFlat(true);
+        btn->setMouseTracking(true);
+        btn->setAttribute(Qt::WA_Hover, true);
+        btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        btn->setStyleSheet(
+            QString("QPushButton{background:#ffffff; border:0; padding:10px %1; color:#222; font-weight:500; text-align:left;}")
+                .arg(paddingLR) +
+            // 更明显的悬浮/按下效果（不更改鼠标样式）
+            "QPushButton:hover{background:#eef2ff;}"
+            "QPushButton:pressed{background:#dde7ff;}"
+        );
+        btn->setMinimumWidth(computedMenuW);
+
+        QWidget *inner = new QWidget(btn);
+        inner->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 让 hover 事件作用于按钮本体
+        QHBoxLayout *h = new QHBoxLayout(inner);
+        h->setContentsMargins(0, 0, 0, 0);
+        h->setSpacing(gap);
+
+        QLabel *iconLabel = new QLabel(inner);
+        QIcon ico = act->icon();
+        if (ico.isNull()) {
+            // 兜底使用文件图标，避免为空不显示
+            ico = QApplication::style()->standardIcon(QStyle::SP_FileIcon);
+        }
+        iconLabel->setPixmap(ico.pixmap(18, 18));
+        iconLabel->setFixedWidth(iconColW);
+        iconLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        h->addWidget(iconLabel);
+
+        QLabel *textLabel = new QLabel(act->text(), inner);
+        textLabel->setStyleSheet("color:#222; font-weight:500;");
+        textLabel->setFixedWidth(maxTextW); // 文本列固定宽度，保证后续列左对齐起点一致
+        textLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        textLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        h->addWidget(textLabel);
+
+        QString sc = act->shortcut().toString(QKeySequence::NativeText);
+        QLabel *shortcutLabel = new QLabel(sc, inner);
+        shortcutLabel->setStyleSheet("color:#666;");
+        shortcutLabel->setFixedWidth(maxScW); // 快捷键列起点固定，左对齐展示
+        shortcutLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        shortcutLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        h->addWidget(shortcutLabel);
+
+        QHBoxLayout *btnLayout = new QHBoxLayout(btn);
+        btnLayout->setContentsMargins(0, 0, 0, 0);
+        btnLayout->addWidget(inner);
+
+        connect(btn, &QPushButton::clicked, this, [this, menu, onClick]() {
+            if (menu) menu->hide();
+            onClick();
+        });
+
+        wa->setDefaultWidget(btn);
+        menu->addAction(wa);
+    };
+
+    // 为各动作设置标准图标（提前设置，确保自定义项能取到 icon）
+    // 设置一级菜单图标为“文件系统/目录”图标
+    QIcon menuIcon = QApplication::style()->standardIcon(QStyle::SP_DirIcon);
+    menu->setIcon(menuIcon);
+
+    // 为各动作设置标准图标
+    actNew->setIcon(QApplication::style()->standardIcon(QStyle::SP_FileIcon));
+    actOpen->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton));
+    actSave->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton));
+    actSaveAs->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton));
+    actUndo->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
+    actRedo->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowForward));
+
+    // 确保快捷键生效：把动作注册到窗口
+    this->addAction(actNew);
+    this->addAction(actOpen);
+    this->addAction(actSave);
+    this->addAction(actSaveAs);
+    this->addAction(actUndo);
+    this->addAction(actRedo);
+
+    addMenuItem(actNew, [this]() { handleNewButtonClicked(); });
+    addMenuItem(actOpen, [this]() { handleOpenButtonClicked(); });
+    // 分隔符用空白项模拟
+    menu->addSeparator();
+    addMenuItem(actSave, [this]() { handleSaveButtonClicked(); });
+    addMenuItem(actSaveAs, [this]() { handleSaveAsButtonClicked(); });
+    menu->addSeparator();
+    addMenuItem(actUndo, [this]() { handleUndoButtonClicked(); });
+    addMenuItem(actRedo, [this]() { handleRedoButtonClicked(); });
+    menu->addSeparator();
+    // 地图管理入口采用普通 QAction（非 QWidgetAction），直接触发对话框
+    menu->addAction(actMapMgr);
+
+    menuBar->addMenu(menu);
+
+    // 基本样式优化（可迁移到全局 qss）
+    // 样式：顶部菜单栏透明；二级菜单白底，悬浮浅灰；文本居中由 QPushButton 样式控制
+    QString menuStyle =
+        "QMenuBar{background-color: transparent; border:0;}"
+        "QMenuBar::item{padding:8px 14px; margin:0 6px; color:#ffffff; font-weight:600;}"
+        "QMenuBar::item:selected{background-color: rgba(255,122,24,0.20); border-radius:6px;}"
+        "QMenuBar::item:pressed{background-color: rgba(255,122,24,0.30);}" 
+        "QMenu{background-color:#ffffff; border:1px solid #dddddd; color:#222222; padding:0px; margin:0px;}"
+        "QMenu::separator{height:1px; background:#e6e6e6; margin:6px 10px;}";
+    menuBar->setStyleSheet(menuStyle);
+    connect(actMapMgr, &QAction::triggered, this, [this]() {
+        auto dlg = new MapManagerDialog(this);
+        dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+        static ManifestStore store("manifest.json");
+        store.load();
+        static MapManagerSettings settings = MapManagerSettings::load("settings.json");
+        dlg->setSettings(settings);
+        auto *sched = new DownloadScheduler(dlg);
+        sched->configure(settings);
+        sched->setManifest(&store);
+        sched->setTileManager(tileMapManager);
+        connect(sched, &DownloadScheduler::taskProgress, dlg, &MapManagerDialog::onTaskProgress);
+        connect(dlg, &MapManagerDialog::requestPause, sched, &DownloadScheduler::pause);
+        connect(dlg, &MapManagerDialog::requestResume, sched, &DownloadScheduler::resume);
+        connect(dlg, &MapManagerDialog::requestStartDownload, this, [sched, &store, dlg]() mutable {
+            // 读取对话框设置（当前区域使用默认中国范围；后续可改为表单读取）
+            auto s = dlg->getSettings();
+            DownloadTask t; t.minLat = 18; t.maxLat = 54; t.minLon = 73; t.maxLon = 135;
+            t.minZoom = s.minZoom; t.maxZoom = s.maxZoom; t.status = "pending";
+            store.upsertTask(t); store.save();
+            sched->start();
+        });
+        connect(dlg, &MapManagerDialog::requestSaveSettings, this, [dlg, &settings]() mutable {
+            settings = dlg->getSettings();
+            settings.save("settings.json");
+        });
+        dlg->show();
+    });
+
+    // 放入功能区布局顶部
+    if (auto layout = ui->functionalArea->layout()) {
+        // 若是 QVBoxLayout，可使用 setMenuBar；否则插入到顶部
+        if (auto vbl = qobject_cast<QVBoxLayout*>(layout)) {
+            vbl->setMenuBar(menuBar);
+        } else {
+            layout->setMenuBar(menuBar);
+        }
+    } else {
+        auto vbl = new QVBoxLayout(ui->functionalArea);
+        vbl->setContentsMargins(0, 0, 0, 0);
+        vbl->setSpacing(0);
+        vbl->setMenuBar(menuBar);
+    }
+
+    // 将菜单动作连接到已有按钮的槽函数，行为保持一致
+    connect(actNew, &QAction::triggered, this, &MyForm::handleNewButtonClicked);
+    connect(actOpen, &QAction::triggered, this, &MyForm::handleOpenButtonClicked);
+    connect(actSave, &QAction::triggered, this, &MyForm::handleSaveButtonClicked);
+    connect(actSaveAs, &QAction::triggered, this, &MyForm::handleSaveAsButtonClicked);
+    connect(actUndo, &QAction::triggered, this, &MyForm::handleUndoButtonClicked);
+    connect(actRedo, &QAction::triggered, this, &MyForm::handleRedoButtonClicked);
 }
 
 void MyForm::setupMapArea() {
@@ -134,6 +362,45 @@ void MyForm::setupMapArea() {
     // 设置滚动条策略
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    // 自定义滚动条样式：默认细线，悬浮时展开便于拖拽
+    if (auto hsb = ui->graphicsView->horizontalScrollBar()) {
+        hsb->setStyleSheet(
+            "QScrollBar:horizontal{height:4px; background:transparent; margin:0px;}"
+            "QScrollBar:horizontal:hover{height:12px;}"
+            "QScrollBar::handle:horizontal{background:#ff7a18; min-width:24px; border-radius:2px;}"
+            "QScrollBar::handle:horizontal:hover{background:#ff9a40;}"
+            "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal{width:0px; height:0px; background:transparent; border:none;}"
+            "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal{background:rgba(0,0,0,0.18); border-radius:2px;}"
+        );
+        hsb->setMouseTracking(true);
+        hsb->setAttribute(Qt::WA_Hover, true);
+        hsb->installEventFilter(this);
+        hScrollTarget = hsb;
+        if (!hScrollHoverTimer) {
+            hScrollHoverTimer = new QTimer(this);
+            hScrollHoverTimer->setSingleShot(true);
+            hScrollHoverTimer->setInterval(180); // 0.18s 延迟
+        }
+    }
+    if (auto vsb = ui->graphicsView->verticalScrollBar()) {
+        vsb->setStyleSheet(
+            "QScrollBar:vertical{width:4px; background:transparent; margin:0px;}"
+            "QScrollBar:vertical:hover{width:12px;}"
+            "QScrollBar::handle:vertical{background:#ff7a18; min-height:24px; border-radius:2px;}"
+            "QScrollBar::handle:vertical:hover{background:#ff9a40;}"
+            "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical{width:0px; height:0px; background:transparent; border:none;}"
+            "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background:rgba(0,0,0,0.18); border-radius:2px;}"
+        );
+        vsb->setMouseTracking(true);
+        vsb->setAttribute(Qt::WA_Hover, true);
+        vsb->installEventFilter(this);
+        vScrollTarget = vsb;
+        if (!vScrollHoverTimer) {
+            vScrollHoverTimer = new QTimer(this);
+            vScrollHoverTimer->setSingleShot(true);
+            vScrollHoverTimer->setInterval(180); // 0.18s 延迟
+        }
+    }
     
     // 启用鼠标跟踪
     ui->graphicsView->setMouseTracking(true);
@@ -146,6 +413,7 @@ void MyForm::setupMapArea() {
     tileMapManager = new TileMapManager(this);
     logMessage(QString("TileMapManager created: %1").arg(tileMapManager != nullptr));
     tileMapManager->initScene(mapScene);
+    ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
     
     // 创建视图更新定时器（用于拖动时延迟更新瓦片）
     viewUpdateTimer = new QTimer(this);
@@ -159,12 +427,14 @@ void MyForm::setupMapArea() {
         if (tileMapManager && !isDownloading) {
             viewUpdateTimer->start();  // 重启定时器，实现防抖更新
         }
+        positionGraphicsOverlay();
     });
     connect(ui->graphicsView->verticalScrollBar(), &QScrollBar::valueChanged, 
             this, [this]() {
         if (tileMapManager && !isDownloading) {
             viewUpdateTimer->start();  // 重启定时器，实现防抖更新
         }
+        positionGraphicsOverlay();
     });
     
     // 连接下载进度信号（在这里连接，因为tileMapManager已经创建）
@@ -234,6 +504,135 @@ void MyForm::setupMapArea() {
             updateStatus("Ready - Use 'Load Tile Map' to download new tiles");
         }
     });
+    // 创建右上角浮动工具条（避免重复）
+    if (!gvOverlay) createGraphicsOverlay();
+}
+
+void MyForm::createGraphicsOverlay()
+{
+    if (!ui->graphicsView || gvOverlay) return;
+    // 如果之前创建过场景代理浮层，先清理，避免与 viewport 版并存
+    if (overlayProxy) {
+        if (mapScene) mapScene->removeItem(overlayProxy);
+        delete overlayProxy; overlayProxy = nullptr;
+    }
+    if (overlayPanel) { delete overlayPanel; overlayPanel = nullptr; }
+    gvOverlay = new QWidget(ui->graphicsView->viewport());
+    gvOverlay->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+    gvOverlay->setObjectName("gvOverlay");
+    gvOverlay->setStyleSheet(
+        "#gvOverlay{background:rgba(30,31,38,0.25); border:1px solid rgba(255,0,0,0.35); border-radius:6px;}"
+        "QToolButton{background:rgba(30,31,38,0.65); border:1px solid rgba(255,255,255,0.15);"
+        "border-radius:6px; width:28px; height:28px; color:#fff;}"
+        "QToolButton:hover{background:rgba(30,31,38,0.8);}"
+    );
+
+    QVBoxLayout *vl = new QVBoxLayout(gvOverlay);
+    vl->setContentsMargins(0, 0, 0, 0);
+    vl->setSpacing(8);
+
+    btnZoomIn = new QToolButton(gvOverlay);
+    btnZoomIn->setToolTip(tr("放大"));
+    btnZoomIn->setIcon(makePlusMinusIcon(true));
+    btnZoomIn->setIconSize(QSize(18,18));
+    connect(btnZoomIn, &QToolButton::clicked, this, &MyForm::handleZoomInButtonClicked);
+
+    btnZoomOut = new QToolButton(gvOverlay);
+    btnZoomOut->setToolTip(tr("缩小"));
+    btnZoomOut->setIcon(makePlusMinusIcon(false));
+    btnZoomOut->setIconSize(QSize(18,18));
+    connect(btnZoomOut, &QToolButton::clicked, this, &MyForm::handleZoomOutButtonClicked);
+
+    btnPanToggle = new QToolButton(gvOverlay);
+    btnPanToggle->setToolTip(tr("拖拽(开/关)"));
+    btnPanToggle->setCheckable(true);
+    btnPanToggle->setChecked(ui->graphicsView->dragMode() == QGraphicsView::ScrollHandDrag);
+    btnPanToggle->setIcon(QApplication::style()->standardIcon(QStyle::SP_DesktopIcon));
+    connect(btnPanToggle, &QToolButton::toggled, this, &MyForm::onOverlayPanToggled);
+
+    vl->addWidget(btnZoomIn);
+    vl->addWidget(btnZoomOut);
+    vl->addWidget(btnPanToggle);
+
+    // 明确设置容器尺寸，避免 sizeHint 为 0 导致不可见
+    int w = 28;
+    int h = 28 * 3 + 8 * 2; // 三个按钮 + 两个间距
+    gvOverlay->setFixedSize(w + 2, h + 2);
+    gvOverlay->adjustSize();
+    gvOverlay->raise();
+    positionGraphicsOverlay();
+    gvOverlay->show();
+    qDebug() << "Overlay created size:" << gvOverlay->size();
+}
+
+void MyForm::positionGraphicsOverlay()
+{
+    if (!gvOverlay || !ui->graphicsView) return;
+    const int margin = 8;
+    QSize vp = ui->graphicsView->viewport()->size();
+    QSize sz = gvOverlay->sizeHint();
+    if (sz.isEmpty()) sz = gvOverlay->size();
+    int x = vp.width() - sz.width() - margin;
+    int y = margin;
+    gvOverlay->setGeometry(x, y, sz.width(), sz.height());
+    qDebug() << "Overlay positioned at:" << gvOverlay->geometry() << "viewport:" << vp;
+}
+
+void MyForm::onOverlayPanToggled(bool checked)
+{
+    ui->graphicsView->setDragMode(checked ? QGraphicsView::ScrollHandDrag : QGraphicsView::NoDrag);
+}
+
+void MyForm::createGraphicsOverlayScene()
+{
+    if (!mapScene) return; // 禁用场景代理方案
+    return;
+    overlayPanel = new QWidget; // dead code, kept for reference
+    overlayPanel->setObjectName("overlayPanel");
+    overlayPanel->setStyleSheet(
+        "#overlayPanel{background:rgba(30,31,38,0.25); border:1px solid rgba(255,0,0,0.35); border-radius:6px;}"
+        "QToolButton{background:rgba(30,31,38,0.65); border:1px solid rgba(255,255,255,0.15);"
+        "border-radius:6px; width:28px; height:28px; color:#fff;}"
+        "QToolButton:hover{background:rgba(30,31,38,0.8);}"
+    );
+
+    QVBoxLayout *vl = new QVBoxLayout(overlayPanel);
+    vl->setContentsMargins(4, 4, 4, 4);
+    vl->setSpacing(8);
+
+    QToolButton *zIn = new QToolButton(overlayPanel);
+    zIn->setToolTip(tr("放大"));
+    zIn->setIcon(makePlusMinusIcon(true));
+    zIn->setIconSize(QSize(18,18));
+    connect(zIn, &QToolButton::clicked, this, &MyForm::handleZoomInButtonClicked);
+
+    QToolButton *zOut = new QToolButton(overlayPanel);
+    zOut->setToolTip(tr("缩小"));
+    zOut->setIcon(makePlusMinusIcon(false));
+    zOut->setIconSize(QSize(18,18));
+    connect(zOut, &QToolButton::clicked, this, &MyForm::handleZoomOutButtonClicked);
+
+    QToolButton *pan = new QToolButton(overlayPanel);
+    pan->setToolTip(tr("拖拽(开/关)"));
+    pan->setCheckable(true);
+    pan->setChecked(ui->graphicsView->dragMode() == QGraphicsView::ScrollHandDrag);
+    pan->setIcon(QApplication::style()->standardIcon(QStyle::SP_DesktopIcon));
+    connect(pan, &QToolButton::toggled, this, &MyForm::onOverlayPanToggled);
+
+    vl->addWidget(zIn);
+    vl->addWidget(zOut);
+    vl->addWidget(pan);
+    overlayPanel->adjustSize();
+
+    overlayProxy = mapScene->addWidget(overlayPanel, Qt::Widget);
+    overlayProxy->setZValue(1e6); // 确保在最顶层
+    positionGraphicsOverlayScene();
+}
+
+void MyForm::positionGraphicsOverlayScene()
+{
+    // disabled
+    return;
 }
 
 bool MyForm::eventFilter(QObject *obj, QEvent *event)
@@ -278,6 +677,11 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
                         ui->graphicsView->viewport()->width(),
                         ui->graphicsView->viewport()->height()
                     );
+                // 缩放后将视图中心与新中心像素对齐，保持锚点一致
+                QPointF centerScene = tileMapManager->getCenterScenePos();
+                ui->graphicsView->centerOn(centerScene);
+                // 用对齐后的真实中心触发一次立即更新，避免缩放中心与加载中心不一致
+                tileMapManager->updateTilesForViewImmediate(centerScene.x(), centerScene.y());
                     
                     updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
                 }
@@ -317,20 +721,20 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
             // 只有当鼠标在QGraphicsView区域时，右键拖拽才生效
             if (isRightClickDragging && (mouseEvent->buttons() & Qt::RightButton)) {
                 // 使用滚动条实现 1:1 平移，避免映射误差与轴向耦合
-                QPointF delta = mouseEvent->pos() - lastRightClickPos;
+                    QPointF delta = mouseEvent->pos() - lastRightClickPos;
                 QScrollBar *h = ui->graphicsView->horizontalScrollBar();
                 QScrollBar *v = ui->graphicsView->verticalScrollBar();
                 // 方向修正：拖拽左（delta<0）应显示右侧 → 滚动值增加
                 h->setValue(h->value() - (int)delta.x());
                 v->setValue(v->value() - (int)delta.y());
-                lastRightClickPos = mouseEvent->pos();
+                    lastRightClickPos = mouseEvent->pos();
                 lastRightClickScenePos = ui->graphicsView->mapToScene(mouseEvent->pos());
 
                 if (tileMapManager && !isDownloading) {
                     QPointF centeredScene = ui->graphicsView->mapToScene(ui->graphicsView->viewport()->rect().center());
                     tileMapManager->updateTilesForViewImmediate(centeredScene.x(), centeredScene.y());
                 }
-                return true; // 事件已处理
+                    return true; // 事件已处理
             }
         } else if (event->type() == QEvent::MouseButtonRelease) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -349,6 +753,108 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
                 return true; // 事件已处理
             }
         }
+    }
+    // 处理滚动条 hover 展开：确保不改变滚动条控件整体宽高，仅通过 handle 的 margin 营造粗细变化
+    if (obj == ui->graphicsView->horizontalScrollBar() || obj == ui->graphicsView->verticalScrollBar()) {
+        QScrollBar *sb = qobject_cast<QScrollBar*>(obj);
+        if (!sb) return QWidget::eventFilter(obj, event);
+        if (event->type() == QEvent::Enter) {
+            if (sb->orientation() == Qt::Horizontal) {
+                hScrollExpanded = false;
+                hScrollHoverTimer->stop();
+                hScrollHoverTimer->start();
+                disconnect(hScrollHoverTimer, nullptr, this, nullptr);
+                connect(hScrollHoverTimer, &QTimer::timeout, this, [this]() {
+                    QScrollBar *sb = hScrollTarget;
+                    if (!sb) return;
+                    // 若鼠标仍在滚动条上再展开
+                    QPoint g = QCursor::pos();
+                    QPoint local = sb->mapFromGlobal(g);
+                    if (sb->rect().contains(local)) {
+                        hScrollExpanded = true;
+                        sb->setStyleSheet(
+                            "QScrollBar:horizontal{height:12px; background:transparent; margin:0px;}"
+                            "QScrollBar::handle:horizontal{background:#ff7a18; min-width:24px; border-radius:2px;}"
+                            "QScrollBar::handle:horizontal:hover{background:#ff9a40;}"
+                            "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal{width:0px; height:0px; background:transparent; border:none;}"
+                            "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal{background:rgba(0,0,0,0.18); border-radius:2px;}"
+                        );
+                    }
+                });
+            } else {
+                vScrollExpanded = false;
+                vScrollHoverTimer->stop();
+                vScrollHoverTimer->start();
+                disconnect(vScrollHoverTimer, nullptr, this, nullptr);
+                connect(vScrollHoverTimer, &QTimer::timeout, this, [this]() {
+                    QScrollBar *sb = vScrollTarget;
+                    if (!sb) return;
+                    QPoint g = QCursor::pos();
+                    QPoint local = sb->mapFromGlobal(g);
+                    if (sb->rect().contains(local)) {
+                        vScrollExpanded = true;
+                        sb->setStyleSheet(
+                            "QScrollBar:vertical{width:12px; background:transparent; margin:0px;}"
+                            "QScrollBar::handle:vertical{background:#ff7a18; min-height:24px; border-radius:2px;}"
+                            "QScrollBar::handle:vertical:hover{background:#ff9a40;}"
+                            "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical{width:0px; height:0px; background:transparent; border:none;}"
+                            "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background:rgba(0,0,0,0.18); border-radius:2px;}"
+                        );
+                    }
+                });
+            }
+        } else if (event->type() == QEvent::Leave) {
+            if (sb->orientation() == Qt::Horizontal) {
+                hScrollHoverTimer->stop();
+                hScrollExpanded = false;
+            } else {
+                vScrollHoverTimer->stop();
+                vScrollExpanded = false;
+            }
+            if (sb->orientation() == Qt::Horizontal) {
+                sb->setStyleSheet(
+                    "QScrollBar:horizontal{height:4px; background:transparent; margin:0px;}"
+                    "QScrollBar:horizontal:hover{height:12px;}"
+                    "QScrollBar::handle:horizontal{background:#ff7a18; min-width:24px; border-radius:2px;}"
+                    "QScrollBar::handle:horizontal:hover{background:#ff9a40;}"
+                    "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal{width:0px; height:0px; background:transparent; border:none;}"
+                    "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal{background:rgba(0,0,0,0.18); border-radius:2px;}"
+                );
+            } else {
+                sb->setStyleSheet(
+                    "QScrollBar:vertical{width:4px; background:transparent; margin:0px;}"
+                    "QScrollBar:vertical:hover{width:12px;}"
+                    "QScrollBar::handle:vertical{background:#ff7a18; min-height:24px; border-radius:2px;}"
+                    "QScrollBar::handle:vertical:hover{background:#ff9a40;}"
+                    "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical{width:0px; height:0px; background:transparent; border:none;}"
+                    "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background:rgba(0,0,0,0.18); border-radius:2px;}"
+                );
+            }
+        } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::Wheel) {
+            // 任何交互都取消延迟并立即展开
+            if (sb->orientation() == Qt::Horizontal) {
+                hScrollHoverTimer->stop();
+                hScrollExpanded = true;
+                sb->setStyleSheet(
+                    "QScrollBar:horizontal{height:12px; background:transparent; margin:0px;}"
+                    "QScrollBar::handle:horizontal{background:#ff7a18; min-width:24px; border-radius:2px;}"
+                    "QScrollBar::handle:horizontal:hover{background:#ff9a40;}"
+                    "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal{width:0px; height:0px; background:transparent; border:none;}"
+                    "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal{background:rgba(0,0,0,0.18); border-radius:2px;}"
+                );
+            } else {
+                vScrollHoverTimer->stop();
+                vScrollExpanded = true;
+                sb->setStyleSheet(
+                    "QScrollBar:vertical{width:12px; background:transparent; margin:0px;}"
+                    "QScrollBar::handle:vertical{background:#ff7a18; min-height:24px; border-radius:2px;}"
+                    "QScrollBar::handle:vertical:hover{background:#ff9a40;}"
+                    "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical{width:0px; height:0px; background:transparent; border:none;}"
+                    "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background:rgba(0,0,0,0.18); border-radius:2px;}"
+                );
+            }
+        }
+        return QWidget::eventFilter(obj, event);
     }
     return QWidget::eventFilter(obj, event);
 }
@@ -526,11 +1032,11 @@ void MyForm::handlePanButtonClicked()
     qDebug() << "Pan button clicked";
     if (ui->graphicsView->dragMode() == QGraphicsView::ScrollHandDrag) {
         ui->graphicsView->setDragMode(QGraphicsView::NoDrag);
-        ui->panButton->setText("Pan");
+        // no-op: UI 按钮已移除
         updateStatus("Pan mode disabled");
     } else {
         ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
-        ui->panButton->setText("Pan Off");
+        // no-op: UI 按钮已移除
         updateStatus("Pan mode enabled - drag to move map");
     }
 }
@@ -557,9 +1063,9 @@ void MyForm::handleLoadTileMapButtonClicked()
     // 设置北京坐标为中心点
     logMessage("Setting center to Beijing coordinates: 39.9042, 116.4074");
     tileMapManager->setCenter(39.9042, 116.4074);
-    // 设置缩放级别为1，从最小级别开始
-    logMessage("Setting zoom level to 1");
-    currentZoomLevel = 1;
+    // 设置缩放级别为最小层级（3）开始
+    logMessage("Setting zoom level to MIN_ZOOM_LEVEL");
+    currentZoomLevel = MIN_ZOOM_LEVEL;
     tileMapManager->setZoom(currentZoomLevel);
     
     // 触发中国区域级别3的瓦片地图下载
@@ -592,6 +1098,10 @@ void MyForm::handleZoomInTileMapButtonClicked()
             viewportRect.width(),
             viewportRect.height()
         );
+        // 与滚轮缩放保持一致：对齐视图中心并立即刷新可见瓦片
+        QPointF centerScene = tileMapManager->getCenterScenePos();
+        ui->graphicsView->centerOn(centerScene);
+        tileMapManager->updateTilesForViewImmediate(centerScene.x(), centerScene.y());
         
         // 更新状态显示
         updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
@@ -624,6 +1134,10 @@ void MyForm::handleZoomOutTileMapButtonClicked()
             viewportRect.width(),
             viewportRect.height()
         );
+        // 与滚轮缩放保持一致：对齐视图中心并立即刷新可见瓦片
+        QPointF centerScene2 = tileMapManager->getCenterScenePos();
+        ui->graphicsView->centerOn(centerScene2);
+        tileMapManager->updateTilesForViewImmediate(centerScene2.x(), centerScene2.y());
         
         // 更新状态显示
         updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
@@ -678,11 +1192,11 @@ void MyForm::startRegionDownload()
     // 中国大致范围：纬度18°N-54°N，经度73°E-135°E
     // 下载缩放级别：1-10级，提供良好的缩放体验
     logMessage("Calling tileMapManager->downloadRegion for China region");
-    logMessage("Parameters: minLat=18.0, maxLat=54.0, minLon=73.0, maxLon=135.0, minZoom=1, maxZoom=10");
-    tileMapManager->downloadRegion(18.0, 54.0, 73.0, 135.0, 1, 10);
+    logMessage("Parameters: minLat=18.0, maxLat=54.0, minLon=73.0, maxLon=135.0, minZoom=3, maxZoom=10");
+    tileMapManager->downloadRegion(18.0, 54.0, 73.0, 135.0, 3, 10);
     
-    updateStatus("Starting China region map download (levels 1-10)...");
-    logMessage("China region map download initiated - Levels 1-10");
+    updateStatus("Starting China region map download (levels 3-10)...");
+    logMessage("China region map download initiated - Levels 3-10");
 }
 
 void MyForm::updateVisibleTiles()

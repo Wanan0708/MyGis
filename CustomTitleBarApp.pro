@@ -14,14 +14,22 @@ SOURCES += \
     main.cpp \
     myform.cpp \
     tilemapmanager.cpp \
-    tileworker.cpp
+    tileworker.cpp \
+    mapmanagersettings.cpp \
+    manifeststore.cpp \
+    downloadscheduler.cpp \
+    mapmanagerdialog.cpp
 
 HEADERS += \
     basewindow.h \
     customtitlebar.h \
     myform.h \
     tilemapmanager.h \
-    tileworker.h
+    tileworker.h \
+    mapmanagersettings.h \
+    manifeststore.h \
+    downloadscheduler.h \
+    mapmanagerdialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

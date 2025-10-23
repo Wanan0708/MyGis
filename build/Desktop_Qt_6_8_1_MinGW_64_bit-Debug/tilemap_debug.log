@@ -1,1042 +1,216 @@
-2025-10-23 00:10:45.213 - TileMapManager constructor started
-2025-10-23 00:10:45.215 - Current working directory: E:/Project/CursorProject/CustomTitleBarApp/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug
-2025-10-23 00:10:45.215 - Project root directory: E:/Project/CursorProject/CustomTitleBarApp
-2025-10-23 00:10:45.216 - Cache directory: E:/Project/CursorProject/CustomTitleBarApp/tilemap
-2025-10-23 00:10:45.216 - Cache directory already exists
-2025-10-23 00:10:45.218 - Network manager is accessible: 1
-2025-10-23 00:10:45.218 - TileMapManager constructor finished
-2025-10-23 00:10:45.221 - Checking for local tiles...
-2025-10-23 00:10:45.221 - Found local tiles, using zoom level: 10
-2025-10-23 00:10:45.222 - Loading local tiles for zoom: 10
-2025-10-23 00:10:45.223 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:45.246 - Local tiles loaded successfully, count: 25
-2025-10-23 00:10:45.254 - === Local Tiles Information ===
-2025-10-23 00:10:45.256 - Zoom level 1: 4 tiles
-2025-10-23 00:10:45.902 - Zoom level 10: 23720 tiles
-2025-10-23 00:10:45.904 - Zoom level 2: 16 tiles
-2025-10-23 00:10:45.908 - Zoom level 3: 64 tiles
-2025-10-23 00:10:45.918 - Zoom level 4: 177 tiles
-2025-10-23 00:10:45.934 - Zoom level 5: 246 tiles
-2025-10-23 00:10:45.953 - Zoom level 6: 252 tiles
-2025-10-23 00:10:45.981 - Zoom level 7: 497 tiles
-2025-10-23 00:10:46.040 - Zoom level 8: 1603 tiles
-2025-10-23 00:10:46.217 - Zoom level 9: 6080 tiles
-2025-10-23 00:10:46.218 - Total tiles: 32659
-2025-10-23 00:10:46.219 - Available zoom levels: 10
-2025-10-23 00:10:46.219 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
-2025-10-23 00:10:46.393 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.401 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.427 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.437 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.450 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.450 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.468 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.475 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:10:46.590 - sceneToLatLon(abs): scene(215836.00,99333.00) -> tile(843.1094,388.0195) -> geo(39.904469,116.405640)
-2025-10-23 00:10:46.592 - latLonToTile: lat=39.9045, lon=116.406, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:00.614 - sceneToLatLon(abs): scene(215928.00,99339.00) -> tile(843.4688,388.0430) -> geo(39.898148,116.531982)
-2025-10-23 00:11:00.616 - latLonToTile: lat=39.8981, lon=116.532, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:00.646 - sceneToLatLon(abs): scene(216021.00,99338.00) -> tile(843.8320,388.0391) -> geo(39.899202,116.659698)
-2025-10-23 00:11:00.647 - latLonToTile: lat=39.8992, lon=116.66, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:01.134 - sceneToLatLon(abs): scene(216112.00,99364.00) -> tile(844.1875,388.1406) -> geo(39.871804,116.784668)
-2025-10-23 00:11:01.135 - latLonToTile: lat=39.8718, lon=116.785, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:01.176 - sceneToLatLon(abs): scene(216207.00,99396.00) -> tile(844.5586,388.2656) -> geo(39.838068,116.915131)
-2025-10-23 00:11:01.176 - latLonToTile: lat=39.8381, lon=116.915, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:01.208 - sceneToLatLon(abs): scene(216307.00,99406.00) -> tile(844.9492,388.3047) -> geo(39.827522,117.052460)
-2025-10-23 00:11:01.224 - latLonToTile: lat=39.8275, lon=117.052, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:01.326 - sceneToLatLon(abs): scene(216393.00,99394.00) -> tile(845.2852,388.2578) -> geo(39.840177,117.170563)
-2025-10-23 00:11:01.328 - latLonToTile: lat=39.8402, lon=117.171, zoom=10 -> tileX=845, tileY=388
-2025-10-23 00:11:01.494 - sceneToLatLon(abs): scene(216426.00,99308.00) -> tile(845.4141,387.9219) -> geo(39.930801,117.215881)
-2025-10-23 00:11:01.496 - latLonToTile: lat=39.9308, lon=117.216, zoom=10 -> tileX=845, tileY=387
-2025-10-23 00:11:01.606 - sceneToLatLon(abs): scene(216325.00,99379.00) -> tile(845.0195,388.1992) -> geo(39.855992,117.077179)
-2025-10-23 00:11:01.609 - latLonToTile: lat=39.856, lon=117.077, zoom=10 -> tileX=845, tileY=388
-2025-10-23 00:11:01.609 - sceneToLatLon(abs): scene(216232.00,99424.00) -> tile(844.6563,388.3750) -> geo(39.808536,116.949463)
-2025-10-23 00:11:01.623 - latLonToTile: lat=39.8085, lon=116.949, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:01.646 - sceneToLatLon(abs): scene(216141.00,99469.00) -> tile(844.3008,388.5508) -> geo(39.761047,116.824493)
-2025-10-23 00:11:01.647 - latLonToTile: lat=39.761, lon=116.824, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:01.719 - sceneToLatLon(abs): scene(216268.00,99429.00) -> tile(844.7969,388.3945) -> geo(39.803261,116.998901)
-2025-10-23 00:11:01.722 - latLonToTile: lat=39.8033, lon=116.999, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:01.806 - sceneToLatLon(abs): scene(216112.00,99482.00) -> tile(844.1875,388.6016) -> geo(39.747322,116.784668)
-2025-10-23 00:11:01.813 - latLonToTile: lat=39.7473, lon=116.785, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:02.142 - sceneToLatLon(abs): scene(216068.00,99573.00) -> tile(844.0156,388.9570) -> geo(39.651169,116.724243)
-2025-10-23 00:11:02.144 - latLonToTile: lat=39.6512, lon=116.724, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:02.161 - sceneToLatLon(abs): scene(215969.00,99644.00) -> tile(843.6289,389.2344) -> geo(39.576056,116.588287)
-2025-10-23 00:11:02.161 - latLonToTile: lat=39.5761, lon=116.588, zoom=10 -> tileX=843, tileY=389
-2025-10-23 00:11:02.191 - sceneToLatLon(abs): scene(215855.00,99702.00) -> tile(843.1836,389.4609) -> geo(39.514636,116.431732)
-2025-10-23 00:11:02.193 - latLonToTile: lat=39.5146, lon=116.432, zoom=10 -> tileX=843, tileY=389
-2025-10-23 00:11:02.254 - sceneToLatLon(abs): scene(216056.00,99579.00) -> tile(843.9688,388.9805) -> geo(39.644825,116.707764)
-2025-10-23 00:11:02.257 - latLonToTile: lat=39.6448, lon=116.708, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:02.341 - sceneToLatLon(abs): scene(215802.00,99721.00) -> tile(842.9766,389.5352) -> geo(39.494504,116.358948)
-2025-10-23 00:11:02.344 - latLonToTile: lat=39.4945, lon=116.359, zoom=10 -> tileX=842, tileY=389
-2025-10-23 00:11:02.614 - sceneToLatLon(abs): scene(215720.00,99811.00) -> tile(842.6563,389.8867) -> geo(39.399061,116.246338)
-2025-10-23 00:11:02.615 - latLonToTile: lat=39.3991, lon=116.246, zoom=10 -> tileX=842, tileY=389
-2025-10-23 00:11:02.630 - sceneToLatLon(abs): scene(215609.00,99885.00) -> tile(842.2227,390.1758) -> geo(39.320488,116.093903)
-2025-10-23 00:11:02.640 - latLonToTile: lat=39.3205, lon=116.094, zoom=10 -> tileX=842, tileY=390
-2025-10-23 00:11:02.662 - sceneToLatLon(abs): scene(215498.00,99942.00) -> tile(841.7891,390.3984) -> geo(39.259905,115.941467)
-2025-10-23 00:11:02.663 - latLonToTile: lat=39.2599, lon=115.941, zoom=10 -> tileX=841, tileY=390
-2025-10-23 00:11:02.750 - sceneToLatLon(abs): scene(215411.00,99962.00) -> tile(841.4492,390.4766) -> geo(39.238635,115.821991)
-2025-10-23 00:11:02.751 - latLonToTile: lat=39.2386, lon=115.822, zoom=10 -> tileX=841, tileY=390
-2025-10-23 00:11:02.942 - sceneToLatLon(abs): scene(215509.00,99969.00) -> tile(841.8320,390.5039) -> geo(39.231189,115.956573)
-2025-10-23 00:11:02.944 - latLonToTile: lat=39.2312, lon=115.957, zoom=10 -> tileX=841, tileY=390
-2025-10-23 00:11:02.982 - sceneToLatLon(abs): scene(215608.00,99949.00) -> tile(842.2188,390.4258) -> geo(39.252461,116.092529)
-2025-10-23 00:11:02.983 - latLonToTile: lat=39.2525, lon=116.093, zoom=10 -> tileX=842, tileY=390
-2025-10-23 00:11:03.026 - sceneToLatLon(abs): scene(215687.00,99854.00) -> tile(842.5273,390.0547) -> geo(39.353414,116.201019)
-2025-10-23 00:11:03.043 - latLonToTile: lat=39.3534, lon=116.201, zoom=10 -> tileX=842, tileY=390
-2025-10-23 00:11:03.124 - sceneToLatLon(abs): scene(215597.00,99781.00) -> tile(842.1758,389.7695) -> geo(39.430890,116.077423)
-2025-10-23 00:11:03.135 - latLonToTile: lat=39.4309, lon=116.077, zoom=10 -> tileX=842, tileY=389
-2025-10-23 00:11:03.174 - sceneToLatLon(abs): scene(215507.00,99780.00) -> tile(841.8242,389.7656) -> geo(39.431950,115.953827)
-2025-10-23 00:11:03.176 - latLonToTile: lat=39.432, lon=115.954, zoom=10 -> tileX=841, tileY=389
-2025-10-23 00:11:03.224 - sceneToLatLon(abs): scene(215598.00,99825.00) -> tile(842.1797,389.9414) -> geo(39.384202,116.078796)
-2025-10-23 00:11:03.227 - latLonToTile: lat=39.3842, lon=116.079, zoom=10 -> tileX=842, tileY=389
-2025-10-23 00:11:03.318 - sceneToLatLon(abs): scene(215444.00,99823.00) -> tile(841.5781,389.9336) -> geo(39.386325,115.867310)
-2025-10-23 00:11:03.319 - latLonToTile: lat=39.3863, lon=115.867, zoom=10 -> tileX=841, tileY=389
-2025-10-23 00:11:03.391 - sceneToLatLon(abs): scene(215547.00,99803.00) -> tile(841.9805,389.8555) -> geo(39.407550,116.008759)
-2025-10-23 00:11:03.393 - latLonToTile: lat=39.4075, lon=116.009, zoom=10 -> tileX=841, tileY=389
-2025-10-23 00:11:03.424 - sceneToLatLon(abs): scene(215632.00,99711.00) -> tile(842.3125,389.4961) -> geo(39.505100,116.125488)
-2025-10-23 00:11:03.431 - latLonToTile: lat=39.5051, lon=116.125, zoom=10 -> tileX=842, tileY=389
-2025-10-23 00:11:03.887 - sceneToLatLon(abs): scene(215650.00,99625.00) -> tile(842.3828,389.1602) -> geo(39.596165,116.150208)
-2025-10-23 00:11:03.890 - latLonToTile: lat=39.5962, lon=116.15, zoom=10 -> tileX=842, tileY=389
-2025-10-23 00:11:03.924 - sceneToLatLon(abs): scene(215606.00,99521.00) -> tile(842.2109,388.7539) -> geo(39.706130,116.089783)
-2025-10-23 00:11:03.935 - latLonToTile: lat=39.7061, lon=116.09, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:11:03.982 - sceneToLatLon(abs): scene(215549.00,99432.00) -> tile(841.9883,388.4063) -> geo(39.800096,116.011505)
-2025-10-23 00:11:03.983 - latLonToTile: lat=39.8001, lon=116.012, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:04.090 - sceneToLatLon(abs): scene(215540.00,99539.00) -> tile(841.9531,388.8242) -> geo(39.687110,115.999146)
-2025-10-23 00:11:04.103 - latLonToTile: lat=39.6871, lon=115.999, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:04.187 - sceneToLatLon(abs): scene(215528.00,99397.00) -> tile(841.9063,388.2695) -> geo(39.837014,115.982666)
-2025-10-23 00:11:04.190 - latLonToTile: lat=39.837, lon=115.983, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:04.457 - sceneToLatLon(abs): scene(215447.00,99302.00) -> tile(841.5898,387.8984) -> geo(39.937119,115.871429)
-2025-10-23 00:11:04.471 - latLonToTile: lat=39.9371, lon=115.871, zoom=10 -> tileX=841, tileY=387
-2025-10-23 00:11:07.109 - sceneToLatLon(abs): scene(215550.00,99375.00) -> tile(841.9922,388.1836) -> geo(39.860209,116.012878)
-2025-10-23 00:11:07.111 - latLonToTile: lat=39.8602, lon=116.013, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:07.142 - sceneToLatLon(abs): scene(215636.00,99423.00) -> tile(842.3281,388.3711) -> geo(39.809591,116.130981)
-2025-10-23 00:11:07.143 - latLonToTile: lat=39.8096, lon=116.131, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:11:07.237 - sceneToLatLon(abs): scene(215722.00,99447.00) -> tile(842.6641,388.4648) -> geo(39.784268,116.249084)
-2025-10-23 00:11:07.241 - latLonToTile: lat=39.7843, lon=116.249, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:11:07.326 - sceneToLatLon(abs): scene(215758.00,99359.00) -> tile(842.8047,388.1211) -> geo(39.877073,116.298523)
-2025-10-23 00:11:07.326 - latLonToTile: lat=39.8771, lon=116.299, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:11:07.430 - sceneToLatLon(abs): scene(215666.00,99280.00) -> tile(842.4453,387.8125) -> geo(39.960280,116.172180)
-2025-10-23 00:11:07.431 - latLonToTile: lat=39.9603, lon=116.172, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:07.477 - sceneToLatLon(abs): scene(215565.00,99273.00) -> tile(842.0508,387.7852) -> geo(39.967648,116.033478)
-2025-10-23 00:11:07.479 - latLonToTile: lat=39.9676, lon=116.033, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:07.534 - sceneToLatLon(abs): scene(215477.00,99296.00) -> tile(841.7070,387.8750) -> geo(39.943436,115.912628)
-2025-10-23 00:11:07.535 - latLonToTile: lat=39.9434, lon=115.913, zoom=10 -> tileX=841, tileY=387
-2025-10-23 00:11:07.654 - sceneToLatLon(abs): scene(215439.00,99386.00) -> tile(841.5586,388.2266) -> geo(39.848612,115.860443)
-2025-10-23 00:11:07.656 - latLonToTile: lat=39.8486, lon=115.86, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:07.838 - sceneToLatLon(abs): scene(215530.00,99416.00) -> tile(841.9141,388.3438) -> geo(39.816975,115.985413)
-2025-10-23 00:11:07.840 - latLonToTile: lat=39.817, lon=115.985, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:07.934 - sceneToLatLon(abs): scene(215623.00,99386.00) -> tile(842.2773,388.2266) -> geo(39.848612,116.113129)
-2025-10-23 00:11:07.934 - latLonToTile: lat=39.8486, lon=116.113, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:11:08.077 - sceneToLatLon(abs): scene(215685.00,99297.00) -> tile(842.5195,387.8789) -> geo(39.942384,116.198273)
-2025-10-23 00:11:08.078 - latLonToTile: lat=39.9424, lon=116.198, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:08.318 - sceneToLatLon(abs): scene(215718.00,99209.00) -> tile(842.6484,387.5352) -> geo(40.034975,116.243591)
-2025-10-23 00:11:08.319 - latLonToTile: lat=40.035, lon=116.244, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:08.878 - sceneToLatLon(abs): scene(215685.00,99295.00) -> tile(842.5195,387.8711) -> geo(39.944489,116.198273)
-2025-10-23 00:11:08.879 - latLonToTile: lat=39.9445, lon=116.198, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:08.955 - sceneToLatLon(abs): scene(215599.00,99336.00) -> tile(842.1836,388.0313) -> geo(39.901309,116.080170)
-2025-10-23 00:11:08.967 - latLonToTile: lat=39.9013, lon=116.08, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:11:09.110 - sceneToLatLon(abs): scene(215511.00,99353.00) -> tile(841.8398,388.0977) -> geo(39.883396,115.959320)
-2025-10-23 00:11:09.111 - latLonToTile: lat=39.8834, lon=115.959, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:11:09.388 - sceneToLatLon(abs): scene(215457.00,99265.00) -> tile(841.6289,387.7539) -> geo(39.976068,115.885162)
-2025-10-23 00:11:09.399 - latLonToTile: lat=39.9761, lon=115.885, zoom=10 -> tileX=841, tileY=387
-2025-10-23 00:11:09.488 - sceneToLatLon(abs): scene(215481.00,99179.00) -> tile(841.7227,387.4180) -> geo(40.066512,115.918121)
-2025-10-23 00:11:09.495 - latLonToTile: lat=40.0665, lon=115.918, zoom=10 -> tileX=841, tileY=387
-2025-10-23 00:11:09.646 - sceneToLatLon(abs): scene(215574.00,99149.00) -> tile(842.0859,387.3008) -> geo(40.098034,116.045837)
-2025-10-23 00:11:09.647 - latLonToTile: lat=40.098, lon=116.046, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:09.854 - sceneToLatLon(abs): scene(215658.00,99241.00) -> tile(842.4141,387.6602) -> geo(40.001320,116.161194)
-2025-10-23 00:11:09.857 - latLonToTile: lat=40.0013, lon=116.161, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:10.849 - latLonToTile: lat=40.0013, lon=116.161, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:11:36.468 - TileMapManager constructor started
-2025-10-23 00:11:36.469 - Current working directory: E:/Project/CursorProject/CustomTitleBarApp/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug
-2025-10-23 00:11:36.469 - Project root directory: E:/Project/CursorProject/CustomTitleBarApp
-2025-10-23 00:11:36.470 - Cache directory: E:/Project/CursorProject/CustomTitleBarApp/tilemap
-2025-10-23 00:11:36.471 - Cache directory already exists
-2025-10-23 00:11:36.472 - Network manager is accessible: 1
-2025-10-23 00:11:36.473 - TileMapManager constructor finished
-2025-10-23 00:11:36.476 - Checking for local tiles...
-2025-10-23 00:11:36.479 - Found local tiles, using zoom level: 10
-2025-10-23 00:11:36.480 - Loading local tiles for zoom: 10
-2025-10-23 00:11:36.481 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:36.521 - Local tiles loaded successfully, count: 25
-2025-10-23 00:11:36.523 - === Local Tiles Information ===
-2025-10-23 00:11:36.524 - Zoom level 1: 4 tiles
-2025-10-23 00:11:37.057 - Zoom level 10: 23720 tiles
-2025-10-23 00:11:37.059 - Zoom level 2: 16 tiles
-2025-10-23 00:11:37.062 - Zoom level 3: 64 tiles
-2025-10-23 00:11:37.062 - Zoom level 4: 177 tiles
-2025-10-23 00:11:37.079 - Zoom level 5: 246 tiles
-2025-10-23 00:11:37.088 - Zoom level 6: 252 tiles
-2025-10-23 00:11:37.096 - Zoom level 7: 497 tiles
-2025-10-23 00:11:37.150 - Zoom level 8: 1603 tiles
-2025-10-23 00:11:37.295 - Zoom level 9: 6080 tiles
-2025-10-23 00:11:37.295 - Total tiles: 32659
-2025-10-23 00:11:37.295 - Available zoom levels: 10
-2025-10-23 00:11:37.295 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
-2025-10-23 00:11:37.451 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.457 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.476 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.487 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.498 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.498 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.511 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.520 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:37.622 - sceneToLatLon(abs): scene(215836.00,99333.00) -> tile(843.1094,388.0195) -> geo(39.904469,116.405640)
-2025-10-23 00:11:37.624 - latLonToTile: lat=39.9045, lon=116.406, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:38.733 - sceneToLatLon(abs): scene(215924.00,99414.00) -> tile(843.4531,388.3359) -> geo(39.819085,116.526489)
-2025-10-23 00:11:38.735 - latLonToTile: lat=39.8191, lon=116.526, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:38.814 - sceneToLatLon(abs): scene(216013.00,99433.00) -> tile(843.8008,388.4102) -> geo(39.799041,116.648712)
-2025-10-23 00:11:38.816 - latLonToTile: lat=39.799, lon=116.649, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:38.862 - sceneToLatLon(abs): scene(216103.00,99368.00) -> tile(844.1523,388.1563) -> geo(39.867588,116.772308)
-2025-10-23 00:11:38.871 - latLonToTile: lat=39.8676, lon=116.772, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:11:38.918 - sceneToLatLon(abs): scene(216160.00,99272.00) -> tile(844.3750,387.7813) -> geo(39.968701,116.850586)
-2025-10-23 00:11:38.919 - latLonToTile: lat=39.9687, lon=116.851, zoom=10 -> tileX=844, tileY=387
-2025-10-23 00:11:38.995 - sceneToLatLon(abs): scene(216098.00,99186.00) -> tile(844.1328,387.4453) -> geo(40.059154,116.765442)
-2025-10-23 00:11:38.995 - latLonToTile: lat=40.0592, lon=116.765, zoom=10 -> tileX=844, tileY=387
-2025-10-23 00:11:39.048 - sceneToLatLon(abs): scene(216004.00,99153.00) -> tile(843.7656,387.3164) -> geo(40.093832,116.636353)
-2025-10-23 00:11:39.048 - latLonToTile: lat=40.0938, lon=116.636, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:11:39.086 - sceneToLatLon(abs): scene(215900.00,99177.00) -> tile(843.3594,387.4102) -> geo(40.068614,116.493530)
-2025-10-23 00:11:39.087 - latLonToTile: lat=40.0686, lon=116.494, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:11:39.191 - sceneToLatLon(abs): scene(215822.00,99271.00) -> tile(843.0547,387.7773) -> geo(39.969753,116.386414)
-2025-10-23 00:11:39.194 - latLonToTile: lat=39.9698, lon=116.386, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:11:39.295 - sceneToLatLon(abs): scene(215866.00,99362.00) -> tile(843.2266,388.1328) -> geo(39.873912,116.446838)
-2025-10-23 00:11:39.301 - latLonToTile: lat=39.8739, lon=116.447, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:39.343 - sceneToLatLon(abs): scene(215957.00,99404.00) -> tile(843.5820,388.2969) -> geo(39.829632,116.571808)
-2025-10-23 00:11:39.350 - latLonToTile: lat=39.8296, lon=116.572, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:39.431 - sceneToLatLon(abs): scene(216043.00,99413.00) -> tile(843.9180,388.3320) -> geo(39.820139,116.689911)
-2025-10-23 00:11:39.434 - latLonToTile: lat=39.8201, lon=116.69, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:39.478 - sceneToLatLon(abs): scene(215889.00,99368.00) -> tile(843.3164,388.1563) -> geo(39.867588,116.478424)
-2025-10-23 00:11:39.489 - latLonToTile: lat=39.8676, lon=116.478, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:39.594 - sceneToLatLon(abs): scene(216048.00,99411.00) -> tile(843.9375,388.3242) -> geo(39.822249,116.696777)
-2025-10-23 00:11:39.596 - latLonToTile: lat=39.8222, lon=116.697, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:40.918 - sceneToLatLon(abs): scene(215961.00,99378.00) -> tile(843.5977,388.1953) -> geo(39.857046,116.577301)
-2025-10-23 00:11:40.919 - latLonToTile: lat=39.857, lon=116.577, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:40.994 - sceneToLatLon(abs): scene(215875.00,99348.00) -> tile(843.2617,388.0781) -> geo(39.888665,116.459198)
-2025-10-23 00:11:41.007 - latLonToTile: lat=39.8887, lon=116.459, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:45.961 - === ZOOM 10->9 === Mouse:(384,258) Viewport:740x511
-2025-10-23 00:11:45.964 - latLonToTile: lat=39.8887, lon=116.459, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:11:45.966 -   Offset:(0.055,0.010) MouseGEO:(39.8860,116.4784) -> NewCenter:(39.8913,116.4400)
-2025-10-23 00:11:45.968 - latLonToTile: lat=39.8913, lon=116.44, zoom=9 -> tileX=421, tileY=194
-2025-10-23 00:11:46.014 - latLonToTile: lat=39.8913, lon=116.44, zoom=9 -> tileX=421, tileY=194
-2025-10-23 00:11:46.015 - latLonToTile: lat=39.8913, lon=116.44, zoom=9 -> tileX=421, tileY=194
-2025-10-23 00:11:46.086 - === ZOOM 9->8 === Mouse:(384,258) Viewport:740x511
-2025-10-23 00:11:46.086 - latLonToTile: lat=39.8913, lon=116.44, zoom=9 -> tileX=421, tileY=194
-2025-10-23 00:11:46.087 -   Offset:(0.055,0.010) MouseGEO:(39.8860,116.4784) -> NewCenter:(39.8966,116.4015)
-2025-10-23 00:11:46.087 - latLonToTile: lat=39.8966, lon=116.402, zoom=8 -> tileX=210, tileY=97
-2025-10-23 00:11:46.089 - latLonToTile: lat=39.8966, lon=116.402, zoom=8 -> tileX=210, tileY=97
-2025-10-23 00:11:46.090 - latLonToTile: lat=39.8966, lon=116.402, zoom=8 -> tileX=210, tileY=97
-2025-10-23 00:11:46.185 - sceneToLatLon(abs): scene(65165.00,65280.00) -> tile(254.5508,255.0000) -> geo(-84.928321,177.962036)
-2025-10-23 00:11:46.187 - latLonToTile: lat=-84.9283, lon=177.962, zoom=8 -> tileX=254, tileY=254
-2025-10-23 00:11:48.911 - === ZOOM 8->9 === Mouse:(383,258) Viewport:740x511
-2025-10-23 00:11:48.912 - latLonToTile: lat=-84.9283, lon=177.962, zoom=8 -> tileX=254, tileY=254
-2025-10-23 00:11:48.912 -   Offset:(0.051,0.010) MouseGEO:(-84.9295,178.0334) -> NewCenter:(-84.9289,177.9977)
-2025-10-23 00:11:48.913 - latLonToTile: lat=-84.9289, lon=177.998, zoom=9 -> tileX=509, tileY=510
-2025-10-23 00:11:48.920 - latLonToTile: lat=-84.9289, lon=177.998, zoom=9 -> tileX=509, tileY=510
-2025-10-23 00:11:48.927 - latLonToTile: lat=-84.9289, lon=177.998, zoom=9 -> tileX=509, tileY=510
-2025-10-23 00:11:49.464 - === ZOOM 9->10 === Mouse:(383,258) Viewport:740x511
-2025-10-23 00:11:49.465 - latLonToTile: lat=-84.9289, lon=177.998, zoom=9 -> tileX=509, tileY=510
-2025-10-23 00:11:49.466 -   Offset:(0.051,0.010) MouseGEO:(-84.9295,178.0334) -> NewCenter:(-84.9292,178.0156)
-2025-10-23 00:11:49.466 - latLonToTile: lat=-84.9292, lon=178.016, zoom=10 -> tileX=1018, tileY=1020
-2025-10-23 00:11:49.469 - latLonToTile: lat=-84.9292, lon=178.016, zoom=10 -> tileX=1018, tileY=1020
-2025-10-23 00:11:49.471 - latLonToTile: lat=-84.9292, lon=178.016, zoom=10 -> tileX=1018, tileY=1020
-2025-10-23 00:15:09.089 - TileMapManager constructor started
-2025-10-23 00:15:09.091 - Current working directory: E:/Project/CursorProject/CustomTitleBarApp/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug
-2025-10-23 00:15:09.091 - Project root directory: E:/Project/CursorProject/CustomTitleBarApp
-2025-10-23 00:15:09.092 - Cache directory: E:/Project/CursorProject/CustomTitleBarApp/tilemap
-2025-10-23 00:15:09.092 - Cache directory already exists
-2025-10-23 00:15:09.094 - Network manager is accessible: 1
-2025-10-23 00:15:09.095 - TileMapManager constructor finished
-2025-10-23 00:15:09.098 - Checking for local tiles...
-2025-10-23 00:15:09.099 - Found local tiles, using zoom level: 10
-2025-10-23 00:15:09.099 - Loading local tiles for zoom: 10
-2025-10-23 00:15:09.099 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:09.132 - Local tiles loaded successfully, count: 25
-2025-10-23 00:15:09.133 - === Local Tiles Information ===
-2025-10-23 00:15:09.134 - Zoom level 1: 4 tiles
-2025-10-23 00:15:09.656 - Zoom level 10: 23720 tiles
-2025-10-23 00:15:09.668 - Zoom level 2: 16 tiles
-2025-10-23 00:15:09.671 - Zoom level 3: 64 tiles
-2025-10-23 00:15:09.678 - Zoom level 4: 177 tiles
-2025-10-23 00:15:09.688 - Zoom level 5: 246 tiles
-2025-10-23 00:15:09.699 - Zoom level 6: 252 tiles
-2025-10-23 00:15:09.719 - Zoom level 7: 497 tiles
-2025-10-23 00:15:09.756 - Zoom level 8: 1603 tiles
-2025-10-23 00:15:09.916 - Zoom level 9: 6080 tiles
-2025-10-23 00:15:09.917 - Total tiles: 32659
-2025-10-23 00:15:09.917 - Available zoom levels: 10
-2025-10-23 00:15:09.917 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
-2025-10-23 00:15:10.072 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.079 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.103 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.111 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.121 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.123 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.131 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.141 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:10.246 - sceneToLatLon(abs): scene(215836.00,99333.00) -> tile(843.1094,388.0195) -> geo(39.904469,116.405640)
-2025-10-23 00:15:10.249 - latLonToTile: lat=39.9045, lon=116.406, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:11.011 - sceneToLatLon(abs): scene(215928.00,99407.00) -> tile(843.4688,388.3086) -> geo(39.826468,116.531982)
-2025-10-23 00:15:11.011 - latLonToTile: lat=39.8265, lon=116.532, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:11.101 - sceneToLatLon(abs): scene(216020.00,99422.00) -> tile(843.8281,388.3672) -> geo(39.810646,116.658325)
-2025-10-23 00:15:11.103 - latLonToTile: lat=39.8106, lon=116.658, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:11.165 - sceneToLatLon(abs): scene(216114.00,99373.00) -> tile(844.1953,388.1758) -> geo(39.862317,116.787415)
-2025-10-23 00:15:11.166 - latLonToTile: lat=39.8623, lon=116.787, zoom=10 -> tileX=844, tileY=388
-2025-10-23 00:15:11.237 - sceneToLatLon(abs): scene(216185.00,99280.00) -> tile(844.4727,387.8125) -> geo(39.960280,116.884918)
-2025-10-23 00:15:11.239 - latLonToTile: lat=39.9603, lon=116.885, zoom=10 -> tileX=844, tileY=387
-2025-10-23 00:15:11.366 - sceneToLatLon(abs): scene(216090.00,99195.00) -> tile(844.1016,387.4805) -> geo(40.049694,116.754456)
-2025-10-23 00:15:11.370 - latLonToTile: lat=40.0497, lon=116.754, zoom=10 -> tileX=844, tileY=387
-2025-10-23 00:15:11.429 - sceneToLatLon(abs): scene(216001.00,99200.00) -> tile(843.7539,387.5000) -> geo(40.044438,116.632233)
-2025-10-23 00:15:11.432 - latLonToTile: lat=40.0444, lon=116.632, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:11.473 - sceneToLatLon(abs): scene(215908.00,99229.00) -> tile(843.3906,387.6133) -> geo(40.013943,116.504517)
-2025-10-23 00:15:11.473 - latLonToTile: lat=40.0139, lon=116.505, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:11.597 - sceneToLatLon(abs): scene(215873.00,99315.00) -> tile(843.2539,387.9492) -> geo(39.923429,116.456451)
-2025-10-23 00:15:11.600 - latLonToTile: lat=39.9234, lon=116.456, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:11.693 - sceneToLatLon(abs): scene(215964.00,99403.00) -> tile(843.6094,388.2930) -> geo(39.830686,116.581421)
-2025-10-23 00:15:11.695 - latLonToTile: lat=39.8307, lon=116.581, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:11.766 - sceneToLatLon(abs): scene(216052.00,99408.00) -> tile(843.9531,388.3125) -> geo(39.825413,116.702271)
-2025-10-23 00:15:11.770 - latLonToTile: lat=39.8254, lon=116.702, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:11.837 - sceneToLatLon(abs): scene(216097.00,99310.00) -> tile(844.1289,387.9297) -> geo(39.928695,116.764069)
-2025-10-23 00:15:11.841 - latLonToTile: lat=39.9287, lon=116.764, zoom=10 -> tileX=844, tileY=387
-2025-10-23 00:15:11.910 - sceneToLatLon(abs): scene(216069.00,99224.00) -> tile(844.0195,387.5938) -> geo(40.019201,116.725616)
-2025-10-23 00:15:11.912 - latLonToTile: lat=40.0192, lon=116.726, zoom=10 -> tileX=844, tileY=387
-2025-10-23 00:15:11.997 - sceneToLatLon(abs): scene(215982.00,99232.00) -> tile(843.6797,387.6250) -> geo(40.010787,116.606140)
-2025-10-23 00:15:12.002 - latLonToTile: lat=40.0108, lon=116.606, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:12.101 - sceneToLatLon(abs): scene(215895.00,99285.00) -> tile(843.3398,387.8320) -> geo(39.955017,116.486664)
-2025-10-23 00:15:12.102 - latLonToTile: lat=39.955, lon=116.487, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:12.159 - sceneToLatLon(abs): scene(215985.00,99288.00) -> tile(843.6914,387.8438) -> geo(39.951859,116.610260)
-2025-10-23 00:15:12.161 - latLonToTile: lat=39.9519, lon=116.61, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:12.238 - sceneToLatLon(abs): scene(215882.00,99314.00) -> tile(843.2891,387.9453) -> geo(39.924482,116.468811)
-2025-10-23 00:15:12.242 - latLonToTile: lat=39.9245, lon=116.469, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:12.351 - sceneToLatLon(abs): scene(215986.00,99244.00) -> tile(843.6953,387.6719) -> geo(39.998164,116.611633)
-2025-10-23 00:15:12.353 - latLonToTile: lat=39.9982, lon=116.612, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:12.453 - sceneToLatLon(abs): scene(215958.00,99373.00) -> tile(843.5859,388.1758) -> geo(39.862317,116.573181)
-2025-10-23 00:15:12.456 - latLonToTile: lat=39.8623, lon=116.573, zoom=10 -> tileX=843, tileY=388
-2025-10-23 00:15:12.722 - sceneToLatLon(abs): scene(215843.00,99269.00) -> tile(843.1367,387.7695) -> geo(39.971858,116.415253)
-2025-10-23 00:15:12.734 - latLonToTile: lat=39.9719, lon=116.415, zoom=10 -> tileX=843, tileY=387
-2025-10-23 00:15:12.749 - sceneToLatLon(abs): scene(215757.00,99216.00) -> tile(842.8008,387.5625) -> geo(40.027614,116.297150)
-2025-10-23 00:15:12.750 - latLonToTile: lat=40.0276, lon=116.297, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:12.780 - sceneToLatLon(abs): scene(215660.00,99173.00) -> tile(842.4219,387.3945) -> geo(40.072817,116.163940)
-2025-10-23 00:15:12.780 - latLonToTile: lat=40.0728, lon=116.164, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:12.869 - sceneToLatLon(abs): scene(215782.00,99276.00) -> tile(842.8984,387.7969) -> geo(39.964491,116.331482)
-2025-10-23 00:15:12.872 - latLonToTile: lat=39.9645, lon=116.331, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:12.965 - sceneToLatLon(abs): scene(215622.00,99162.00) -> tile(842.2734,387.3516) -> geo(40.084376,116.111755)
-2025-10-23 00:15:12.967 - latLonToTile: lat=40.0844, lon=116.112, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:13.205 - sceneToLatLon(abs): scene(215532.00,99096.00) -> tile(841.9219,387.0938) -> geo(40.153687,115.988159)
-2025-10-23 00:15:13.216 - latLonToTile: lat=40.1537, lon=115.988, zoom=10 -> tileX=841, tileY=387
-2025-10-23 00:15:13.246 - sceneToLatLon(abs): scene(215436.00,99054.00) -> tile(841.5469,386.9297) -> geo(40.197757,115.856323)
-2025-10-23 00:15:13.246 - latLonToTile: lat=40.1978, lon=115.856, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:13.641 - sceneToLatLon(abs): scene(215342.00,99016.00) -> tile(841.1797,386.7813) -> geo(40.237605,115.727234)
-2025-10-23 00:15:13.657 - latLonToTile: lat=40.2376, lon=115.727, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:13.693 - sceneToLatLon(abs): scene(215223.00,98995.00) -> tile(840.7148,386.6992) -> geo(40.259617,115.563812)
-2025-10-23 00:15:13.695 - latLonToTile: lat=40.2596, lon=115.564, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:13.725 - sceneToLatLon(abs): scene(215123.00,98993.00) -> tile(840.3242,386.6914) -> geo(40.261713,115.426483)
-2025-10-23 00:15:13.726 - latLonToTile: lat=40.2617, lon=115.426, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:13.743 - sceneToLatLon(abs): scene(215217.00,98965.00) -> tile(840.6914,386.5820) -> geo(40.291049,115.555573)
-2025-10-23 00:15:13.745 - latLonToTile: lat=40.291, lon=115.556, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:13.855 - sceneToLatLon(abs): scene(215095.00,98995.00) -> tile(840.2148,386.6992) -> geo(40.259617,115.388031)
-2025-10-23 00:15:13.860 - latLonToTile: lat=40.2596, lon=115.388, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:13.990 - sceneToLatLon(abs): scene(215187.00,98996.00) -> tile(840.5742,386.7031) -> geo(40.258569,115.514374)
-2025-10-23 00:15:13.991 - latLonToTile: lat=40.2586, lon=115.514, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:14.037 - sceneToLatLon(abs): scene(215284.00,98949.00) -> tile(840.9531,386.5195) -> geo(40.307807,115.647583)
-2025-10-23 00:15:14.038 - latLonToTile: lat=40.3078, lon=115.648, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:14.072 - sceneToLatLon(abs): scene(215377.00,98889.00) -> tile(841.3164,386.2852) -> geo(40.370613,115.775299)
-2025-10-23 00:15:14.072 - latLonToTile: lat=40.3706, lon=115.775, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:14.138 - sceneToLatLon(abs): scene(215463.00,98822.00) -> tile(841.6523,386.0234) -> geo(40.440676,115.893402)
-2025-10-23 00:15:14.138 - latLonToTile: lat=40.4407, lon=115.893, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:14.405 - sceneToLatLon(abs): scene(215375.00,98778.00) -> tile(841.3086,385.8516) -> geo(40.486649,115.772552)
-2025-10-23 00:15:14.405 - latLonToTile: lat=40.4866, lon=115.773, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:14.430 - sceneToLatLon(abs): scene(215282.00,98778.00) -> tile(840.9453,385.8516) -> geo(40.486649,115.644836)
-2025-10-23 00:15:14.431 - latLonToTile: lat=40.4866, lon=115.645, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:14.447 - sceneToLatLon(abs): scene(215185.00,98790.00) -> tile(840.5664,385.8984) -> geo(40.474114,115.511627)
-2025-10-23 00:15:14.448 - latLonToTile: lat=40.4741, lon=115.512, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:14.461 - sceneToLatLon(abs): scene(215086.00,98810.00) -> tile(840.1797,385.9766) -> geo(40.453217,115.375671)
-2025-10-23 00:15:14.462 - latLonToTile: lat=40.4532, lon=115.376, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:14.486 - sceneToLatLon(abs): scene(214997.00,98829.00) -> tile(839.8320,386.0508) -> geo(40.433360,115.253448)
-2025-10-23 00:15:14.488 - latLonToTile: lat=40.4334, lon=115.253, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:14.533 - sceneToLatLon(abs): scene(214909.00,98871.00) -> tile(839.4883,386.2148) -> geo(40.389443,115.132599)
-2025-10-23 00:15:14.534 - latLonToTile: lat=40.3894, lon=115.133, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:14.629 - sceneToLatLon(abs): scene(214823.00,98956.00) -> tile(839.1523,386.5469) -> geo(40.300476,115.014496)
-2025-10-23 00:15:14.630 - latLonToTile: lat=40.3005, lon=115.014, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:14.757 - sceneToLatLon(abs): scene(214792.00,99042.00) -> tile(839.0313,386.8828) -> geo(40.210343,114.971924)
-2025-10-23 00:15:14.758 - latLonToTile: lat=40.2103, lon=114.972, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:14.829 - sceneToLatLon(abs): scene(214836.00,99138.00) -> tile(839.2031,387.2578) -> geo(40.109588,115.032349)
-2025-10-23 00:15:14.830 - latLonToTile: lat=40.1096, lon=115.032, zoom=10 -> tileX=839, tileY=387
-2025-10-23 00:15:14.885 - sceneToLatLon(abs): scene(214927.00,99222.00) -> tile(839.5586,387.5859) -> geo(40.021305,115.157318)
-2025-10-23 00:15:14.888 - latLonToTile: lat=40.0213, lon=115.157, zoom=10 -> tileX=839, tileY=387
-2025-10-23 00:15:14.917 - sceneToLatLon(abs): scene(215035.00,99287.00) -> tile(839.9805,387.8398) -> geo(39.952912,115.305634)
-2025-10-23 00:15:14.918 - latLonToTile: lat=39.9529, lon=115.306, zoom=10 -> tileX=839, tileY=387
-2025-10-23 00:15:14.941 - sceneToLatLon(abs): scene(215128.00,99337.00) -> tile(840.3438,388.0352) -> geo(39.900255,115.433350)
-2025-10-23 00:15:14.942 - latLonToTile: lat=39.9003, lon=115.433, zoom=10 -> tileX=840, tileY=388
-2025-10-23 00:15:14.973 - sceneToLatLon(abs): scene(215230.00,99382.00) -> tile(840.7422,388.2109) -> geo(39.852829,115.573425)
-2025-10-23 00:15:14.975 - latLonToTile: lat=39.8528, lon=115.573, zoom=10 -> tileX=840, tileY=388
-2025-10-23 00:15:15.007 - sceneToLatLon(abs): scene(215326.00,99405.00) -> tile(841.1172,388.3008) -> geo(39.828577,115.705261)
-2025-10-23 00:15:15.008 - latLonToTile: lat=39.8286, lon=115.705, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:15:15.022 - sceneToLatLon(abs): scene(215425.00,99405.00) -> tile(841.5039,388.3008) -> geo(39.828577,115.841217)
-2025-10-23 00:15:15.022 - latLonToTile: lat=39.8286, lon=115.841, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:15:15.055 - sceneToLatLon(abs): scene(215536.00,99400.00) -> tile(841.9375,388.2813) -> geo(39.833850,115.993652)
-2025-10-23 00:15:15.062 - latLonToTile: lat=39.8339, lon=115.994, zoom=10 -> tileX=841, tileY=388
-2025-10-23 00:15:15.088 - sceneToLatLon(abs): scene(215638.00,99366.00) -> tile(842.3359,388.1484) -> geo(39.869696,116.133728)
-2025-10-23 00:15:15.106 - latLonToTile: lat=39.8697, lon=116.134, zoom=10 -> tileX=842, tileY=388
-2025-10-23 00:15:15.137 - sceneToLatLon(abs): scene(215733.00,99278.00) -> tile(842.7070,387.8047) -> geo(39.962386,116.264191)
-2025-10-23 00:15:15.150 - latLonToTile: lat=39.9624, lon=116.264, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:15.191 - sceneToLatLon(abs): scene(215759.00,99185.00) -> tile(842.8086,387.4414) -> geo(40.060206,116.299896)
-2025-10-23 00:15:15.193 - latLonToTile: lat=40.0602, lon=116.3, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:15.205 - sceneToLatLon(abs): scene(215750.00,99098.00) -> tile(842.7734,387.1016) -> geo(40.151588,116.287537)
-2025-10-23 00:15:15.205 - latLonToTile: lat=40.1516, lon=116.288, zoom=10 -> tileX=842, tileY=387
-2025-10-23 00:15:15.237 - sceneToLatLon(abs): scene(215721.00,98988.00) -> tile(842.6602,386.6719) -> geo(40.266952,116.247711)
-2025-10-23 00:15:15.242 - latLonToTile: lat=40.267, lon=116.248, zoom=10 -> tileX=842, tileY=386
-2025-10-23 00:15:15.269 - sceneToLatLon(abs): scene(215676.00,98894.00) -> tile(842.4844,386.3047) -> geo(40.365381,116.185913)
-2025-10-23 00:15:15.271 - latLonToTile: lat=40.3654, lon=116.186, zoom=10 -> tileX=842, tileY=386
-2025-10-23 00:15:15.305 - sceneToLatLon(abs): scene(215598.00,98800.00) -> tile(842.1797,385.9375) -> geo(40.463666,116.078796)
-2025-10-23 00:15:15.322 - latLonToTile: lat=40.4637, lon=116.079, zoom=10 -> tileX=842, tileY=385
-2025-10-23 00:15:15.371 - sceneToLatLon(abs): scene(215493.00,98748.00) -> tile(841.7695,385.7344) -> geo(40.517975,115.934601)
-2025-10-23 00:15:15.372 - latLonToTile: lat=40.518, lon=115.935, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:15.397 - sceneToLatLon(abs): scene(215372.00,98742.00) -> tile(841.2969,385.7109) -> geo(40.524239,115.768433)
-2025-10-23 00:15:15.398 - latLonToTile: lat=40.5242, lon=115.768, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:15.413 - sceneToLatLon(abs): scene(215284.00,98754.00) -> tile(840.9531,385.7578) -> geo(40.511711,115.647583)
-2025-10-23 00:15:15.414 - latLonToTile: lat=40.5117, lon=115.648, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:15.424 - sceneToLatLon(abs): scene(215193.00,98776.00) -> tile(840.5977,385.8438) -> geo(40.488737,115.522614)
-2025-10-23 00:15:15.424 - latLonToTile: lat=40.4887, lon=115.523, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:15.445 - sceneToLatLon(abs): scene(215106.00,98814.00) -> tile(840.2578,385.9922) -> geo(40.449037,115.403137)
-2025-10-23 00:15:15.446 - latLonToTile: lat=40.449, lon=115.403, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:15.463 - sceneToLatLon(abs): scene(215007.00,98881.00) -> tile(839.8711,386.2539) -> geo(40.378982,115.267181)
-2025-10-23 00:15:15.471 - latLonToTile: lat=40.379, lon=115.267, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:15.523 - sceneToLatLon(abs): scene(214980.00,98969.00) -> tile(839.7656,386.5977) -> geo(40.286859,115.230103)
-2025-10-23 00:15:15.529 - latLonToTile: lat=40.2869, lon=115.23, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:15.573 - sceneToLatLon(abs): scene(215074.00,99018.00) -> tile(840.1328,386.7891) -> geo(40.235509,115.359192)
-2025-10-23 00:15:15.574 - latLonToTile: lat=40.2355, lon=115.359, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:15.597 - sceneToLatLon(abs): scene(215194.00,99025.00) -> tile(840.6016,386.8164) -> geo(40.228170,115.523987)
-2025-10-23 00:15:15.598 - latLonToTile: lat=40.2282, lon=115.524, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:15.621 - sceneToLatLon(abs): scene(215314.00,99006.00) -> tile(841.0703,386.7422) -> geo(40.248088,115.688782)
-2025-10-23 00:15:15.624 - latLonToTile: lat=40.2481, lon=115.689, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:15.644 - sceneToLatLon(abs): scene(215429.00,98946.00) -> tile(841.5195,386.5078) -> geo(40.310949,115.846710)
-2025-10-23 00:15:15.646 - latLonToTile: lat=40.3109, lon=115.847, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:15.660 - sceneToLatLon(abs): scene(215542.00,98829.00) -> tile(841.9609,386.0508) -> geo(40.433360,116.001892)
-2025-10-23 00:15:15.671 - latLonToTile: lat=40.4334, lon=116.002, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:15.685 - sceneToLatLon(abs): scene(215605.00,98741.00) -> tile(842.2070,385.7070) -> geo(40.525283,116.088409)
-2025-10-23 00:15:15.687 - latLonToTile: lat=40.5253, lon=116.088, zoom=10 -> tileX=842, tileY=385
-2025-10-23 00:15:15.709 - sceneToLatLon(abs): scene(215646.00,98652.00) -> tile(842.3672,385.3594) -> geo(40.618122,116.144714)
-2025-10-23 00:15:15.710 - latLonToTile: lat=40.6181, lon=116.145, zoom=10 -> tileX=842, tileY=385
-2025-10-23 00:15:15.773 - sceneToLatLon(abs): scene(215547.00,98662.00) -> tile(841.9805,385.3984) -> geo(40.607697,116.008759)
-2025-10-23 00:15:15.775 - latLonToTile: lat=40.6077, lon=116.009, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:15.788 - sceneToLatLon(abs): scene(215438.00,98704.00) -> tile(841.5547,385.5625) -> geo(40.563895,115.859070)
-2025-10-23 00:15:15.788 - latLonToTile: lat=40.5639, lon=115.859, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:15.806 - sceneToLatLon(abs): scene(215332.00,98735.00) -> tile(841.1406,385.6836) -> geo(40.531546,115.713501)
-2025-10-23 00:15:15.808 - latLonToTile: lat=40.5315, lon=115.714, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:15.822 - sceneToLatLon(abs): scene(215244.00,98762.00) -> tile(840.7969,385.7891) -> geo(40.503358,115.592651)
-2025-10-23 00:15:15.825 - latLonToTile: lat=40.5034, lon=115.593, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:15.853 - sceneToLatLon(abs): scene(215137.00,98809.00) -> tile(840.3789,385.9727) -> geo(40.454262,115.445709)
-2025-10-23 00:15:15.855 - latLonToTile: lat=40.4543, lon=115.446, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:15.871 - sceneToLatLon(abs): scene(215250.00,98893.00) -> tile(840.8203,386.3008) -> geo(40.366427,115.600891)
-2025-10-23 00:15:15.874 - latLonToTile: lat=40.3664, lon=115.601, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:15.973 - sceneToLatLon(abs): scene(215107.00,98835.00) -> tile(840.2617,386.0742) -> geo(40.427088,115.404510)
-2025-10-23 00:15:15.978 - latLonToTile: lat=40.4271, lon=115.405, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:16.906 - latLonToTile: lat=40.4271, lon=115.405, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:16.941 - latLonToTile: lat=40.4271, lon=115.405, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:18.254 - sceneToLatLon(abs): scene(215194.00,98853.00) -> tile(840.6016,386.1445) -> geo(40.408268,115.523987)
-2025-10-23 00:15:18.259 - latLonToTile: lat=40.4083, lon=115.524, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:18.368 - sceneToLatLon(abs): scene(215283.00,98860.00) -> tile(840.9492,386.1719) -> geo(40.400948,115.646210)
-2025-10-23 00:15:18.370 - latLonToTile: lat=40.4009, lon=115.646, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:18.437 - sceneToLatLon(abs): scene(215380.00,98864.00) -> tile(841.3281,386.1875) -> geo(40.396764,115.779419)
-2025-10-23 00:15:18.441 - latLonToTile: lat=40.3968, lon=115.779, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:18.533 - sceneToLatLon(abs): scene(215469.00,98864.00) -> tile(841.6758,386.1875) -> geo(40.396764,115.901642)
-2025-10-23 00:15:18.535 - latLonToTile: lat=40.3968, lon=115.902, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:18.638 - sceneToLatLon(abs): scene(215560.00,98860.00) -> tile(842.0313,386.1719) -> geo(40.400948,116.026611)
-2025-10-23 00:15:18.642 - latLonToTile: lat=40.4009, lon=116.027, zoom=10 -> tileX=842, tileY=386
-2025-10-23 00:15:18.745 - sceneToLatLon(abs): scene(215648.00,98852.00) -> tile(842.3750,386.1406) -> geo(40.409314,116.147461)
-2025-10-23 00:15:18.747 - latLonToTile: lat=40.4093, lon=116.147, zoom=10 -> tileX=842, tileY=386
-2025-10-23 00:15:19.043 - sceneToLatLon(abs): scene(215530.00,98860.00) -> tile(841.9141,386.1719) -> geo(40.400948,115.985413)
-2025-10-23 00:15:19.045 - latLonToTile: lat=40.4009, lon=115.985, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:19.069 - sceneToLatLon(abs): scene(215439.00,98867.00) -> tile(841.5586,386.1992) -> geo(40.393627,115.860443)
-2025-10-23 00:15:19.071 - latLonToTile: lat=40.3936, lon=115.86, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:19.122 - sceneToLatLon(abs): scene(215349.00,98874.00) -> tile(841.2070,386.2266) -> geo(40.386305,115.736847)
-2025-10-23 00:15:19.136 - latLonToTile: lat=40.3863, lon=115.737, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:19.154 - sceneToLatLon(abs): scene(215263.00,98880.00) -> tile(840.8711,386.2500) -> geo(40.380028,115.618744)
-2025-10-23 00:15:19.169 - latLonToTile: lat=40.38, lon=115.619, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:19.203 - sceneToLatLon(abs): scene(215166.00,98882.00) -> tile(840.4922,386.2578) -> geo(40.377936,115.485535)
-2025-10-23 00:15:19.205 - latLonToTile: lat=40.3779, lon=115.486, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:19.222 - sceneToLatLon(abs): scene(215076.00,98882.00) -> tile(840.1406,386.2578) -> geo(40.377936,115.361938)
-2025-10-23 00:15:19.222 - latLonToTile: lat=40.3779, lon=115.362, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:19.270 - sceneToLatLon(abs): scene(214979.00,98882.00) -> tile(839.7617,386.2578) -> geo(40.377936,115.228729)
-2025-10-23 00:15:19.271 - latLonToTile: lat=40.3779, lon=115.229, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:19.380 - sceneToLatLon(abs): scene(214892.00,98886.00) -> tile(839.4219,386.2734) -> geo(40.373751,115.109253)
-2025-10-23 00:15:19.380 - latLonToTile: lat=40.3738, lon=115.109, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:19.653 - sceneToLatLon(abs): scene(214978.00,98958.00) -> tile(839.7578,386.5547) -> geo(40.298381,115.227356)
-2025-10-23 00:15:19.653 - latLonToTile: lat=40.2984, lon=115.227, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:19.703 - sceneToLatLon(abs): scene(215071.00,98988.00) -> tile(840.1211,386.6719) -> geo(40.266952,115.355072)
-2025-10-23 00:15:19.704 - latLonToTile: lat=40.267, lon=115.355, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:19.749 - sceneToLatLon(abs): scene(215160.00,99006.00) -> tile(840.4688,386.7422) -> geo(40.248088,115.477295)
-2025-10-23 00:15:19.750 - latLonToTile: lat=40.2481, lon=115.477, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:19.789 - sceneToLatLon(abs): scene(215255.00,99009.00) -> tile(840.8398,386.7539) -> geo(40.244943,115.607758)
-2025-10-23 00:15:19.789 - latLonToTile: lat=40.2449, lon=115.608, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:19.845 - sceneToLatLon(abs): scene(215353.00,99008.00) -> tile(841.2227,386.7500) -> geo(40.245992,115.742340)
-2025-10-23 00:15:19.846 - latLonToTile: lat=40.246, lon=115.742, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:19.897 - sceneToLatLon(abs): scene(215453.00,98975.00) -> tile(841.6133,386.6211) -> geo(40.280573,115.879669)
-2025-10-23 00:15:19.898 - latLonToTile: lat=40.2806, lon=115.88, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:19.953 - sceneToLatLon(abs): scene(215535.00,98887.00) -> tile(841.9336,386.2773) -> geo(40.372705,115.992279)
-2025-10-23 00:15:19.955 - latLonToTile: lat=40.3727, lon=115.992, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:19.991 - sceneToLatLon(abs): scene(215550.00,98796.00) -> tile(841.9922,385.9219) -> geo(40.467845,116.012878)
-2025-10-23 00:15:19.993 - latLonToTile: lat=40.4678, lon=116.013, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:20.049 - sceneToLatLon(abs): scene(215517.00,98710.00) -> tile(841.8633,385.5859) -> geo(40.557635,115.967560)
-2025-10-23 00:15:20.050 - latLonToTile: lat=40.5576, lon=115.968, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:20.096 - sceneToLatLon(abs): scene(215430.00,98638.00) -> tile(841.5234,385.3047) -> geo(40.632714,115.848083)
-2025-10-23 00:15:20.097 - latLonToTile: lat=40.6327, lon=115.848, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:20.128 - sceneToLatLon(abs): scene(215287.00,98598.00) -> tile(840.9648,385.1484) -> geo(40.674389,115.651703)
-2025-10-23 00:15:20.129 - latLonToTile: lat=40.6744, lon=115.652, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:20.152 - sceneToLatLon(abs): scene(215180.00,98586.00) -> tile(840.5469,385.1016) -> geo(40.686886,115.504761)
-2025-10-23 00:15:20.155 - latLonToTile: lat=40.6869, lon=115.505, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:20.184 - sceneToLatLon(abs): scene(215076.00,98587.00) -> tile(840.1406,385.1055) -> geo(40.685845,115.361938)
-2025-10-23 00:15:20.187 - latLonToTile: lat=40.6858, lon=115.362, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:20.220 - sceneToLatLon(abs): scene(214987.00,98602.00) -> tile(839.7930,385.1641) -> geo(40.670223,115.239716)
-2025-10-23 00:15:20.221 - latLonToTile: lat=40.6702, lon=115.24, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:20.266 - sceneToLatLon(abs): scene(214889.00,98650.00) -> tile(839.4102,385.3516) -> geo(40.620207,115.105133)
-2025-10-23 00:15:20.267 - latLonToTile: lat=40.6202, lon=115.105, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:20.343 - sceneToLatLon(abs): scene(214850.00,98736.00) -> tile(839.2578,385.6875) -> geo(40.530502,115.051575)
-2025-10-23 00:15:20.344 - latLonToTile: lat=40.5305, lon=115.052, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:20.382 - sceneToLatLon(abs): scene(214845.00,98823.00) -> tile(839.2383,386.0273) -> geo(40.439631,115.044708)
-2025-10-23 00:15:20.383 - latLonToTile: lat=40.4396, lon=115.045, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:20.435 - sceneToLatLon(abs): scene(214867.00,98916.00) -> tile(839.3242,386.3906) -> geo(40.342357,115.074921)
-2025-10-23 00:15:20.438 - latLonToTile: lat=40.3424, lon=115.075, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:20.497 - sceneToLatLon(abs): scene(214954.00,98961.00) -> tile(839.6641,386.5664) -> geo(40.295239,115.194397)
-2025-10-23 00:15:20.498 - latLonToTile: lat=40.2952, lon=115.194, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:20.529 - sceneToLatLon(abs): scene(215047.00,98972.00) -> tile(840.0273,386.6094) -> geo(40.283716,115.322113)
-2025-10-23 00:15:20.530 - latLonToTile: lat=40.2837, lon=115.322, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:20.560 - sceneToLatLon(abs): scene(215140.00,98972.00) -> tile(840.3906,386.6094) -> geo(40.283716,115.449829)
-2025-10-23 00:15:20.561 - latLonToTile: lat=40.2837, lon=115.45, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:20.597 - sceneToLatLon(abs): scene(215235.00,98945.00) -> tile(840.7617,386.5039) -> geo(40.311996,115.580292)
-2025-10-23 00:15:20.598 - latLonToTile: lat=40.312, lon=115.58, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:20.653 - sceneToLatLon(abs): scene(215328.00,98861.00) -> tile(841.1250,386.1758) -> geo(40.399902,115.708008)
-2025-10-23 00:15:20.656 - latLonToTile: lat=40.3999, lon=115.708, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:20.696 - sceneToLatLon(abs): scene(215383.00,98766.00) -> tile(841.3398,385.8047) -> geo(40.499181,115.783539)
-2025-10-23 00:15:20.697 - latLonToTile: lat=40.4992, lon=115.784, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:20.759 - sceneToLatLon(abs): scene(215381.00,98672.00) -> tile(841.3320,385.4375) -> geo(40.597271,115.780792)
-2025-10-23 00:15:20.761 - latLonToTile: lat=40.5973, lon=115.781, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:20.810 - sceneToLatLon(abs): scene(215269.00,98608.00) -> tile(840.8945,385.1875) -> geo(40.663973,115.626984)
-2025-10-23 00:15:20.811 - latLonToTile: lat=40.664, lon=115.627, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:20.832 - sceneToLatLon(abs): scene(215113.00,98597.00) -> tile(840.2852,385.1445) -> geo(40.675431,115.412750)
-2025-10-23 00:15:20.833 - latLonToTile: lat=40.6754, lon=115.413, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:20.845 - sceneToLatLon(abs): scene(215003.00,98607.00) -> tile(839.8555,385.1836) -> geo(40.665015,115.261688)
-2025-10-23 00:15:20.846 - latLonToTile: lat=40.665, lon=115.262, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:20.870 - sceneToLatLon(abs): scene(214898.00,98630.00) -> tile(839.4453,385.2734) -> geo(40.641051,115.117493)
-2025-10-23 00:15:20.872 - latLonToTile: lat=40.6411, lon=115.117, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:20.981 - sceneToLatLon(abs): scene(214885.00,98725.00) -> tile(839.3945,385.6445) -> geo(40.541982,115.099640)
-2025-10-23 00:15:20.982 - latLonToTile: lat=40.542, lon=115.1, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:21.021 - sceneToLatLon(abs): scene(214981.00,98789.00) -> tile(839.7695,385.8945) -> geo(40.475158,115.231476)
-2025-10-23 00:15:21.021 - latLonToTile: lat=40.4752, lon=115.231, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:21.062 - sceneToLatLon(abs): scene(215076.00,98818.00) -> tile(840.1406,386.0078) -> geo(40.444857,115.361938)
-2025-10-23 00:15:21.063 - latLonToTile: lat=40.4449, lon=115.362, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:21.105 - sceneToLatLon(abs): scene(215169.00,98820.00) -> tile(840.5039,386.0156) -> geo(40.442767,115.489655)
-2025-10-23 00:15:21.105 - latLonToTile: lat=40.4428, lon=115.49, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:21.179 - sceneToLatLon(abs): scene(215259.00,98820.00) -> tile(840.8555,386.0156) -> geo(40.442767,115.613251)
-2025-10-23 00:15:21.179 - latLonToTile: lat=40.4428, lon=115.613, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:21.337 - sceneToLatLon(abs): scene(215345.00,98800.00) -> tile(841.1914,385.9375) -> geo(40.463666,115.731354)
-2025-10-23 00:15:21.337 - latLonToTile: lat=40.4637, lon=115.731, zoom=10 -> tileX=841, tileY=385
-2025-10-23 00:15:21.565 - sceneToLatLon(abs): scene(215246.00,98799.00) -> tile(840.8047,385.9336) -> geo(40.464711,115.595398)
-2025-10-23 00:15:21.566 - latLonToTile: lat=40.4647, lon=115.595, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:21.629 - sceneToLatLon(abs): scene(215150.00,98799.00) -> tile(840.4297,385.9336) -> geo(40.464711,115.463562)
-2025-10-23 00:15:21.630 - latLonToTile: lat=40.4647, lon=115.464, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:21.704 - sceneToLatLon(abs): scene(215056.00,98796.00) -> tile(840.0625,385.9219) -> geo(40.467845,115.334473)
-2025-10-23 00:15:21.709 - latLonToTile: lat=40.4678, lon=115.334, zoom=10 -> tileX=840, tileY=385
-2025-10-23 00:15:21.786 - sceneToLatLon(abs): scene(214959.00,98789.00) -> tile(839.6836,385.8945) -> geo(40.475158,115.201263)
-2025-10-23 00:15:21.792 - latLonToTile: lat=40.4752, lon=115.201, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:21.845 - sceneToLatLon(abs): scene(214866.00,98789.00) -> tile(839.3203,385.8945) -> geo(40.475158,115.073547)
-2025-10-23 00:15:21.846 - latLonToTile: lat=40.4752, lon=115.074, zoom=10 -> tileX=839, tileY=385
-2025-10-23 00:15:21.902 - sceneToLatLon(abs): scene(214779.00,98789.00) -> tile(838.9805,385.8945) -> geo(40.475158,114.954071)
-2025-10-23 00:15:21.904 - latLonToTile: lat=40.4752, lon=114.954, zoom=10 -> tileX=838, tileY=385
-2025-10-23 00:15:21.992 - sceneToLatLon(abs): scene(214693.00,98789.00) -> tile(838.6445,385.8945) -> geo(40.475158,114.835968)
-2025-10-23 00:15:21.992 - latLonToTile: lat=40.4752, lon=114.836, zoom=10 -> tileX=838, tileY=385
-2025-10-23 00:15:22.226 - sceneToLatLon(abs): scene(214792.00,98822.00) -> tile(839.0313,386.0234) -> geo(40.440676,114.971924)
-2025-10-23 00:15:22.228 - latLonToTile: lat=40.4407, lon=114.972, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:22.297 - sceneToLatLon(abs): scene(214887.00,98838.00) -> tile(839.4023,386.0859) -> geo(40.423951,115.102386)
-2025-10-23 00:15:22.298 - latLonToTile: lat=40.424, lon=115.102, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:22.336 - sceneToLatLon(abs): scene(214988.00,98847.00) -> tile(839.7969,386.1211) -> geo(40.414542,115.241089)
-2025-10-23 00:15:22.351 - latLonToTile: lat=40.4145, lon=115.241, zoom=10 -> tileX=839, tileY=386
-2025-10-23 00:15:22.399 - sceneToLatLon(abs): scene(215082.00,98854.00) -> tile(840.1641,386.1484) -> geo(40.407222,115.370178)
-2025-10-23 00:15:22.400 - latLonToTile: lat=40.4072, lon=115.37, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:22.462 - sceneToLatLon(abs): scene(215173.00,98857.00) -> tile(840.5195,386.1602) -> geo(40.404085,115.495148)
-2025-10-23 00:15:22.463 - latLonToTile: lat=40.4041, lon=115.495, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:22.559 - sceneToLatLon(abs): scene(215265.00,98857.00) -> tile(840.8789,386.1602) -> geo(40.404085,115.621490)
-2025-10-23 00:15:22.561 - latLonToTile: lat=40.4041, lon=115.621, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:22.685 - sceneToLatLon(abs): scene(215354.00,98828.00) -> tile(841.2266,386.0469) -> geo(40.434405,115.743713)
-2025-10-23 00:15:22.688 - latLonToTile: lat=40.4344, lon=115.744, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:22.766 - sceneToLatLon(abs): scene(215200.00,98863.00) -> tile(840.6250,386.1836) -> geo(40.397810,115.532227)
-2025-10-23 00:15:22.770 - latLonToTile: lat=40.3978, lon=115.532, zoom=10 -> tileX=840, tileY=386
-2025-10-23 00:15:22.852 - sceneToLatLon(abs): scene(215366.00,98826.00) -> tile(841.2734,386.0391) -> geo(40.436495,115.760193)
-2025-10-23 00:15:22.854 - latLonToTile: lat=40.4365, lon=115.76, zoom=10 -> tileX=841, tileY=386
-2025-10-23 00:15:23.709 - latLonToTile: lat=40.4365, lon=115.76, zoom=10 -> tileX=841, tileY=386
-2025-10-23 09:05:21.710 - TileMapManager constructor started
-2025-10-23 09:05:21.725 - Current working directory: E:/Project/CursorProject/CustomTitleBarApp/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug
-2025-10-23 09:05:21.725 - Project root directory: E:/Project/CursorProject/CustomTitleBarApp
-2025-10-23 09:05:21.792 - Cache directory: E:/Project/CursorProject/CustomTitleBarApp/tilemap
-2025-10-23 09:05:21.803 - Cache directory already exists
-2025-10-23 09:05:21.804 - Network manager is accessible: 1
-2025-10-23 09:05:21.804 - TileMapManager constructor finished
-2025-10-23 09:05:21.807 - Checking for local tiles...
-2025-10-23 09:05:21.808 - Found local tiles, using zoom level: 10
-2025-10-23 09:05:21.808 - Loading local tiles for zoom: 10
-2025-10-23 09:05:21.809 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:21.826 - Local tiles loaded successfully, count: 25
-2025-10-23 09:05:21.839 - === Local Tiles Information ===
-2025-10-23 09:05:21.840 - Zoom level 1: 4 tiles
-2025-10-23 09:05:22.658 - Zoom level 10: 23720 tiles
-2025-10-23 09:05:22.675 - Zoom level 2: 16 tiles
-2025-10-23 09:05:22.680 - Zoom level 3: 64 tiles
-2025-10-23 09:05:22.691 - Zoom level 4: 177 tiles
-2025-10-23 09:05:22.710 - Zoom level 5: 246 tiles
-2025-10-23 09:05:22.724 - Zoom level 6: 252 tiles
-2025-10-23 09:05:22.753 - Zoom level 7: 497 tiles
-2025-10-23 09:05:22.823 - Zoom level 8: 1603 tiles
-2025-10-23 09:05:23.058 - Zoom level 9: 6080 tiles
-2025-10-23 09:05:23.058 - Total tiles: 32659
-2025-10-23 09:05:23.060 - Available zoom levels: 10
-2025-10-23 09:05:23.060 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
-2025-10-23 09:05:23.263 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.272 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.290 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.292 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.316 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.318 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.326 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.326 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:23.450 - sceneToLatLon(abs): scene(215836.00,99333.00) -> tile(843.1094,388.0195) -> geo(39.904469,116.405640)
-2025-10-23 09:05:23.452 - latLonToTile: lat=39.9045, lon=116.406, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:24.558 - sceneToLatLon(abs): scene(215879.00,99422.00) -> tile(843.2773,388.3672) -> geo(39.810646,116.464691)
-2025-10-23 09:05:24.558 - latLonToTile: lat=39.8106, lon=116.465, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:24.658 - sceneToLatLon(abs): scene(215966.00,99459.00) -> tile(843.6172,388.5117) -> geo(39.771603,116.584167)
-2025-10-23 09:05:24.658 - latLonToTile: lat=39.7716, lon=116.584, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:24.724 - sceneToLatLon(abs): scene(216062.00,99460.00) -> tile(843.9922,388.5156) -> geo(39.770548,116.716003)
-2025-10-23 09:05:24.724 - latLonToTile: lat=39.7705, lon=116.716, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:24.791 - sceneToLatLon(abs): scene(216156.00,99414.00) -> tile(844.3594,388.3359) -> geo(39.819085,116.845093)
-2025-10-23 09:05:24.791 - latLonToTile: lat=39.8191, lon=116.845, zoom=10 -> tileX=844, tileY=388
-2025-10-23 09:05:24.858 - sceneToLatLon(abs): scene(216216.00,99328.00) -> tile(844.5938,388.0000) -> geo(39.909736,116.927490)
-2025-10-23 09:05:24.858 - latLonToTile: lat=39.9097, lon=116.927, zoom=10 -> tileX=844, tileY=388
-2025-10-23 09:05:24.924 - sceneToLatLon(abs): scene(216216.00,99239.00) -> tile(844.5938,387.6523) -> geo(40.003424,116.927490)
-2025-10-23 09:05:24.924 - latLonToTile: lat=40.0034, lon=116.927, zoom=10 -> tileX=844, tileY=387
-2025-10-23 09:05:25.030 - sceneToLatLon(abs): scene(216126.00,99152.00) -> tile(844.2422,387.3125) -> geo(40.094882,116.803894)
-2025-10-23 09:05:25.032 - latLonToTile: lat=40.0949, lon=116.804, zoom=10 -> tileX=844, tileY=387
-2025-10-23 09:05:25.078 - sceneToLatLon(abs): scene(216029.00,99140.00) -> tile(843.8633,387.2656) -> geo(40.107487,116.670685)
-2025-10-23 09:05:25.079 - latLonToTile: lat=40.1075, lon=116.671, zoom=10 -> tileX=843, tileY=387
-2025-10-23 09:05:25.124 - sceneToLatLon(abs): scene(215938.00,99142.00) -> tile(843.5078,387.2734) -> geo(40.105387,116.545715)
-2025-10-23 09:05:25.124 - latLonToTile: lat=40.1054, lon=116.546, zoom=10 -> tileX=843, tileY=387
-2025-10-23 09:05:25.226 - sceneToLatLon(abs): scene(215859.00,99234.00) -> tile(843.1992,387.6328) -> geo(40.008683,116.437225)
-2025-10-23 09:05:25.226 - latLonToTile: lat=40.0087, lon=116.437, zoom=10 -> tileX=843, tileY=387
-2025-10-23 09:05:25.286 - sceneToLatLon(abs): scene(215814.00,99322.00) -> tile(843.0234,387.9766) -> geo(39.916056,116.375427)
-2025-10-23 09:05:25.287 - latLonToTile: lat=39.9161, lon=116.375, zoom=10 -> tileX=843, tileY=387
-2025-10-23 09:05:25.408 - sceneToLatLon(abs): scene(216004.00,99330.00) -> tile(843.7656,388.0078) -> geo(39.907629,116.636353)
-2025-10-23 09:05:25.408 - latLonToTile: lat=39.9076, lon=116.636, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:25.523 - sceneToLatLon(abs): scene(215809.00,99392.00) -> tile(843.0039,388.2500) -> geo(39.842286,116.368561)
-2025-10-23 09:05:25.525 - latLonToTile: lat=39.8423, lon=116.369, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:05:25.966 - sceneToLatLon(abs): scene(215720.00,99421.00) -> tile(842.6563,388.3633) -> geo(39.811701,116.246338)
-2025-10-23 09:05:25.967 - latLonToTile: lat=39.8117, lon=116.246, zoom=10 -> tileX=842, tileY=388
-2025-10-23 09:05:26.006 - sceneToLatLon(abs): scene(215628.00,99430.00) -> tile(842.2969,388.3984) -> geo(39.802206,116.119995)
-2025-10-23 09:05:26.008 - latLonToTile: lat=39.8022, lon=116.12, zoom=10 -> tileX=842, tileY=388
-2025-10-23 09:05:26.051 - sceneToLatLon(abs): scene(215533.00,99430.00) -> tile(841.9258,388.3984) -> geo(39.802206,115.989532)
-2025-10-23 09:05:26.051 - latLonToTile: lat=39.8022, lon=115.99, zoom=10 -> tileX=841, tileY=388
-2025-10-23 09:05:26.134 - sceneToLatLon(abs): scene(215666.00,99420.00) -> tile(842.4453,388.3594) -> geo(39.812756,116.172180)
-2025-10-23 09:05:26.136 - latLonToTile: lat=39.8128, lon=116.172, zoom=10 -> tileX=842, tileY=388
-2025-10-23 09:05:26.239 - sceneToLatLon(abs): scene(215490.00,99432.00) -> tile(841.7578,388.4063) -> geo(39.800096,115.930481)
-2025-10-23 09:05:26.240 - latLonToTile: lat=39.8001, lon=115.93, zoom=10 -> tileX=841, tileY=388
-2025-10-23 09:05:26.566 - sceneToLatLon(abs): scene(215392.00,99411.00) -> tile(841.3750,388.3242) -> geo(39.822249,115.795898)
-2025-10-23 09:05:26.567 - latLonToTile: lat=39.8222, lon=115.796, zoom=10 -> tileX=841, tileY=388
-2025-10-23 09:05:26.591 - sceneToLatLon(abs): scene(215303.00,99394.00) -> tile(841.0273,388.2578) -> geo(39.840177,115.673676)
-2025-10-23 09:05:26.594 - latLonToTile: lat=39.8402, lon=115.674, zoom=10 -> tileX=841, tileY=388
-2025-10-23 09:05:26.609 - sceneToLatLon(abs): scene(215206.00,99372.00) -> tile(840.6484,388.1719) -> geo(39.863371,115.540466)
-2025-10-23 09:05:26.624 - latLonToTile: lat=39.8634, lon=115.54, zoom=10 -> tileX=840, tileY=388
-2025-10-23 09:05:26.674 - sceneToLatLon(abs): scene(215119.00,99367.00) -> tile(840.3086,388.1523) -> geo(39.868642,115.420990)
-2025-10-23 09:05:26.674 - latLonToTile: lat=39.8686, lon=115.421, zoom=10 -> tileX=840, tileY=388
-2025-10-23 09:05:26.704 - sceneToLatLon(abs): scene(215345.00,99391.00) -> tile(841.1914,388.2461) -> geo(39.843340,115.731354)
-2025-10-23 09:05:26.706 - latLonToTile: lat=39.8433, lon=115.731, zoom=10 -> tileX=841, tileY=388
-2025-10-23 09:05:26.810 - sceneToLatLon(abs): scene(215115.00,99368.00) -> tile(840.2930,388.1563) -> geo(39.867588,115.415497)
-2025-10-23 09:05:26.811 - latLonToTile: lat=39.8676, lon=115.415, zoom=10 -> tileX=840, tileY=388
-2025-10-23 09:05:27.074 - sceneToLatLon(abs): scene(215013.00,99352.00) -> tile(839.8945,388.0938) -> geo(39.884450,115.275421)
-2025-10-23 09:05:27.087 - latLonToTile: lat=39.8845, lon=115.275, zoom=10 -> tileX=839, tileY=388
-2025-10-23 09:05:27.128 - sceneToLatLon(abs): scene(214921.00,99338.00) -> tile(839.5352,388.0391) -> geo(39.899202,115.149078)
-2025-10-23 09:05:27.129 - latLonToTile: lat=39.8992, lon=115.149, zoom=10 -> tileX=839, tileY=388
-2025-10-23 09:05:27.177 - sceneToLatLon(abs): scene(215043.00,99281.00) -> tile(840.0117,387.8164) -> geo(39.959228,115.316620)
-2025-10-23 09:05:27.179 - latLonToTile: lat=39.9592, lon=115.317, zoom=10 -> tileX=840, tileY=387
-2025-10-23 09:05:27.289 - sceneToLatLon(abs): scene(214887.00,99333.00) -> tile(839.4023,388.0195) -> geo(39.904469,115.102386)
-2025-10-23 09:05:27.291 - latLonToTile: lat=39.9045, lon=115.102, zoom=10 -> tileX=839, tileY=388
-2025-10-23 09:05:27.540 - sceneToLatLon(abs): scene(214763.00,99333.00) -> tile(838.9180,388.0195) -> geo(39.904469,114.932098)
-2025-10-23 09:05:27.540 - latLonToTile: lat=39.9045, lon=114.932, zoom=10 -> tileX=838, tileY=388
-2025-10-23 09:05:27.558 - sceneToLatLon(abs): scene(214670.00,99333.00) -> tile(838.5547,388.0195) -> geo(39.904469,114.804382)
-2025-10-23 09:05:27.559 - latLonToTile: lat=39.9045, lon=114.804, zoom=10 -> tileX=838, tileY=388
-2025-10-23 09:05:27.574 - sceneToLatLon(abs): scene(214577.00,99333.00) -> tile(838.1914,388.0195) -> geo(39.904469,114.676666)
-2025-10-23 09:05:27.574 - latLonToTile: lat=39.9045, lon=114.677, zoom=10 -> tileX=838, tileY=388
-2025-10-23 09:05:27.598 - sceneToLatLon(abs): scene(214470.00,99333.00) -> tile(837.7734,388.0195) -> geo(39.904469,114.529724)
-2025-10-23 09:05:27.599 - latLonToTile: lat=39.9045, lon=114.53, zoom=10 -> tileX=837, tileY=388
-2025-10-23 09:05:27.638 - sceneToLatLon(abs): scene(214380.00,99333.00) -> tile(837.4219,388.0195) -> geo(39.904469,114.406128)
-2025-10-23 09:05:27.640 - latLonToTile: lat=39.9045, lon=114.406, zoom=10 -> tileX=837, tileY=388
-2025-10-23 09:05:27.664 - sceneToLatLon(abs): scene(214675.00,99285.00) -> tile(838.5742,387.8320) -> geo(39.955017,114.811249)
-2025-10-23 09:05:27.666 - latLonToTile: lat=39.955, lon=114.811, zoom=10 -> tileX=838, tileY=387
-2025-10-23 09:05:27.765 - sceneToLatLon(abs): scene(214368.00,99333.00) -> tile(837.3750,388.0195) -> geo(39.904469,114.389648)
-2025-10-23 09:05:27.766 - latLonToTile: lat=39.9045, lon=114.39, zoom=10 -> tileX=837, tileY=388
-2025-10-23 09:05:28.054 - sceneToLatLon(abs): scene(214255.00,99364.00) -> tile(836.9336,388.1406) -> geo(39.871804,114.234467)
-2025-10-23 09:05:28.055 - latLonToTile: lat=39.8718, lon=114.234, zoom=10 -> tileX=836, tileY=388
-2025-10-23 09:05:28.079 - sceneToLatLon(abs): scene(214146.00,99369.00) -> tile(836.5078,388.1602) -> geo(39.866534,114.084778)
-2025-10-23 09:05:28.080 - latLonToTile: lat=39.8665, lon=114.085, zoom=10 -> tileX=836, tileY=388
-2025-10-23 09:05:28.090 - sceneToLatLon(abs): scene(214051.00,99369.00) -> tile(836.1367,388.1602) -> geo(39.866534,113.954315)
-2025-10-23 09:05:28.090 - latLonToTile: lat=39.8665, lon=113.954, zoom=10 -> tileX=836, tileY=388
-2025-10-23 09:05:28.191 - sceneToLatLon(abs): scene(214269.00,99320.00) -> tile(836.9883,387.9688) -> geo(39.918163,114.253693)
-2025-10-23 09:05:28.193 - latLonToTile: lat=39.9182, lon=114.254, zoom=10 -> tileX=836, tileY=387
-2025-10-23 09:05:28.247 - sceneToLatLon(abs): scene(214005.00,99365.00) -> tile(835.9570,388.1445) -> geo(39.870750,113.891144)
-2025-10-23 09:05:28.248 - latLonToTile: lat=39.8707, lon=113.891, zoom=10 -> tileX=835, tileY=388
-2025-10-23 09:05:28.511 - sceneToLatLon(abs): scene(213891.00,99388.00) -> tile(835.5117,388.2344) -> geo(39.846504,113.734589)
-2025-10-23 09:05:28.512 - latLonToTile: lat=39.8465, lon=113.735, zoom=10 -> tileX=835, tileY=388
-2025-10-23 09:05:28.523 - sceneToLatLon(abs): scene(213772.00,99405.00) -> tile(835.0469,388.3008) -> geo(39.828577,113.571167)
-2025-10-23 09:05:28.523 - latLonToTile: lat=39.8286, lon=113.571, zoom=10 -> tileX=835, tileY=388
-2025-10-23 09:05:28.557 - sceneToLatLon(abs): scene(213658.00,99412.00) -> tile(834.6016,388.3281) -> geo(39.821194,113.414612)
-2025-10-23 09:05:28.557 - latLonToTile: lat=39.8212, lon=113.415, zoom=10 -> tileX=834, tileY=388
-2025-10-23 09:05:28.918 - sceneToLatLon(abs): scene(213570.00,99416.00) -> tile(834.2578,388.3438) -> geo(39.816975,113.293762)
-2025-10-23 09:05:28.919 - latLonToTile: lat=39.817, lon=113.294, zoom=10 -> tileX=834, tileY=388
-2025-10-23 09:05:28.950 - sceneToLatLon(abs): scene(213479.00,99432.00) -> tile(833.9023,388.4063) -> geo(39.800096,113.168793)
-2025-10-23 09:05:28.952 - latLonToTile: lat=39.8001, lon=113.169, zoom=10 -> tileX=833, tileY=388
-2025-10-23 09:05:28.975 - sceneToLatLon(abs): scene(213351.00,99437.00) -> tile(833.4023,388.4258) -> geo(39.794820,112.993011)
-2025-10-23 09:05:28.976 - latLonToTile: lat=39.7948, lon=112.993, zoom=10 -> tileX=833, tileY=388
-2025-10-23 09:05:28.992 - sceneToLatLon(abs): scene(213254.00,99437.00) -> tile(833.0234,388.4258) -> geo(39.794820,112.859802)
-2025-10-23 09:05:28.993 - latLonToTile: lat=39.7948, lon=112.86, zoom=10 -> tileX=833, tileY=388
-2025-10-23 09:05:29.015 - sceneToLatLon(abs): scene(213141.00,99436.00) -> tile(832.5820,388.4219) -> geo(39.795876,112.704620)
-2025-10-23 09:05:29.017 - latLonToTile: lat=39.7959, lon=112.705, zoom=10 -> tileX=832, tileY=388
-2025-10-23 09:05:29.056 - sceneToLatLon(abs): scene(213364.00,99398.00) -> tile(833.4531,388.2734) -> geo(39.835959,113.010864)
-2025-10-23 09:05:29.060 - latLonToTile: lat=39.836, lon=113.011, zoom=10 -> tileX=833, tileY=388
-2025-10-23 09:05:29.156 - sceneToLatLon(abs): scene(213070.00,99434.00) -> tile(832.3047,388.4141) -> geo(39.797986,112.607117)
-2025-10-23 09:05:29.158 - latLonToTile: lat=39.798, lon=112.607, zoom=10 -> tileX=832, tileY=388
-2025-10-23 09:05:29.390 - sceneToLatLon(abs): scene(212977.00,99434.00) -> tile(831.9414,388.4141) -> geo(39.797986,112.479401)
-2025-10-23 09:05:29.393 - latLonToTile: lat=39.798, lon=112.479, zoom=10 -> tileX=831, tileY=388
-2025-10-23 09:05:29.415 - sceneToLatLon(abs): scene(212869.00,99433.00) -> tile(831.5195,388.4102) -> geo(39.799041,112.331085)
-2025-10-23 09:05:29.417 - latLonToTile: lat=39.799, lon=112.331, zoom=10 -> tileX=831, tileY=388
-2025-10-23 09:05:29.439 - sceneToLatLon(abs): scene(212763.00,99426.00) -> tile(831.1055,388.3828) -> geo(39.806426,112.185516)
-2025-10-23 09:05:29.440 - latLonToTile: lat=39.8064, lon=112.186, zoom=10 -> tileX=831, tileY=388
-2025-10-23 09:05:29.470 - sceneToLatLon(abs): scene(212669.00,99420.00) -> tile(830.7383,388.3594) -> geo(39.812756,112.056427)
-2025-10-23 09:05:29.472 - latLonToTile: lat=39.8128, lon=112.056, zoom=10 -> tileX=830, tileY=388
-2025-10-23 09:05:29.856 - sceneToLatLon(abs): scene(212578.00,99433.00) -> tile(830.3828,388.4102) -> geo(39.799041,111.931458)
-2025-10-23 09:05:29.871 - latLonToTile: lat=39.799, lon=111.931, zoom=10 -> tileX=830, tileY=388
-2025-10-23 09:05:29.892 - sceneToLatLon(abs): scene(212471.00,99458.00) -> tile(829.9648,388.5078) -> geo(39.772659,111.784515)
-2025-10-23 09:05:29.903 - latLonToTile: lat=39.7727, lon=111.785, zoom=10 -> tileX=829, tileY=388
-2025-10-23 09:05:29.926 - sceneToLatLon(abs): scene(212381.00,99477.00) -> tile(829.6133,388.5820) -> geo(39.752601,111.660919)
-2025-10-23 09:05:29.927 - latLonToTile: lat=39.7526, lon=111.661, zoom=10 -> tileX=829, tileY=388
-2025-10-23 09:05:30.534 - sceneToLatLon(abs): scene(212295.00,99510.00) -> tile(829.2773,388.7109) -> geo(39.717751,111.542816)
-2025-10-23 09:05:30.535 - latLonToTile: lat=39.7178, lon=111.543, zoom=10 -> tileX=829, tileY=388
-2025-10-23 09:05:30.798 - sceneToLatLon(abs): scene(212208.00,99564.00) -> tile(828.9375,388.9219) -> geo(39.660685,111.423340)
-2025-10-23 09:05:30.799 - latLonToTile: lat=39.6607, lon=111.423, zoom=10 -> tileX=828, tileY=388
-2025-10-23 09:05:31.071 - sceneToLatLon(abs): scene(212121.00,99594.00) -> tile(828.5977,389.0391) -> geo(39.628961,111.303864)
-2025-10-23 09:05:31.073 - latLonToTile: lat=39.629, lon=111.304, zoom=10 -> tileX=828, tileY=389
-2025-10-23 09:05:31.422 - sceneToLatLon(abs): scene(212035.00,99615.00) -> tile(828.2617,389.1211) -> geo(39.606746,111.185760)
-2025-10-23 09:05:31.425 - latLonToTile: lat=39.6067, lon=111.186, zoom=10 -> tileX=828, tileY=389
-2025-10-23 09:05:31.622 - sceneToLatLon(abs): scene(211947.00,99633.00) -> tile(827.9180,389.1914) -> geo(39.587699,111.064911)
-2025-10-23 09:05:31.625 - latLonToTile: lat=39.5877, lon=111.065, zoom=10 -> tileX=827, tileY=389
-2025-10-23 09:05:31.726 - sceneToLatLon(abs): scene(211860.00,99647.00) -> tile(827.5781,389.2461) -> geo(39.572881,110.945435)
-2025-10-23 09:05:31.727 - latLonToTile: lat=39.5729, lon=110.945, zoom=10 -> tileX=827, tileY=389
-2025-10-23 09:05:31.824 - sceneToLatLon(abs): scene(212076.00,99569.00) -> tile(828.4219,388.9414) -> geo(39.655399,111.242065)
-2025-10-23 09:05:31.825 - latLonToTile: lat=39.6554, lon=111.242, zoom=10 -> tileX=828, tileY=388
-2025-10-23 09:05:31.918 - sceneToLatLon(abs): scene(211846.00,99651.00) -> tile(827.5234,389.2617) -> geo(39.568646,110.926208)
-2025-10-23 09:05:31.919 - latLonToTile: lat=39.5686, lon=110.926, zoom=10 -> tileX=827, tileY=389
-2025-10-23 09:05:32.423 - sceneToLatLon(abs): scene(211734.00,99723.00) -> tile(827.0859,389.5430) -> geo(39.492384,110.772400)
-2025-10-23 09:05:32.424 - latLonToTile: lat=39.4924, lon=110.772, zoom=10 -> tileX=827, tileY=389
-2025-10-23 09:05:32.443 - sceneToLatLon(abs): scene(211644.00,99765.00) -> tile(826.7344,389.7070) -> geo(39.447859,110.648804)
-2025-10-23 09:05:32.443 - latLonToTile: lat=39.4479, lon=110.649, zoom=10 -> tileX=826, tileY=389
-2025-10-23 09:05:32.473 - sceneToLatLon(abs): scene(211549.00,99797.00) -> tile(826.3633,389.8320) -> geo(39.413916,110.518341)
-2025-10-23 09:05:32.479 - latLonToTile: lat=39.4139, lon=110.518, zoom=10 -> tileX=826, tileY=389
-2025-10-23 09:05:32.518 - sceneToLatLon(abs): scene(211457.00,99821.00) -> tile(826.0039,389.9258) -> geo(39.388448,110.391998)
-2025-10-23 09:05:32.520 - latLonToTile: lat=39.3884, lon=110.392, zoom=10 -> tileX=826, tileY=389
-2025-10-23 09:05:32.576 - sceneToLatLon(abs): scene(211365.00,99844.00) -> tile(825.6445,390.0156) -> geo(39.364032,110.265656)
-2025-10-23 09:05:32.576 - latLonToTile: lat=39.364, lon=110.266, zoom=10 -> tileX=825, tileY=390
-2025-10-23 09:05:32.648 - sceneToLatLon(abs): scene(211276.00,99861.00) -> tile(825.2969,390.0820) -> geo(39.345981,110.143433)
-2025-10-23 09:05:32.648 - latLonToTile: lat=39.346, lon=110.143, zoom=10 -> tileX=825, tileY=390
-2025-10-23 09:05:32.687 - sceneToLatLon(abs): scene(211539.00,99785.00) -> tile(826.3242,389.7852) -> geo(39.426647,110.504608)
-2025-10-23 09:05:32.689 - latLonToTile: lat=39.4266, lon=110.505, zoom=10 -> tileX=826, tileY=389
-2025-10-23 09:05:32.798 - sceneToLatLon(abs): scene(211229.00,99868.00) -> tile(825.1133,390.1094) -> geo(39.338546,110.078888)
-2025-10-23 09:05:32.800 - latLonToTile: lat=39.3385, lon=110.079, zoom=10 -> tileX=825, tileY=390
-2025-10-23 09:05:33.462 - sceneToLatLon(abs): scene(211107.00,99854.00) -> tile(824.6367,390.0547) -> geo(39.353414,109.911346)
-2025-10-23 09:05:33.463 - latLonToTile: lat=39.3534, lon=109.911, zoom=10 -> tileX=824, tileY=390
-2025-10-23 09:05:33.478 - sceneToLatLon(abs): scene(210990.00,99848.00) -> tile(824.1797,390.0313) -> geo(39.359785,109.750671)
-2025-10-23 09:05:33.480 - latLonToTile: lat=39.3598, lon=109.751, zoom=10 -> tileX=824, tileY=390
-2025-10-23 09:05:33.494 - sceneToLatLon(abs): scene(210855.00,99845.00) -> tile(823.6523,390.0195) -> geo(39.362971,109.565277)
-2025-10-23 09:05:33.495 - latLonToTile: lat=39.363, lon=109.565, zoom=10 -> tileX=823, tileY=390
-2025-10-23 09:05:33.510 - sceneToLatLon(abs): scene(210734.00,99842.00) -> tile(823.1797,390.0078) -> geo(39.366156,109.399109)
-2025-10-23 09:05:33.511 - latLonToTile: lat=39.3662, lon=109.399, zoom=10 -> tileX=823, tileY=390
-2025-10-23 09:05:33.535 - sceneToLatLon(abs): scene(210635.00,99842.00) -> tile(822.7930,390.0078) -> geo(39.366156,109.263153)
-2025-10-23 09:05:33.537 - latLonToTile: lat=39.3662, lon=109.263, zoom=10 -> tileX=822, tileY=390
-2025-10-23 09:05:33.646 - sceneToLatLon(abs): scene(210995.00,99768.00) -> tile(824.1992,389.7188) -> geo(39.444678,109.757538)
-2025-10-23 09:05:33.648 - latLonToTile: lat=39.4447, lon=109.758, zoom=10 -> tileX=824, tileY=389
-2025-10-23 09:05:33.702 - sceneToLatLon(abs): scene(210606.00,99842.00) -> tile(822.6797,390.0078) -> geo(39.366156,109.223328)
-2025-10-23 09:05:33.705 - latLonToTile: lat=39.3662, lon=109.223, zoom=10 -> tileX=822, tileY=390
-2025-10-23 09:05:34.166 - sceneToLatLon(abs): scene(210482.00,99884.00) -> tile(822.1953,390.1719) -> geo(39.321550,109.053040)
-2025-10-23 09:05:34.167 - latLonToTile: lat=39.3216, lon=109.053, zoom=10 -> tileX=822, tileY=390
-2025-10-23 09:05:34.182 - sceneToLatLon(abs): scene(210392.00,99902.00) -> tile(821.8438,390.2422) -> geo(39.302425,108.929443)
-2025-10-23 09:05:34.183 - latLonToTile: lat=39.3024, lon=108.929, zoom=10 -> tileX=821, tileY=390
-2025-10-23 09:05:34.199 - sceneToLatLon(abs): scene(210297.00,99910.00) -> tile(821.4727,390.2734) -> geo(39.293923,108.798981)
-2025-10-23 09:05:34.200 - latLonToTile: lat=39.2939, lon=108.799, zoom=10 -> tileX=821, tileY=390
-2025-10-23 09:05:34.224 - sceneToLatLon(abs): scene(210201.00,99913.00) -> tile(821.0977,390.2852) -> geo(39.290734,108.667145)
-2025-10-23 09:05:34.225 - latLonToTile: lat=39.2907, lon=108.667, zoom=10 -> tileX=821, tileY=390
-2025-10-23 09:05:34.326 - sceneToLatLon(abs): scene(210411.00,99868.00) -> tile(821.9180,390.1094) -> geo(39.338546,108.955536)
-2025-10-23 09:05:34.328 - latLonToTile: lat=39.3385, lon=108.956, zoom=10 -> tileX=821, tileY=390
-2025-10-23 09:05:34.389 - sceneToLatLon(abs): scene(210141.00,99913.00) -> tile(820.8633,390.2852) -> geo(39.290734,108.584747)
-2025-10-23 09:05:34.391 - latLonToTile: lat=39.2907, lon=108.585, zoom=10 -> tileX=820, tileY=390
-2025-10-23 09:05:34.742 - sceneToLatLon(abs): scene(210039.00,99942.00) -> tile(820.4648,390.3984) -> geo(39.259905,108.444672)
-2025-10-23 09:05:34.743 - latLonToTile: lat=39.2599, lon=108.445, zoom=10 -> tileX=820, tileY=390
-2025-10-23 09:05:34.755 - sceneToLatLon(abs): scene(209911.00,99960.00) -> tile(819.9648,390.4688) -> geo(39.240763,108.268890)
-2025-10-23 09:05:34.755 - latLonToTile: lat=39.2408, lon=108.269, zoom=10 -> tileX=819, tileY=390
-2025-10-23 09:05:34.788 - sceneToLatLon(abs): scene(209819.00,99966.00) -> tile(819.6055,390.4922) -> geo(39.234381,108.142548)
-2025-10-23 09:05:34.788 - latLonToTile: lat=39.2344, lon=108.143, zoom=10 -> tileX=819, tileY=390
-2025-10-23 09:05:34.831 - sceneToLatLon(abs): scene(209730.00,99968.00) -> tile(819.2578,390.5000) -> geo(39.232253,108.020325)
-2025-10-23 09:05:34.833 - latLonToTile: lat=39.2323, lon=108.02, zoom=10 -> tileX=819, tileY=390
-2025-10-23 09:05:34.895 - sceneToLatLon(abs): scene(209993.00,99943.00) -> tile(820.2852,390.4023) -> geo(39.258841,108.381500)
-2025-10-23 09:05:34.898 - latLonToTile: lat=39.2588, lon=108.382, zoom=10 -> tileX=820, tileY=390
-2025-10-23 09:05:35.003 - sceneToLatLon(abs): scene(209700.00,99971.00) -> tile(819.1406,390.5117) -> geo(39.229062,107.979126)
-2025-10-23 09:05:35.005 - latLonToTile: lat=39.2291, lon=107.979, zoom=10 -> tileX=819, tileY=390
-2025-10-23 09:05:35.322 - sceneToLatLon(abs): scene(209599.00,99996.00) -> tile(818.7461,390.6094) -> geo(39.202462,107.840424)
-2025-10-23 09:05:35.322 - latLonToTile: lat=39.2025, lon=107.84, zoom=10 -> tileX=818, tileY=390
-2025-10-23 09:05:35.350 - sceneToLatLon(abs): scene(209500.00,100017.00) -> tile(818.3594,390.6914) -> geo(39.180111,107.704468)
-2025-10-23 09:05:35.352 - latLonToTile: lat=39.1801, lon=107.704, zoom=10 -> tileX=818, tileY=390
-2025-10-23 09:05:35.374 - sceneToLatLon(abs): scene(209399.00,100033.00) -> tile(817.9648,390.7539) -> geo(39.163076,107.565765)
-2025-10-23 09:05:35.376 - latLonToTile: lat=39.1631, lon=107.566, zoom=10 -> tileX=817, tileY=390
-2025-10-23 09:05:35.396 - sceneToLatLon(abs): scene(209311.00,100048.00) -> tile(817.6211,390.8125) -> geo(39.147103,107.444916)
-2025-10-23 09:05:35.396 - latLonToTile: lat=39.1471, lon=107.445, zoom=10 -> tileX=817, tileY=390
-2025-10-23 09:05:35.427 - sceneToLatLon(abs): scene(209218.00,100064.00) -> tile(817.2578,390.8750) -> geo(39.130060,107.317200)
-2025-10-23 09:05:35.427 - latLonToTile: lat=39.1301, lon=107.317, zoom=10 -> tileX=817, tileY=390
-2025-10-23 09:05:35.479 - sceneToLatLon(abs): scene(209465.00,100018.00) -> tile(818.2227,390.6953) -> geo(39.179046,107.656403)
-2025-10-23 09:05:35.481 - latLonToTile: lat=39.179, lon=107.656, zoom=10 -> tileX=818, tileY=390
-2025-10-23 09:05:35.578 - sceneToLatLon(abs): scene(209161.00,100075.00) -> tile(817.0352,390.9180) -> geo(39.118341,107.238922)
-2025-10-23 09:05:35.580 - latLonToTile: lat=39.1183, lon=107.239, zoom=10 -> tileX=817, tileY=390
-2025-10-23 09:05:35.910 - sceneToLatLon(abs): scene(209054.00,100125.00) -> tile(816.6172,391.1133) -> geo(39.065048,107.091980)
-2025-10-23 09:05:35.911 - latLonToTile: lat=39.065, lon=107.092, zoom=10 -> tileX=816, tileY=391
-2025-10-23 09:05:35.942 - sceneToLatLon(abs): scene(208942.00,100158.00) -> tile(816.1797,391.2422) -> geo(39.029852,106.938171)
-2025-10-23 09:05:35.943 - latLonToTile: lat=39.0299, lon=106.938, zoom=10 -> tileX=816, tileY=391
-2025-10-23 09:05:35.974 - sceneToLatLon(abs): scene(208855.00,100177.00) -> tile(815.8398,391.3164) -> geo(39.009580,106.818695)
-2025-10-23 09:05:35.975 - latLonToTile: lat=39.0096, lon=106.819, zoom=10 -> tileX=815, tileY=391
-2025-10-23 09:05:36.006 - sceneToLatLon(abs): scene(208762.00,100198.00) -> tile(815.4766,391.3984) -> geo(38.987168,106.690979)
-2025-10-23 09:05:36.008 - latLonToTile: lat=38.9872, lon=106.691, zoom=10 -> tileX=815, tileY=391
-2025-10-23 09:05:36.046 - sceneToLatLon(abs): scene(208664.00,100209.00) -> tile(815.0938,391.4414) -> geo(38.975425,106.556396)
-2025-10-23 09:05:36.047 - latLonToTile: lat=38.9754, lon=106.556, zoom=10 -> tileX=815, tileY=391
-2025-10-23 09:05:36.135 - sceneToLatLon(abs): scene(208878.00,100142.00) -> tile(815.9297,391.1797) -> geo(39.046919,106.850281)
-2025-10-23 09:05:36.137 - latLonToTile: lat=39.0469, lon=106.85, zoom=10 -> tileX=815, tileY=391
-2025-10-23 09:05:36.202 - sceneToLatLon(abs): scene(208642.00,100209.00) -> tile(815.0078,391.4414) -> geo(38.975425,106.526184)
-2025-10-23 09:05:36.204 - latLonToTile: lat=38.9754, lon=106.526, zoom=10 -> tileX=815, tileY=391
-2025-10-23 09:05:36.521 - sceneToLatLon(abs): scene(208545.00,100251.00) -> tile(814.6289,391.6055) -> geo(38.930571,106.392975)
-2025-10-23 09:05:36.521 - latLonToTile: lat=38.9306, lon=106.393, zoom=10 -> tileX=814, tileY=391
-2025-10-23 09:05:36.555 - sceneToLatLon(abs): scene(208429.00,100283.00) -> tile(814.1758,391.7305) -> geo(38.896377,106.233673)
-2025-10-23 09:05:36.555 - latLonToTile: lat=38.8964, lon=106.234, zoom=10 -> tileX=814, tileY=391
-2025-10-23 09:05:36.575 - sceneToLatLon(abs): scene(208339.00,100302.00) -> tile(813.8242,391.8047) -> geo(38.876067,106.110077)
-2025-10-23 09:05:36.576 - latLonToTile: lat=38.8761, lon=106.11, zoom=10 -> tileX=813, tileY=391
-2025-10-23 09:05:36.598 - sceneToLatLon(abs): scene(208227.00,100324.00) -> tile(813.3867,391.8906) -> geo(38.852542,105.956268)
-2025-10-23 09:05:36.599 - latLonToTile: lat=38.8525, lon=105.956, zoom=10 -> tileX=813, tileY=391
-2025-10-23 09:05:36.639 - sceneToLatLon(abs): scene(208134.00,100340.00) -> tile(813.0234,391.9531) -> geo(38.835429,105.828552)
-2025-10-23 09:05:36.640 - latLonToTile: lat=38.8354, lon=105.829, zoom=10 -> tileX=813, tileY=391
-2025-10-23 09:05:36.799 - sceneToLatLon(abs): scene(208346.00,100261.00) -> tile(813.8516,391.6445) -> geo(38.919887,106.119690)
-2025-10-23 09:05:36.801 - latLonToTile: lat=38.9199, lon=106.12, zoom=10 -> tileX=813, tileY=391
-2025-10-23 09:05:36.904 - sceneToLatLon(abs): scene(208095.00,100339.00) -> tile(812.8711,391.9492) -> geo(38.836499,105.774994)
-2025-10-23 09:05:36.906 - latLonToTile: lat=38.8365, lon=105.775, zoom=10 -> tileX=812, tileY=391
-2025-10-23 09:05:37.207 - sceneToLatLon(abs): scene(208005.00,100392.00) -> tile(812.5195,392.1563) -> geo(38.779781,105.651398)
-2025-10-23 09:05:37.208 - latLonToTile: lat=38.7798, lon=105.651, zoom=10 -> tileX=812, tileY=392
-2025-10-23 09:05:37.221 - sceneToLatLon(abs): scene(207918.00,100430.00) -> tile(812.1797,392.3047) -> geo(38.739088,105.531921)
-2025-10-23 09:05:37.221 - latLonToTile: lat=38.7391, lon=105.532, zoom=10 -> tileX=812, tileY=392
-2025-10-23 09:05:37.246 - sceneToLatLon(abs): scene(207831.00,100465.00) -> tile(811.8398,392.4414) -> geo(38.701588,105.412445)
-2025-10-23 09:05:37.248 - latLonToTile: lat=38.7016, lon=105.412, zoom=10 -> tileX=811, tileY=392
-2025-10-23 09:05:37.271 - sceneToLatLon(abs): scene(207719.00,100500.00) -> tile(811.4023,392.5781) -> geo(38.664067,105.258636)
-2025-10-23 09:05:37.274 - latLonToTile: lat=38.6641, lon=105.259, zoom=10 -> tileX=811, tileY=392
-2025-10-23 09:05:37.319 - sceneToLatLon(abs): scene(207630.00,100518.00) -> tile(811.0547,392.6484) -> geo(38.644763,105.136414)
-2025-10-23 09:05:37.320 - latLonToTile: lat=38.6448, lon=105.136, zoom=10 -> tileX=811, tileY=392
-2025-10-23 09:05:37.455 - sceneToLatLon(abs): scene(207805.00,100416.00) -> tile(811.7383,392.2500) -> geo(38.754083,105.376740)
-2025-10-23 09:05:37.457 - latLonToTile: lat=38.7541, lon=105.377, zoom=10 -> tileX=811, tileY=392
-2025-10-23 09:05:37.560 - sceneToLatLon(abs): scene(207581.00,100518.00) -> tile(810.8633,392.6484) -> geo(38.644763,105.069122)
-2025-10-23 09:05:37.562 - latLonToTile: lat=38.6448, lon=105.069, zoom=10 -> tileX=810, tileY=392
-2025-10-23 09:05:37.806 - sceneToLatLon(abs): scene(207491.00,100591.00) -> tile(810.5117,392.9336) -> geo(38.566422,104.945526)
-2025-10-23 09:05:37.808 - latLonToTile: lat=38.5664, lon=104.946, zoom=10 -> tileX=810, tileY=392
-2025-10-23 09:05:37.831 - sceneToLatLon(abs): scene(207399.00,100638.00) -> tile(810.1523,393.1172) -> geo(38.515937,104.819183)
-2025-10-23 09:05:37.832 - latLonToTile: lat=38.5159, lon=104.819, zoom=10 -> tileX=810, tileY=393
-2025-10-23 09:05:37.854 - sceneToLatLon(abs): scene(207282.00,100674.00) -> tile(809.6953,393.2578) -> geo(38.477245,104.658508)
-2025-10-23 09:05:37.857 - latLonToTile: lat=38.4772, lon=104.659, zoom=10 -> tileX=809, tileY=393
-2025-10-23 09:05:37.882 - sceneToLatLon(abs): scene(207176.00,100693.00) -> tile(809.2813,393.3320) -> geo(38.456815,104.512939)
-2025-10-23 09:05:37.882 - latLonToTile: lat=38.4568, lon=104.513, zoom=10 -> tileX=809, tileY=393
-2025-10-23 09:05:37.910 - sceneToLatLon(abs): scene(207072.00,100694.00) -> tile(808.8750,393.3359) -> geo(38.455740,104.370117)
-2025-10-23 09:05:37.910 - latLonToTile: lat=38.4557, lon=104.37, zoom=10 -> tileX=808, tileY=393
-2025-10-23 09:05:37.958 - sceneToLatLon(abs): scene(206980.00,100682.00) -> tile(808.5156,393.2891) -> geo(38.468643,104.243774)
-2025-10-23 09:05:37.959 - latLonToTile: lat=38.4686, lon=104.244, zoom=10 -> tileX=808, tileY=393
-2025-10-23 09:05:38.015 - sceneToLatLon(abs): scene(207359.00,100567.00) -> tile(809.9961,392.8398) -> geo(38.592187,104.764252)
-2025-10-23 09:05:38.017 - latLonToTile: lat=38.5922, lon=104.764, zoom=10 -> tileX=809, tileY=392
-2025-10-23 09:05:38.108 - sceneToLatLon(abs): scene(206968.00,100679.00) -> tile(808.4688,393.2773) -> geo(38.471869,104.227295)
-2025-10-23 09:05:38.111 - latLonToTile: lat=38.4719, lon=104.227, zoom=10 -> tileX=808, tileY=393
-2025-10-23 09:05:38.408 - sceneToLatLon(abs): scene(206868.00,100743.00) -> tile(808.0781,393.5273) -> geo(38.403025,104.089966)
-2025-10-23 09:05:38.410 - latLonToTile: lat=38.403, lon=104.09, zoom=10 -> tileX=808, tileY=393
-2025-10-23 09:05:38.440 - sceneToLatLon(abs): scene(206763.00,100769.00) -> tile(807.6680,393.6289) -> geo(38.375039,103.945770)
-2025-10-23 09:05:38.441 - latLonToTile: lat=38.375, lon=103.946, zoom=10 -> tileX=807, tileY=393
-2025-10-23 09:05:38.462 - sceneToLatLon(abs): scene(206673.00,100775.00) -> tile(807.3164,393.6523) -> geo(38.368579,103.822174)
-2025-10-23 09:05:38.464 - latLonToTile: lat=38.3686, lon=103.822, zoom=10 -> tileX=807, tileY=393
-2025-10-23 09:05:38.474 - sceneToLatLon(abs): scene(206582.00,100768.00) -> tile(806.9609,393.6250) -> geo(38.376115,103.697205)
-2025-10-23 09:05:38.476 - latLonToTile: lat=38.3761, lon=103.697, zoom=10 -> tileX=806, tileY=393
-2025-10-23 09:05:38.496 - sceneToLatLon(abs): scene(206485.00,100743.00) -> tile(806.5820,393.5273) -> geo(38.403025,103.563995)
-2025-10-23 09:05:38.497 - latLonToTile: lat=38.403, lon=103.564, zoom=10 -> tileX=806, tileY=393
-2025-10-23 09:05:38.591 - sceneToLatLon(abs): scene(206820.00,100723.00) -> tile(807.8906,393.4492) -> geo(38.424546,104.024048)
-2025-10-23 09:05:38.592 - latLonToTile: lat=38.4245, lon=104.024, zoom=10 -> tileX=807, tileY=393
-2025-10-23 09:05:38.701 - sceneToLatLon(abs): scene(206445.00,100704.00) -> tile(806.4258,393.3750) -> geo(38.444985,103.509064)
-2025-10-23 09:05:38.704 - latLonToTile: lat=38.445, lon=103.509, zoom=10 -> tileX=806, tileY=393
-2025-10-23 09:05:38.926 - sceneToLatLon(abs): scene(206335.00,100761.00) -> tile(805.9961,393.5977) -> geo(38.383651,103.358002)
-2025-10-23 09:05:38.927 - latLonToTile: lat=38.3837, lon=103.358, zoom=10 -> tileX=805, tileY=393
-2025-10-23 09:05:38.950 - sceneToLatLon(abs): scene(206230.00,100775.00) -> tile(805.5859,393.6523) -> geo(38.368579,103.213806)
-2025-10-23 09:05:38.952 - latLonToTile: lat=38.3686, lon=103.214, zoom=10 -> tileX=805, tileY=393
-2025-10-23 09:05:38.974 - sceneToLatLon(abs): scene(206138.00,100774.00) -> tile(805.2266,393.6484) -> geo(38.369656,103.087463)
-2025-10-23 09:05:38.975 - latLonToTile: lat=38.3697, lon=103.087, zoom=10 -> tileX=805, tileY=393
-2025-10-23 09:05:39.090 - sceneToLatLon(abs): scene(206446.00,100752.00) -> tile(806.4297,393.5625) -> geo(38.393339,103.510437)
-2025-10-23 09:05:39.092 - latLonToTile: lat=38.3933, lon=103.51, zoom=10 -> tileX=806, tileY=393
-2025-10-23 09:05:39.204 - sceneToLatLon(abs): scene(206087.00,100739.00) -> tile(805.0273,393.5117) -> geo(38.407330,103.017426)
-2025-10-23 09:05:39.205 - latLonToTile: lat=38.4073, lon=103.017, zoom=10 -> tileX=805, tileY=393
-2025-10-23 09:05:39.390 - sceneToLatLon(abs): scene(205976.00,100712.00) -> tile(804.5938,393.4063) -> geo(38.436380,102.864990)
-2025-10-23 09:05:39.391 - latLonToTile: lat=38.4364, lon=102.865, zoom=10 -> tileX=804, tileY=393
-2025-10-23 09:05:39.413 - sceneToLatLon(abs): scene(205886.00,100692.00) -> tile(804.2422,393.3281) -> geo(38.457890,102.741394)
-2025-10-23 09:05:39.413 - latLonToTile: lat=38.4579, lon=102.741, zoom=10 -> tileX=804, tileY=393
-2025-10-23 09:05:39.446 - sceneToLatLon(abs): scene(205799.00,100677.00) -> tile(803.9023,393.2695) -> geo(38.474019,102.621918)
-2025-10-23 09:05:39.447 - latLonToTile: lat=38.474, lon=102.622, zoom=10 -> tileX=803, tileY=393
-2025-10-23 09:05:39.486 - sceneToLatLon(abs): scene(205713.00,100673.00) -> tile(803.5664,393.2539) -> geo(38.478320,102.503815)
-2025-10-23 09:05:39.488 - latLonToTile: lat=38.4783, lon=102.504, zoom=10 -> tileX=803, tileY=393
-2025-10-23 09:05:40.406 - sceneToLatLon(abs): scene(205610.00,100659.00) -> tile(803.1641,393.1992) -> geo(38.493369,102.362366)
-2025-10-23 09:05:40.407 - latLonToTile: lat=38.4934, lon=102.362, zoom=10 -> tileX=803, tileY=393
-2025-10-23 09:05:40.423 - sceneToLatLon(abs): scene(205518.00,100648.00) -> tile(802.8047,393.1563) -> geo(38.505191,102.236023)
-2025-10-23 09:05:40.424 - latLonToTile: lat=38.5052, lon=102.236, zoom=10 -> tileX=802, tileY=393
-2025-10-23 09:05:40.438 - sceneToLatLon(abs): scene(205402.00,100628.00) -> tile(802.3516,393.0781) -> geo(38.526682,102.076721)
-2025-10-23 09:05:40.439 - latLonToTile: lat=38.5267, lon=102.077, zoom=10 -> tileX=802, tileY=393
-2025-10-23 09:05:40.453 - sceneToLatLon(abs): scene(205289.00,100604.00) -> tile(801.9102,392.9844) -> geo(38.552461,101.921539)
-2025-10-23 09:05:40.453 - latLonToTile: lat=38.5525, lon=101.922, zoom=10 -> tileX=801, tileY=392
-2025-10-23 09:05:40.472 - sceneToLatLon(abs): scene(205203.00,100586.00) -> tile(801.5742,392.9141) -> geo(38.571790,101.803436)
-2025-10-23 09:05:40.473 - latLonToTile: lat=38.5718, lon=101.803, zoom=10 -> tileX=801, tileY=392
-2025-10-23 09:05:40.519 - sceneToLatLon(abs): scene(205117.00,100573.00) -> tile(801.2383,392.8633) -> geo(38.585747,101.685333)
-2025-10-23 09:05:40.520 - latLonToTile: lat=38.5857, lon=101.685, zoom=10 -> tileX=801, tileY=392
-2025-10-23 09:05:40.553 - sceneToLatLon(abs): scene(205448.00,100613.00) -> tile(802.5313,393.0195) -> geo(38.542795,102.139893)
-2025-10-23 09:05:40.571 - latLonToTile: lat=38.5428, lon=102.14, zoom=10 -> tileX=802, tileY=393
-2025-10-23 09:05:40.638 - sceneToLatLon(abs): scene(205115.00,100573.00) -> tile(801.2305,392.8633) -> geo(38.585747,101.682587)
-2025-10-23 09:05:40.640 - latLonToTile: lat=38.5857, lon=101.683, zoom=10 -> tileX=801, tileY=392
-2025-10-23 09:05:41.055 - sceneToLatLon(abs): scene(205027.00,100537.00) -> tile(800.8867,392.7227) -> geo(38.624381,101.561737)
-2025-10-23 09:05:41.056 - latLonToTile: lat=38.6244, lon=101.562, zoom=10 -> tileX=800, tileY=392
-2025-10-23 09:05:41.073 - sceneToLatLon(abs): scene(204897.00,100514.00) -> tile(800.3789,392.6328) -> geo(38.649053,101.383209)
-2025-10-23 09:05:41.074 - latLonToTile: lat=38.6491, lon=101.383, zoom=10 -> tileX=800, tileY=392
-2025-10-23 09:05:41.086 - sceneToLatLon(abs): scene(204800.00,100500.00) -> tile(800.0000,392.5781) -> geo(38.664067,101.250000)
-2025-10-23 09:05:41.086 - latLonToTile: lat=38.6641, lon=101.25, zoom=10 -> tileX=800, tileY=392
-2025-10-23 09:05:41.104 - sceneToLatLon(abs): scene(204713.00,100492.00) -> tile(799.6602,392.5469) -> geo(38.672645,101.130524)
-2025-10-23 09:05:41.106 - latLonToTile: lat=38.6726, lon=101.131, zoom=10 -> tileX=799, tileY=392
-2025-10-23 09:05:41.191 - sceneToLatLon(abs): scene(204993.00,100521.00) -> tile(800.7539,392.6602) -> geo(38.641545,101.515045)
-2025-10-23 09:05:41.193 - latLonToTile: lat=38.6415, lon=101.515, zoom=10 -> tileX=800, tileY=392
-2025-10-23 09:05:41.262 - sceneToLatLon(abs): scene(204650.00,100492.00) -> tile(799.4141,392.5469) -> geo(38.672645,101.044006)
-2025-10-23 09:05:41.264 - latLonToTile: lat=38.6726, lon=101.044, zoom=10 -> tileX=799, tileY=392
-2025-10-23 09:05:42.414 - sceneToLatLon(abs): scene(204559.00,100526.00) -> tile(799.0586,392.6797) -> geo(38.636182,100.919037)
-2025-10-23 09:05:42.415 - latLonToTile: lat=38.6362, lon=100.919, zoom=10 -> tileX=799, tileY=392
-2025-10-23 09:05:42.438 - sceneToLatLon(abs): scene(204443.00,100553.00) -> tile(798.6055,392.7852) -> geo(38.607213,100.759735)
-2025-10-23 09:05:42.439 - latLonToTile: lat=38.6072, lon=100.76, zoom=10 -> tileX=798, tileY=392
-2025-10-23 09:05:42.462 - sceneToLatLon(abs): scene(204342.00,100570.00) -> tile(798.2109,392.8516) -> geo(38.588967,100.621033)
-2025-10-23 09:05:42.463 - latLonToTile: lat=38.589, lon=100.621, zoom=10 -> tileX=798, tileY=392
-2025-10-23 09:05:42.510 - sceneToLatLon(abs): scene(204251.00,100573.00) -> tile(797.8555,392.8633) -> geo(38.585747,100.496063)
-2025-10-23 09:05:42.512 - latLonToTile: lat=38.5857, lon=100.496, zoom=10 -> tileX=797, tileY=392
-2025-10-23 09:05:42.607 - sceneToLatLon(abs): scene(204483.00,100536.00) -> tile(798.7617,392.7188) -> geo(38.625454,100.814667)
-2025-10-23 09:05:42.608 - latLonToTile: lat=38.6255, lon=100.815, zoom=10 -> tileX=798, tileY=392
-2025-10-23 09:05:42.719 - sceneToLatLon(abs): scene(204199.00,100573.00) -> tile(797.6523,392.8633) -> geo(38.585747,100.424652)
-2025-10-23 09:05:42.724 - latLonToTile: lat=38.5857, lon=100.425, zoom=10 -> tileX=797, tileY=392
-2025-10-23 09:05:43.454 - sceneToLatLon(abs): scene(204103.00,100577.00) -> tile(797.2773,392.8789) -> geo(38.581453,100.292816)
-2025-10-23 09:05:43.455 - latLonToTile: lat=38.5815, lon=100.293, zoom=10 -> tileX=797, tileY=392
-2025-10-23 09:05:43.470 - sceneToLatLon(abs): scene(204011.00,100569.00) -> tile(796.9180,392.8477) -> geo(38.590040,100.166473)
-2025-10-23 09:05:43.470 - latLonToTile: lat=38.59, lon=100.166, zoom=10 -> tileX=796, tileY=392
-2025-10-23 09:05:43.502 - sceneToLatLon(abs): scene(203905.00,100546.00) -> tile(796.5039,392.7578) -> geo(38.614724,100.020905)
-2025-10-23 09:05:43.511 - latLonToTile: lat=38.6147, lon=100.021, zoom=10 -> tileX=796, tileY=392
-2025-10-23 09:05:43.590 - sceneToLatLon(abs): scene(203816.00,100530.00) -> tile(796.1563,392.6953) -> geo(38.631891,99.898682)
-2025-10-23 09:05:43.591 - latLonToTile: lat=38.6319, lon=99.8987, zoom=10 -> tileX=796, tileY=392
-2025-10-23 09:05:43.642 - sceneToLatLon(abs): scene(204081.00,100509.00) -> tile(797.1914,392.6133) -> geo(38.654416,100.262604)
-2025-10-23 09:05:43.644 - latLonToTile: lat=38.6544, lon=100.263, zoom=10 -> tileX=797, tileY=392
-2025-10-23 09:05:43.751 - sceneToLatLon(abs): scene(203794.00,100529.00) -> tile(796.0703,392.6914) -> geo(38.632964,99.868469)
-2025-10-23 09:05:43.756 - latLonToTile: lat=38.633, lon=99.8685, zoom=10 -> tileX=796, tileY=392
-2025-10-23 09:05:44.218 - sceneToLatLon(abs): scene(203832.00,100441.00) -> tile(796.2188,392.3477) -> geo(38.727305,99.920654)
-2025-10-23 09:05:44.223 - latLonToTile: lat=38.7273, lon=99.9207, zoom=10 -> tileX=796, tileY=392
-2025-10-23 09:05:44.270 - sceneToLatLon(abs): scene(203731.00,100365.00) -> tile(795.8242,392.0508) -> geo(38.808681,99.781952)
-2025-10-23 09:05:44.272 - latLonToTile: lat=38.8087, lon=99.782, zoom=10 -> tileX=795, tileY=392
-2025-10-23 09:05:44.290 - sceneToLatLon(abs): scene(203628.00,100320.00) -> tile(795.4219,391.8750) -> geo(38.856820,99.640503)
-2025-10-23 09:05:44.290 - latLonToTile: lat=38.8568, lon=99.6405, zoom=10 -> tileX=795, tileY=391
-2025-10-23 09:05:44.330 - sceneToLatLon(abs): scene(203537.00,100294.00) -> tile(795.0664,391.7734) -> geo(38.884619,99.515533)
-2025-10-23 09:05:44.331 - latLonToTile: lat=38.8846, lon=99.5155, zoom=10 -> tileX=795, tileY=391
-2025-10-23 09:05:44.399 - sceneToLatLon(abs): scene(203769.00,100414.00) -> tile(795.9727,392.2422) -> geo(38.756225,99.834137)
-2025-10-23 09:05:44.401 - latLonToTile: lat=38.7562, lon=99.8341, zoom=10 -> tileX=795, tileY=392
-2025-10-23 09:05:44.503 - sceneToLatLon(abs): scene(203463.00,100282.00) -> tile(794.7773,391.7266) -> geo(38.897446,99.413910)
-2025-10-23 09:05:44.504 - latLonToTile: lat=38.8974, lon=99.4139, zoom=10 -> tileX=794, tileY=391
-2025-10-23 09:05:44.855 - sceneToLatLon(abs): scene(203468.00,100195.00) -> tile(794.7969,391.3867) -> geo(38.990370,99.420776)
-2025-10-23 09:05:44.857 - latLonToTile: lat=38.9904, lon=99.4208, zoom=10 -> tileX=794, tileY=391
-2025-10-23 09:05:44.910 - sceneToLatLon(abs): scene(203386.00,100106.00) -> tile(794.4766,391.0391) -> geo(39.085304,99.308167)
-2025-10-23 09:05:44.911 - latLonToTile: lat=39.0853, lon=99.3082, zoom=10 -> tileX=794, tileY=391
-2025-10-23 09:05:44.958 - sceneToLatLon(abs): scene(203288.00,100048.00) -> tile(794.0938,390.8125) -> geo(39.147103,99.173584)
-2025-10-23 09:05:44.960 - latLonToTile: lat=39.1471, lon=99.1736, zoom=10 -> tileX=794, tileY=390
-2025-10-23 09:05:45.015 - sceneToLatLon(abs): scene(203377.00,100166.00) -> tile(794.4414,391.2734) -> geo(39.021318,99.295807)
-2025-10-23 09:05:45.018 - latLonToTile: lat=39.0213, lon=99.2958, zoom=10 -> tileX=794, tileY=391
-2025-10-23 09:05:45.126 - sceneToLatLon(abs): scene(203240.00,100041.00) -> tile(793.9063,390.7852) -> geo(39.154557,99.107666)
-2025-10-23 09:05:45.128 - latLonToTile: lat=39.1546, lon=99.1077, zoom=10 -> tileX=793, tileY=390
-2025-10-23 09:05:45.438 - sceneToLatLon(abs): scene(203327.00,100004.00) -> tile(794.2461,390.6406) -> geo(39.193948,99.227142)
-2025-10-23 09:05:45.439 - latLonToTile: lat=39.1939, lon=99.2271, zoom=10 -> tileX=794, tileY=390
-2025-10-23 09:05:45.470 - sceneToLatLon(abs): scene(203403.00,99910.00) -> tile(794.5430,390.2734) -> geo(39.293923,99.331512)
-2025-10-23 09:05:45.471 - latLonToTile: lat=39.2939, lon=99.3315, zoom=10 -> tileX=794, tileY=390
-2025-10-23 09:05:45.510 - sceneToLatLon(abs): scene(203457.00,99814.00) -> tile(794.7539,389.8984) -> geo(39.395877,99.405670)
-2025-10-23 09:05:45.511 - latLonToTile: lat=39.3959, lon=99.4057, zoom=10 -> tileX=794, tileY=389
-2025-10-23 09:05:45.627 - sceneToLatLon(abs): scene(203214.00,99919.00) -> tile(793.8047,390.3086) -> geo(39.284357,99.071960)
-2025-10-23 09:05:45.633 - latLonToTile: lat=39.2844, lon=99.072, zoom=10 -> tileX=793, tileY=390
-2025-10-23 09:05:45.733 - sceneToLatLon(abs): scene(203444.00,99784.00) -> tile(794.7031,389.7813) -> geo(39.427707,99.387817)
-2025-10-23 09:05:45.735 - latLonToTile: lat=39.4277, lon=99.3878, zoom=10 -> tileX=794, tileY=389
-2025-10-23 09:05:46.051 - sceneToLatLon(abs): scene(203511.00,99697.00) -> tile(794.9648,389.4414) -> geo(39.519933,99.479828)
-2025-10-23 09:05:46.051 - latLonToTile: lat=39.5199, lon=99.4798, zoom=10 -> tileX=794, tileY=389
-2025-10-23 09:05:46.151 - sceneToLatLon(abs): scene(203606.00,99649.00) -> tile(795.3359,389.2539) -> geo(39.570764,99.610291)
-2025-10-23 09:05:46.151 - latLonToTile: lat=39.5708, lon=99.6103, zoom=10 -> tileX=795, tileY=389
-2025-10-23 09:05:50.727 - === ZOOM 10->9 === Mouse:(346,178) Viewport:740x511
-2025-10-23 09:05:50.729 - latLonToTile: lat=39.5708, lon=99.6103, zoom=10 -> tileX=795, tileY=389
-2025-10-23 09:05:50.731 -   Offset:(-0.094,-0.303) MouseGEO:(39.6528,99.5773) -> NewCenter:(39.4887,99.6432)
-2025-10-23 09:05:50.731 - latLonToTile: lat=39.4887, lon=99.6432, zoom=9 -> tileX=397, tileY=194
-2025-10-23 09:05:50.803 - latLonToTile: lat=39.4887, lon=99.6432, zoom=9 -> tileX=397, tileY=194
-2025-10-23 09:05:50.804 - latLonToTile: lat=39.4887, lon=99.6432, zoom=9 -> tileX=397, tileY=194
-2025-10-23 09:05:50.904 - sceneToLatLon(abs): scene(130701.00,99662.00) -> tile(510.5508,389.3047) -> geo(-67.956086,178.981018)
-2025-10-23 09:05:50.906 - latLonToTile: lat=-67.9561, lon=178.981, zoom=9 -> tileX=510, tileY=389
-2025-10-23 09:05:53.581 - === ZOOM 9->10 === Mouse:(346,178) Viewport:740x511
-2025-10-23 09:05:53.591 - latLonToTile: lat=-67.9561, lon=178.981, zoom=9 -> tileX=510, tileY=389
-2025-10-23 09:05:53.592 -   Offset:(-0.094,-0.303) MouseGEO:(-67.8761,178.9151) -> NewCenter:(-67.9161,178.9481)
-2025-10-23 09:05:53.592 - latLonToTile: lat=-67.9161, lon=178.948, zoom=10 -> tileX=1021, tileY=778
-2025-10-23 09:05:53.598 - latLonToTile: lat=-67.9161, lon=178.948, zoom=10 -> tileX=1021, tileY=778
-2025-10-23 09:05:53.599 - latLonToTile: lat=-67.9161, lon=178.948, zoom=10 -> tileX=1021, tileY=778
-2025-10-23 09:59:45.637 - TileMapManager constructor started
-2025-10-23 09:59:45.660 - Current working directory: E:/Project/CursorProject/CustomTitleBarApp/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug
-2025-10-23 09:59:45.660 - Project root directory: E:/Project/CursorProject/CustomTitleBarApp
-2025-10-23 09:59:45.724 - Cache directory: E:/Project/CursorProject/CustomTitleBarApp/tilemap
-2025-10-23 09:59:45.736 - Cache directory already exists
-2025-10-23 09:59:45.736 - Network manager is accessible: 1
-2025-10-23 09:59:45.736 - TileMapManager constructor finished
-2025-10-23 09:59:45.742 - Checking for local tiles...
-2025-10-23 09:59:45.743 - Found local tiles, using zoom level: 10
-2025-10-23 09:59:45.744 - Loading local tiles for zoom: 10
-2025-10-23 09:59:45.745 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:45.770 - Local tiles loaded successfully, count: 25
-2025-10-23 09:59:45.807 - === Local Tiles Information ===
-2025-10-23 09:59:45.860 - Zoom level 1: 4 tiles
-2025-10-23 09:59:46.386 - Zoom level 10: 23720 tiles
-2025-10-23 09:59:46.394 - Zoom level 2: 16 tiles
-2025-10-23 09:59:46.396 - Zoom level 3: 64 tiles
-2025-10-23 09:59:46.405 - Zoom level 4: 177 tiles
-2025-10-23 09:59:46.414 - Zoom level 5: 246 tiles
-2025-10-23 09:59:46.426 - Zoom level 6: 252 tiles
-2025-10-23 09:59:46.443 - Zoom level 7: 497 tiles
-2025-10-23 09:59:46.486 - Zoom level 8: 1603 tiles
-2025-10-23 09:59:46.619 - Zoom level 9: 6080 tiles
-2025-10-23 09:59:46.619 - Total tiles: 32659
-2025-10-23 09:59:46.630 - Available zoom levels: 10
-2025-10-23 09:59:46.631 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
-2025-10-23 09:59:46.780 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.786 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.807 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.816 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.828 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.830 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.839 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.849 - latLonToTile: lat=39.9042, lon=116.407, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:46.960 - sceneToLatLon(abs): scene(215836.00,99333.00) -> tile(843.1094,388.0195) -> geo(39.904469,116.405640)
-2025-10-23 09:59:46.961 - latLonToTile: lat=39.9045, lon=116.406, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:49.643 - === ZOOM 10->9 === Mouse:(375,248) Viewport:740x511
-2025-10-23 09:59:49.644 - latLonToTile: lat=39.9045, lon=116.406, zoom=10 -> tileX=843, tileY=388
-2025-10-23 09:59:49.647 -   Offset:(0.020,-0.029) MouseGEO:(39.9124,116.4125) -> NewCenter:(39.8966,116.3988)
-2025-10-23 09:59:49.648 - latLonToTile: lat=39.8966, lon=116.399, zoom=9 -> tileX=421, tileY=194
-2025-10-23 09:59:49.707 - latLonToTile: lat=39.8966, lon=116.399, zoom=9 -> tileX=421, tileY=194
-2025-10-23 09:59:49.709 - latLonToTile: lat=39.8966, lon=116.399, zoom=9 -> tileX=421, tileY=194
-2025-10-23 09:59:49.810 - sceneToLatLon(abs): scene(130701.00,99333.00) -> tile(510.5508,388.0195) -> geo(-67.614451,178.981018)
-2025-10-23 09:59:49.810 - latLonToTile: lat=-67.6145, lon=178.981, zoom=9 -> tileX=510, tileY=388
-2025-10-23 09:59:52.437 - === ZOOM 9->8 === Mouse:(375,248) Viewport:740x511
-2025-10-23 09:59:52.437 - latLonToTile: lat=-67.6145, lon=178.981, zoom=9 -> tileX=510, tileY=388
-2025-10-23 09:59:52.438 -   Offset:(0.020,-0.029) MouseGEO:(-67.6066,178.9948) -> NewCenter:(-67.6223,178.9673)
-2025-10-23 09:59:52.438 - latLonToTile: lat=-67.6223, lon=178.967, zoom=8 -> tileX=255, tileY=194
-2025-10-23 09:59:52.447 - latLonToTile: lat=-67.6223, lon=178.967, zoom=8 -> tileX=255, tileY=194
-2025-10-23 09:59:52.449 - latLonToTile: lat=-67.6223, lon=178.967, zoom=8 -> tileX=255, tileY=194
-2025-10-23 09:59:52.704 - sceneToLatLon(abs): scene(65165.00,65280.00) -> tile(254.5508,255.0000) -> geo(-84.928321,177.962036)
-2025-10-23 09:59:52.711 - latLonToTile: lat=-84.9283, lon=177.962, zoom=8 -> tileX=254, tileY=254
+2025-10-23 15:31:53.188 - Checking for local tiles...
+2025-10-23 15:31:53.189 - Found local tiles, using zoom level: 10
+2025-10-23 15:31:53.190 - Loading local tiles for zoom: 10
+2025-10-23 15:31:53.221 - Local tiles loaded successfully, count: 25
+2025-10-23 15:31:53.223 - === Local Tiles Information ===
+2025-10-23 15:31:53.224 - Zoom level 1: 4 tiles
+2025-10-23 15:31:53.682 - Zoom level 10: 23864 tiles
+2025-10-23 15:31:53.684 - Zoom level 2: 16 tiles
+2025-10-23 15:31:53.690 - Zoom level 3: 64 tiles
+2025-10-23 15:31:53.694 - Zoom level 4: 216 tiles
+2025-10-23 15:31:53.707 - Zoom level 5: 251 tiles
+2025-10-23 15:31:53.715 - Zoom level 6: 269 tiles
+2025-10-23 15:31:53.722 - Zoom level 7: 497 tiles
+2025-10-23 15:31:53.772 - Zoom level 8: 1603 tiles
+2025-10-23 15:31:53.903 - Zoom level 9: 6116 tiles
+2025-10-23 15:31:53.905 - Total tiles: 32900
+2025-10-23 15:31:53.906 - Available zoom levels: 10
+2025-10-23 15:31:53.907 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 15:34:42.130 - Checking for local tiles...
+2025-10-23 15:34:42.145 - Found local tiles, using zoom level: 10
+2025-10-23 15:34:42.146 - Loading local tiles for zoom: 10
+2025-10-23 15:34:42.163 - Local tiles loaded successfully, count: 25
+2025-10-23 15:34:42.163 - === Local Tiles Information ===
+2025-10-23 15:34:42.179 - Zoom level 1: 4 tiles
+2025-10-23 15:34:42.529 - Zoom level 10: 23864 tiles
+2025-10-23 15:34:42.529 - Zoom level 2: 16 tiles
+2025-10-23 15:34:42.529 - Zoom level 3: 64 tiles
+2025-10-23 15:34:42.551 - Zoom level 4: 216 tiles
+2025-10-23 15:34:42.559 - Zoom level 5: 251 tiles
+2025-10-23 15:34:42.563 - Zoom level 6: 269 tiles
+2025-10-23 15:34:42.581 - Zoom level 7: 497 tiles
+2025-10-23 15:34:42.616 - Zoom level 8: 1603 tiles
+2025-10-23 15:34:42.714 - Zoom level 9: 6116 tiles
+2025-10-23 15:34:42.715 - Total tiles: 32900
+2025-10-23 15:34:42.715 - Available zoom levels: 10
+2025-10-23 15:34:42.716 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 15:39:12.925 - Checking for local tiles...
+2025-10-23 15:39:12.926 - Found local tiles, using zoom level: 10
+2025-10-23 15:39:12.926 - Loading local tiles for zoom: 10
+2025-10-23 15:39:12.953 - Local tiles loaded successfully, count: 25
+2025-10-23 15:39:12.956 - === Local Tiles Information ===
+2025-10-23 15:39:12.958 - Zoom level 1: 4 tiles
+2025-10-23 15:39:13.337 - Zoom level 10: 23864 tiles
+2025-10-23 15:39:13.339 - Zoom level 2: 16 tiles
+2025-10-23 15:39:13.342 - Zoom level 3: 64 tiles
+2025-10-23 15:39:13.348 - Zoom level 4: 216 tiles
+2025-10-23 15:39:13.354 - Zoom level 5: 251 tiles
+2025-10-23 15:39:13.361 - Zoom level 6: 269 tiles
+2025-10-23 15:39:13.373 - Zoom level 7: 497 tiles
+2025-10-23 15:39:13.405 - Zoom level 8: 1603 tiles
+2025-10-23 15:39:13.504 - Zoom level 9: 6116 tiles
+2025-10-23 15:39:13.504 - Total tiles: 32900
+2025-10-23 15:39:13.504 - Available zoom levels: 10
+2025-10-23 15:39:13.511 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 15:52:56.385 - Checking for local tiles...
+2025-10-23 15:52:56.385 - Found local tiles, using zoom level: 10
+2025-10-23 15:52:56.386 - Loading local tiles for zoom: 10
+2025-10-23 15:52:56.413 - Local tiles loaded successfully, count: 25
+2025-10-23 15:52:56.414 - === Local Tiles Information ===
+2025-10-23 15:52:56.415 - Zoom level 1: 4 tiles
+2025-10-23 15:52:56.754 - Zoom level 10: 23864 tiles
+2025-10-23 15:52:56.755 - Zoom level 2: 16 tiles
+2025-10-23 15:52:56.758 - Zoom level 3: 64 tiles
+2025-10-23 15:52:56.761 - Zoom level 4: 216 tiles
+2025-10-23 15:52:56.768 - Zoom level 5: 251 tiles
+2025-10-23 15:52:56.778 - Zoom level 6: 269 tiles
+2025-10-23 15:52:56.789 - Zoom level 7: 497 tiles
+2025-10-23 15:52:56.820 - Zoom level 8: 1603 tiles
+2025-10-23 15:52:56.914 - Zoom level 9: 6116 tiles
+2025-10-23 15:52:56.914 - Total tiles: 32900
+2025-10-23 15:52:56.915 - Available zoom levels: 10
+2025-10-23 15:52:56.915 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 17:56:42.903 - Checking for local tiles...
+2025-10-23 17:56:42.904 - Found local tiles, using zoom level: 10
+2025-10-23 17:56:42.904 - Loading local tiles for zoom: 10
+2025-10-23 17:56:43.107 - Local tiles loaded successfully, count: 25
+2025-10-23 17:56:43.117 - === Local Tiles Information ===
+2025-10-23 17:56:43.119 - Zoom level 1: 4 tiles
+2025-10-23 17:56:43.657 - Zoom level 10: 23864 tiles
+2025-10-23 17:56:43.662 - Zoom level 2: 16 tiles
+2025-10-23 17:56:43.665 - Zoom level 3: 64 tiles
+2025-10-23 17:56:43.673 - Zoom level 4: 216 tiles
+2025-10-23 17:56:43.681 - Zoom level 5: 251 tiles
+2025-10-23 17:56:43.691 - Zoom level 6: 269 tiles
+2025-10-23 17:56:43.714 - Zoom level 7: 497 tiles
+2025-10-23 17:56:43.757 - Zoom level 8: 1603 tiles
+2025-10-23 17:56:43.906 - Zoom level 9: 6116 tiles
+2025-10-23 17:56:43.906 - Total tiles: 32900
+2025-10-23 17:56:43.907 - Available zoom levels: 10
+2025-10-23 17:56:43.907 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 18:01:20.181 - Checking for local tiles...
+2025-10-23 18:01:20.182 - Found local tiles, using zoom level: 10
+2025-10-23 18:01:20.182 - Loading local tiles for zoom: 10
+2025-10-23 18:01:20.213 - Local tiles loaded successfully, count: 25
+2025-10-23 18:01:20.218 - === Local Tiles Information ===
+2025-10-23 18:01:20.219 - Zoom level 1: 4 tiles
+2025-10-23 18:01:20.762 - Zoom level 10: 23864 tiles
+2025-10-23 18:01:20.764 - Zoom level 2: 16 tiles
+2025-10-23 18:01:20.766 - Zoom level 3: 64 tiles
+2025-10-23 18:01:20.773 - Zoom level 4: 216 tiles
+2025-10-23 18:01:20.782 - Zoom level 5: 251 tiles
+2025-10-23 18:01:20.794 - Zoom level 6: 269 tiles
+2025-10-23 18:01:20.811 - Zoom level 7: 497 tiles
+2025-10-23 18:01:20.846 - Zoom level 8: 1603 tiles
+2025-10-23 18:01:21.004 - Zoom level 9: 6116 tiles
+2025-10-23 18:01:21.004 - Total tiles: 32900
+2025-10-23 18:01:21.004 - Available zoom levels: 10
+2025-10-23 18:01:21.005 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 18:30:49.776 - Checking for local tiles...
+2025-10-23 18:30:49.777 - Found local tiles, using zoom level: 10
+2025-10-23 18:30:49.777 - Loading local tiles for zoom: 10
+2025-10-23 18:30:49.805 - Local tiles loaded successfully, count: 25
+2025-10-23 18:30:49.806 - === Local Tiles Information ===
+2025-10-23 18:30:49.807 - Zoom level 1: 4 tiles
+2025-10-23 18:30:50.354 - Zoom level 10: 23864 tiles
+2025-10-23 18:30:50.355 - Zoom level 2: 16 tiles
+2025-10-23 18:30:50.358 - Zoom level 3: 64 tiles
+2025-10-23 18:30:50.364 - Zoom level 4: 216 tiles
+2025-10-23 18:30:50.371 - Zoom level 5: 251 tiles
+2025-10-23 18:30:50.383 - Zoom level 6: 269 tiles
+2025-10-23 18:30:50.399 - Zoom level 7: 497 tiles
+2025-10-23 18:30:50.437 - Zoom level 8: 1603 tiles
+2025-10-23 18:30:50.590 - Zoom level 9: 6116 tiles
+2025-10-23 18:30:50.590 - Total tiles: 32900
+2025-10-23 18:30:50.591 - Available zoom levels: 10
+2025-10-23 18:30:50.591 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 18:33:44.810 - Checking for local tiles...
+2025-10-23 18:33:44.810 - Found local tiles, using zoom level: 10
+2025-10-23 18:33:44.810 - Loading local tiles for zoom: 10
+2025-10-23 18:33:44.840 - Local tiles loaded successfully, count: 25
+2025-10-23 18:33:44.844 - === Local Tiles Information ===
+2025-10-23 18:33:44.845 - Zoom level 1: 4 tiles
+2025-10-23 18:33:45.393 - Zoom level 10: 23864 tiles
+2025-10-23 18:33:45.397 - Zoom level 2: 16 tiles
+2025-10-23 18:33:45.399 - Zoom level 3: 64 tiles
+2025-10-23 18:33:45.405 - Zoom level 4: 216 tiles
+2025-10-23 18:33:45.413 - Zoom level 5: 251 tiles
+2025-10-23 18:33:45.420 - Zoom level 6: 269 tiles
+2025-10-23 18:33:45.439 - Zoom level 7: 497 tiles
+2025-10-23 18:33:45.483 - Zoom level 8: 1603 tiles
+2025-10-23 18:33:45.622 - Zoom level 9: 6116 tiles
+2025-10-23 18:33:45.622 - Total tiles: 32900
+2025-10-23 18:33:45.634 - Available zoom levels: 10
+2025-10-23 18:33:45.634 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 19:07:22.541 - Checking for local tiles...
+2025-10-23 19:07:22.547 - Found local tiles, using zoom level: 10
+2025-10-23 19:07:22.547 - Loading local tiles for zoom: 10
+2025-10-23 19:07:22.578 - Local tiles loaded successfully, count: 25
+2025-10-23 19:07:22.579 - === Local Tiles Information ===
+2025-10-23 19:07:22.580 - Zoom level 1: 4 tiles
+2025-10-23 19:07:32.170 - Zoom level 10: 23864 tiles
+2025-10-23 19:07:32.172 - Zoom level 2: 16 tiles
+2025-10-23 19:07:32.176 - Zoom level 3: 64 tiles
+2025-10-23 19:07:32.185 - Zoom level 4: 216 tiles
+2025-10-23 19:07:32.199 - Zoom level 5: 251 tiles
+2025-10-23 19:07:32.268 - Zoom level 6: 269 tiles
+2025-10-23 19:07:32.716 - Zoom level 7: 497 tiles
+2025-10-23 19:07:32.781 - Zoom level 8: 1603 tiles
+2025-10-23 19:07:32.931 - Zoom level 9: 6116 tiles
+2025-10-23 19:07:32.931 - Total tiles: 32900
+2025-10-23 19:07:32.932 - Available zoom levels: 10
+2025-10-23 19:07:32.932 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 19:21:50.927 - Checking for local tiles...
+2025-10-23 19:21:50.928 - Found local tiles, using zoom level: 10
+2025-10-23 19:21:50.928 - Loading local tiles for zoom: 10
+2025-10-23 19:21:50.954 - Local tiles loaded successfully, count: 25
+2025-10-23 19:21:50.955 - === Local Tiles Information ===
+2025-10-23 19:21:50.956 - Zoom level 1: 4 tiles
+2025-10-23 19:21:51.468 - Zoom level 10: 23864 tiles
+2025-10-23 19:21:51.485 - Zoom level 2: 16 tiles
+2025-10-23 19:21:51.488 - Zoom level 3: 64 tiles
+2025-10-23 19:21:51.495 - Zoom level 4: 216 tiles
+2025-10-23 19:21:51.502 - Zoom level 5: 251 tiles
+2025-10-23 19:21:51.508 - Zoom level 6: 269 tiles
+2025-10-23 19:21:51.528 - Zoom level 7: 497 tiles
+2025-10-23 19:21:51.568 - Zoom level 8: 1603 tiles
+2025-10-23 19:21:51.740 - Zoom level 9: 6116 tiles
+2025-10-23 19:21:51.740 - Total tiles: 32900
+2025-10-23 19:21:51.740 - Available zoom levels: 10
+2025-10-23 19:21:51.741 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 19:24:56.563 - Checking for local tiles...
+2025-10-23 19:24:56.563 - Found local tiles, using zoom level: 10
+2025-10-23 19:24:56.564 - Loading local tiles for zoom: 10
+2025-10-23 19:24:56.593 - Local tiles loaded successfully, count: 25
+2025-10-23 19:24:56.594 - === Local Tiles Information ===
+2025-10-23 19:24:56.595 - Zoom level 1: 4 tiles
+2025-10-23 19:24:57.149 - Zoom level 10: 23864 tiles
+2025-10-23 19:24:57.151 - Zoom level 2: 16 tiles
+2025-10-23 19:24:57.154 - Zoom level 3: 64 tiles
+2025-10-23 19:24:57.161 - Zoom level 4: 216 tiles
+2025-10-23 19:24:57.168 - Zoom level 5: 251 tiles
+2025-10-23 19:24:57.173 - Zoom level 6: 269 tiles
+2025-10-23 19:24:57.195 - Zoom level 7: 497 tiles
+2025-10-23 19:24:57.232 - Zoom level 8: 1603 tiles
+2025-10-23 19:24:57.384 - Zoom level 9: 6116 tiles
+2025-10-23 19:24:57.384 - Total tiles: 32900
+2025-10-23 19:24:57.385 - Available zoom levels: 10
+2025-10-23 19:24:57.385 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9
+2025-10-23 20:37:00.580 - Checking for local tiles...
+2025-10-23 20:37:00.580 - Found local tiles, using zoom level: 10
+2025-10-23 20:37:00.580 - Loading local tiles for zoom: 10
+2025-10-23 20:37:00.608 - Local tiles loaded successfully, count: 25
+2025-10-23 20:37:00.609 - === Local Tiles Information ===
+2025-10-23 20:37:00.610 - Zoom level 1: 4 tiles
+2025-10-23 20:37:01.160 - Zoom level 10: 23864 tiles
+2025-10-23 20:37:01.162 - Zoom level 2: 16 tiles
+2025-10-23 20:37:01.164 - Zoom level 3: 64 tiles
+2025-10-23 20:37:01.171 - Zoom level 4: 216 tiles
+2025-10-23 20:37:01.178 - Zoom level 5: 251 tiles
+2025-10-23 20:37:01.184 - Zoom level 6: 269 tiles
+2025-10-23 20:37:01.205 - Zoom level 7: 497 tiles
+2025-10-23 20:37:01.253 - Zoom level 8: 1603 tiles
+2025-10-23 20:37:01.404 - Zoom level 9: 6116 tiles
+2025-10-23 20:37:01.404 - Total tiles: 32900
+2025-10-23 20:37:01.404 - Available zoom levels: 10
+2025-10-23 20:37:01.404 - Zoom levels: 1, 10, 2, 3, 4, 5, 6, 7, 8, 9

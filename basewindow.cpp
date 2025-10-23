@@ -2,6 +2,10 @@
 #include "basewindow.h"
 #include <QDebug>
 #include <QTimer>
+#include <QEvent>
+#include <QMouseEvent>
+#include <QApplication>
+#include <QWidget>
 
 const int BaseWindow::BORDER_WIDTH = 6;
 
@@ -31,6 +35,13 @@ BaseWindow::BaseWindow(QWidget *parent)
     centralWidgetContainer->setMouseTracking(true);
     titleBar->setMouseTracking(true);
     contentContainer->setMouseTracking(true);
+
+    // 安装事件过滤器，确保子控件不吞掉鼠标移动，用于更新边框光标
+    this->installEventFilter(this);
+    centralWidgetContainer->installEventFilter(this);
+    contentContainer->installEventFilter(this);
+    // 全局监听鼠标移动，保证在复杂子层级上也能更新光标
+    qApp->installEventFilter(this);
 }
 
 void BaseWindow::setContentWidget(QWidget *content) {
@@ -44,37 +55,80 @@ void BaseWindow::setContentWidget(QWidget *content) {
 }
 
 bool BaseWindow::event(QEvent *event) {
-    // if (event->type() == QEvent::MouseMove) {
-    //     QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-    //     // 只有在非拖拽、非按钮按下时更新光标
-    //     if (!m_resizing && !(mouseEvent->buttons() & Qt::LeftButton)) {
-    //         QPoint pos = mapFromGlobal(mouseEvent->globalPosition().toPoint());
-    //         ResizeDirection dir = getResizeDirection(pos);
+    if (event->type() == QEvent::MouseMove) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        // 只有在非拖拽、非左键按下时更新光标样式
+        if (!m_resizing && !(mouseEvent->buttons() & Qt::LeftButton)) {
+            QPoint pos = mapFromGlobal(mouseEvent->globalPosition().toPoint());
+            ResizeDirection dir = getResizeDirection(pos);
 
-    //         switch (dir) {
-    //         case Top:
-    //         case Bottom:
-    //             setCursor(Qt::SizeVerCursor);
-    //             break;
-    //         case Left:
-    //         case Right:
-    //             setCursor(Qt::SizeHorCursor);
-    //             break;
-    //         case TopLeft:
-    //         case BottomRight:
-    //             setCursor(Qt::SizeFDiagCursor);
-    //             break;
-    //         case TopRight:
-    //         case BottomLeft:
-    //             setCursor(Qt::SizeBDiagCursor);
-    //             break;
-    //         default:
-    //             setCursor(Qt::ArrowCursor);
-    //             break;
-    //         }
-    //     }
-    // }
+            switch (dir) {
+            case Top:
+            case Bottom:
+                setCursor(Qt::SizeVerCursor);
+                break;
+            case Left:
+            case Right:
+                setCursor(Qt::SizeHorCursor);
+                break;
+            case TopLeft:
+            case BottomRight:
+                setCursor(Qt::SizeFDiagCursor);
+                break;
+            case TopRight:
+            case BottomLeft:
+                setCursor(Qt::SizeBDiagCursor);
+                break;
+            default:
+                setCursor(Qt::ArrowCursor);
+                break;
+            }
+        }
+    } else if (event->type() == QEvent::Leave) {
+        // 离开窗口时恢复箭头光标
+        unsetCursor();
+    }
     return QMainWindow::event(event);
+}
+
+bool BaseWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::MouseMove) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        if (!m_resizing && !(mouseEvent->buttons() & Qt::LeftButton)) {
+            // 仅当鼠标位于本窗口上时处理
+            const QPoint globalPos = mouseEvent->globalPosition().toPoint();
+            QWidget *w = QApplication::widgetAt(globalPos);
+            if (w && w->window() == this) {
+                // 统一使用全局坐标映射到窗口坐标，避免子控件局部坐标误差
+                QPoint pos = mapFromGlobal(globalPos);
+                ResizeDirection dir = getResizeDirection(pos);
+
+                switch (dir) {
+                case Top:
+                case Bottom:
+                    setCursor(Qt::SizeVerCursor);
+                    break;
+                case Left:
+                case Right:
+                    setCursor(Qt::SizeHorCursor);
+                    break;
+                case TopLeft:
+                case BottomRight:
+                    setCursor(Qt::SizeFDiagCursor);
+                    break;
+                case TopRight:
+                case BottomLeft:
+                    setCursor(Qt::SizeBDiagCursor);
+                    break;
+                default:
+                    setCursor(Qt::ArrowCursor);
+                    break;
+                }
+            }
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
 
 BaseWindow::ResizeDirection BaseWindow::getResizeDirection(const QPoint &pos) const {

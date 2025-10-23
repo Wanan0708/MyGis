@@ -11,6 +11,11 @@
 #include <QPixmap>
 #include <QPoint>
 #include <QProgressBar>
+#include <QTimer>
+#include <QPointer>
+#include <QScrollBar>
+#include <QToolButton>
+#include <QGraphicsProxyWidget>
 
 // 添加TileMapManager的前置声明
 class TileMapManager;
@@ -56,6 +61,9 @@ private slots:
     void onTileDownloadProgress(int current, int total);
     void onRegionDownloadProgress(int current, int total, int zoom); // 区域下载进度槽函数
 
+    // Overlay 相关槽
+    void onOverlayPanToggled(bool checked);
+
 private:
     Ui::MyForm *ui;
     QString currentFile;
@@ -73,7 +81,7 @@ private:
     QPointF lastRightClickScenePos;
     
     // 缩放限制
-    static constexpr int MIN_ZOOM_LEVEL = 1;   // 最小缩放层级
+    static constexpr int MIN_ZOOM_LEVEL = 3;   // 最小缩放层级（限制为3-10）
     static constexpr int MAX_ZOOM_LEVEL = 10;  // 最大缩放层级
     
     // 瓦片地图管理器
@@ -85,6 +93,21 @@ private:
     
     // 拖动更新相关
     QTimer *viewUpdateTimer;  // 延迟更新定时器
+    // 滚动条悬浮延迟展开
+    QTimer *hScrollHoverTimer = nullptr;
+    QTimer *vScrollHoverTimer = nullptr;
+    bool hScrollExpanded = false;
+    bool vScrollExpanded = false;
+    QPointer<QScrollBar> hScrollTarget;
+    QPointer<QScrollBar> vScrollTarget;
+
+    // GraphicsView 右上角浮动工具（两种模式：viewport-widget 或 scene-proxy）
+    QWidget *gvOverlay = nullptr;               // 直接贴在 viewport 上
+    QGraphicsProxyWidget *overlayProxy = nullptr; // 作为场景项添加
+    QWidget *overlayPanel = nullptr;            // 场景代理承载的面板
+    QToolButton *btnZoomIn = nullptr;
+    QToolButton *btnZoomOut = nullptr;
+    QToolButton *btnPanToggle = nullptr;
     
     // 日志记录函数
     void logMessage(const QString &message);
@@ -95,6 +118,10 @@ private:
     void setupSplitter();
     void updateStatus(const QString &message);
     void loadMap(const QString &mapPath);
+    void createGraphicsOverlay();               // viewport 方案
+    void positionGraphicsOverlay();
+    void createGraphicsOverlayScene();          // scene+proxy 方案（兜底）
+    void positionGraphicsOverlayScene();
     
     // 添加公共方法来触发区域下载
 public:

@@ -1,209 +1,132 @@
-2025-10-22 22:31:33.837 - === MyForm constructor started ===
-2025-10-22 22:31:33.840 - Setting up map area
-2025-10-22 22:31:33.841 - Creating TileMapManager
-2025-10-22 22:31:33.857 - TileMapManager created: 1
-2025-10-22 22:31:33.858 - Connecting regionDownloadProgress signal
-2025-10-22 22:31:33.858 - Signal connected
-2025-10-22 22:31:33.858 - Checking for local tiles...
-2025-10-22 22:31:33.898 - Local tiles check completed
-2025-10-22 22:31:40.983 - === MyForm constructor finished ===
-2025-10-22 22:31:41.331 - Initial view size: 740x511
-2025-10-22 22:31:41.464 - Current zoom level: 10/10
-2025-10-22 22:38:58.478 - === MyForm constructor started ===
-2025-10-22 22:38:58.482 - Setting up map area
-2025-10-22 22:38:58.482 - Creating TileMapManager
-2025-10-22 22:38:58.513 - TileMapManager created: 1
-2025-10-22 22:38:58.513 - Connecting regionDownloadProgress signal
-2025-10-22 22:38:58.513 - Signal connected
-2025-10-22 22:38:58.515 - Checking for local tiles...
-2025-10-22 22:38:58.552 - Local tiles check completed
-2025-10-22 22:38:59.525 - === MyForm constructor finished ===
-2025-10-22 22:38:59.884 - Initial view size: 740x511
-2025-10-22 22:39:00.045 - Current zoom level: 10/10
-2025-10-22 22:50:16.292 - === MyForm constructor started ===
-2025-10-22 22:50:16.296 - Setting up map area
-2025-10-22 22:50:16.297 - Creating TileMapManager
-2025-10-22 22:50:16.302 - TileMapManager created: 1
-2025-10-22 22:50:16.302 - Connecting regionDownloadProgress signal
-2025-10-22 22:50:16.303 - Signal connected
-2025-10-22 22:50:16.303 - Checking for local tiles...
-2025-10-22 22:50:16.341 - Local tiles check completed
-2025-10-22 22:50:17.132 - === MyForm constructor finished ===
-2025-10-22 22:50:17.438 - Initial view size: 740x511
-2025-10-22 22:50:17.497 - Current zoom level: 10/10
-2025-10-22 22:56:18.290 - === MyForm constructor started ===
-2025-10-22 22:56:18.294 - Setting up map area
-2025-10-22 22:56:18.295 - Creating TileMapManager
-2025-10-22 22:56:18.300 - TileMapManager created: 1
-2025-10-22 22:56:18.301 - Connecting regionDownloadProgress signal
-2025-10-22 22:56:18.301 - Signal connected
-2025-10-22 22:56:18.302 - Checking for local tiles...
-2025-10-22 22:56:18.339 - Local tiles check completed
-2025-10-22 22:56:19.124 - === MyForm constructor finished ===
-2025-10-22 22:56:19.431 - Initial view size: 740x511
-2025-10-22 22:56:19.496 - Current zoom level: 10/10
-2025-10-22 23:06:34.570 - === MyForm constructor started ===
-2025-10-22 23:06:34.574 - Setting up map area
-2025-10-22 23:06:34.575 - Creating TileMapManager
-2025-10-22 23:06:34.584 - TileMapManager created: 1
-2025-10-22 23:06:34.584 - Connecting regionDownloadProgress signal
-2025-10-22 23:06:34.584 - Signal connected
-2025-10-22 23:06:34.585 - Checking for local tiles...
-2025-10-22 23:06:34.623 - Local tiles check completed
-2025-10-22 23:06:35.418 - === MyForm constructor finished ===
-2025-10-22 23:06:35.617 - Initial view size: 740x511
-2025-10-22 23:06:35.648 - Current zoom level: 10/10
-2025-10-22 23:20:24.324 - === MyForm constructor started ===
-2025-10-22 23:20:24.328 - Setting up map area
-2025-10-22 23:20:24.329 - Creating TileMapManager
-2025-10-22 23:20:24.334 - TileMapManager created: 1
-2025-10-22 23:20:24.334 - Connecting regionDownloadProgress signal
-2025-10-22 23:20:24.335 - Signal connected
-2025-10-22 23:20:24.335 - Checking for local tiles...
-2025-10-22 23:20:24.370 - Local tiles check completed
-2025-10-22 23:20:25.162 - === MyForm constructor finished ===
-2025-10-22 23:20:25.368 - Initial view size: 740x511
-2025-10-22 23:20:25.398 - Current zoom level: 10/10
-2025-10-22 23:31:26.357 - === MyForm constructor started ===
-2025-10-22 23:31:26.358 - Setting up map area
-2025-10-22 23:31:26.361 - Creating TileMapManager
-2025-10-22 23:31:26.369 - TileMapManager created: 1
-2025-10-22 23:31:26.369 - Connecting regionDownloadProgress signal
-2025-10-22 23:31:26.370 - Signal connected
-2025-10-22 23:31:26.371 - Checking for local tiles...
-2025-10-22 23:31:26.404 - Local tiles check completed
-2025-10-22 23:31:27.290 - === MyForm constructor finished ===
-2025-10-22 23:31:27.524 - Initial view size: 740x511
-2025-10-22 23:31:27.561 - Current zoom level: 10/10
-2025-10-22 23:38:12.768 - === MyForm constructor started ===
-2025-10-22 23:38:12.771 - Setting up map area
-2025-10-22 23:38:12.771 - Creating TileMapManager
-2025-10-22 23:38:12.777 - TileMapManager created: 1
-2025-10-22 23:38:12.779 - Connecting regionDownloadProgress signal
-2025-10-22 23:38:12.780 - Signal connected
-2025-10-22 23:38:12.781 - Checking for local tiles...
-2025-10-22 23:38:12.818 - Local tiles check completed
-2025-10-22 23:38:13.623 - === MyForm constructor finished ===
-2025-10-22 23:38:13.826 - Initial view size: 740x511
-2025-10-22 23:38:13.857 - Current zoom level: 10/10
-2025-10-22 23:41:27.349 - === MyForm constructor started ===
-2025-10-22 23:41:27.354 - Setting up map area
-2025-10-22 23:41:27.355 - Creating TileMapManager
-2025-10-22 23:41:27.363 - TileMapManager created: 1
-2025-10-22 23:41:27.364 - Connecting regionDownloadProgress signal
-2025-10-22 23:41:27.364 - Signal connected
-2025-10-22 23:41:27.364 - Checking for local tiles...
-2025-10-22 23:41:27.396 - Local tiles check completed
-2025-10-22 23:41:28.216 - === MyForm constructor finished ===
-2025-10-22 23:41:28.427 - Initial view size: 740x511
-2025-10-22 23:41:28.461 - Current zoom level: 10/10
-2025-10-22 23:49:06.907 - === MyForm constructor started ===
-2025-10-22 23:49:06.910 - Setting up map area
-2025-10-22 23:49:06.911 - Creating TileMapManager
-2025-10-22 23:49:06.917 - TileMapManager created: 1
-2025-10-22 23:49:06.917 - Connecting regionDownloadProgress signal
-2025-10-22 23:49:06.918 - Signal connected
-2025-10-22 23:49:06.918 - Checking for local tiles...
-2025-10-22 23:49:06.956 - Local tiles check completed
-2025-10-22 23:49:07.732 - === MyForm constructor finished ===
-2025-10-22 23:49:07.924 - Initial view size: 740x511
-2025-10-22 23:49:07.960 - Current zoom level: 10/10
-2025-10-22 23:50:33.148 - === MyForm constructor started ===
-2025-10-22 23:50:33.152 - Setting up map area
-2025-10-22 23:50:33.152 - Creating TileMapManager
-2025-10-22 23:50:33.158 - TileMapManager created: 1
-2025-10-22 23:50:33.159 - Connecting regionDownloadProgress signal
-2025-10-22 23:50:33.160 - Signal connected
-2025-10-22 23:50:33.160 - Checking for local tiles...
-2025-10-22 23:50:33.198 - Local tiles check completed
-2025-10-22 23:50:37.731 - === MyForm constructor finished ===
-2025-10-22 23:50:37.930 - Initial view size: 740x511
-2025-10-22 23:50:37.963 - Current zoom level: 10/10
-2025-10-22 23:56:36.492 - === MyForm constructor started ===
-2025-10-22 23:56:36.495 - Setting up map area
-2025-10-22 23:56:36.496 - Creating TileMapManager
-2025-10-22 23:56:36.503 - TileMapManager created: 1
-2025-10-22 23:56:36.503 - Connecting regionDownloadProgress signal
-2025-10-22 23:56:36.503 - Signal connected
-2025-10-22 23:56:36.503 - Checking for local tiles...
-2025-10-22 23:56:36.543 - Local tiles check completed
-2025-10-22 23:56:37.348 - === MyForm constructor finished ===
-2025-10-22 23:56:37.548 - Initial view size: 740x511
-2025-10-22 23:56:37.581 - Current zoom level: 10/10
-2025-10-23 00:05:35.706 - === MyForm constructor started ===
-2025-10-23 00:05:35.709 - Setting up map area
-2025-10-23 00:05:35.710 - Creating TileMapManager
-2025-10-23 00:05:35.716 - TileMapManager created: 1
-2025-10-23 00:05:35.716 - Connecting regionDownloadProgress signal
-2025-10-23 00:05:35.717 - Signal connected
-2025-10-23 00:05:35.718 - Checking for local tiles...
-2025-10-23 00:05:35.753 - Local tiles check completed
-2025-10-23 00:05:36.546 - === MyForm constructor finished ===
-2025-10-23 00:05:36.757 - Initial view size: 740x511
-2025-10-23 00:05:36.789 - Current zoom level: 10/10
-2025-10-23 00:09:38.378 - === MyForm constructor started ===
-2025-10-23 00:09:38.381 - Setting up map area
-2025-10-23 00:09:38.382 - Creating TileMapManager
-2025-10-23 00:09:38.390 - TileMapManager created: 1
-2025-10-23 00:09:38.390 - Connecting regionDownloadProgress signal
-2025-10-23 00:09:38.391 - Signal connected
-2025-10-23 00:09:38.391 - Checking for local tiles...
-2025-10-23 00:09:38.427 - Local tiles check completed
-2025-10-23 00:09:39.216 - === MyForm constructor finished ===
-2025-10-23 00:09:39.419 - Initial view size: 740x511
-2025-10-23 00:09:39.453 - Current zoom level: 10/10
-2025-10-23 00:10:45.174 - === MyForm constructor started ===
-2025-10-23 00:10:45.177 - Setting up map area
-2025-10-23 00:10:45.178 - Creating TileMapManager
-2025-10-23 00:10:45.219 - TileMapManager created: 1
-2025-10-23 00:10:45.219 - Connecting regionDownloadProgress signal
-2025-10-23 00:10:45.220 - Signal connected
-2025-10-23 00:10:45.220 - Checking for local tiles...
-2025-10-23 00:10:45.254 - Local tiles check completed
-2025-10-23 00:10:46.220 - === MyForm constructor finished ===
-2025-10-23 00:10:46.443 - Initial view size: 740x511
-2025-10-23 00:10:46.482 - Current zoom level: 10/10
-2025-10-23 00:11:36.456 - === MyForm constructor started ===
-2025-10-23 00:11:36.460 - Setting up map area
-2025-10-23 00:11:36.467 - Creating TileMapManager
-2025-10-23 00:11:36.473 - TileMapManager created: 1
-2025-10-23 00:11:36.474 - Connecting regionDownloadProgress signal
-2025-10-23 00:11:36.476 - Signal connected
-2025-10-23 00:11:36.476 - Checking for local tiles...
-2025-10-23 00:11:36.522 - Local tiles check completed
-2025-10-23 00:11:37.300 - === MyForm constructor finished ===
-2025-10-23 00:11:37.492 - Initial view size: 740x511
-2025-10-23 00:11:37.525 - Current zoom level: 10/10
-2025-10-23 00:15:09.083 - === MyForm constructor started ===
-2025-10-23 00:15:09.087 - Setting up map area
-2025-10-23 00:15:09.087 - Creating TileMapManager
-2025-10-23 00:15:09.096 - TileMapManager created: 1
-2025-10-23 00:15:09.096 - Connecting regionDownloadProgress signal
-2025-10-23 00:15:09.097 - Signal connected
-2025-10-23 00:15:09.097 - Checking for local tiles...
-2025-10-23 00:15:09.132 - Local tiles check completed
-2025-10-23 00:15:09.918 - === MyForm constructor finished ===
-2025-10-23 00:15:10.115 - Initial view size: 740x511
-2025-10-23 00:15:10.147 - Current zoom level: 10/10
-2025-10-23 09:05:21.677 - === MyForm constructor started ===
-2025-10-23 09:05:21.709 - Setting up map area
-2025-10-23 09:05:21.709 - Creating TileMapManager
-2025-10-23 09:05:21.805 - TileMapManager created: 1
-2025-10-23 09:05:21.805 - Connecting regionDownloadProgress signal
-2025-10-23 09:05:21.805 - Signal connected
-2025-10-23 09:05:21.806 - Checking for local tiles...
-2025-10-23 09:05:21.839 - Local tiles check completed
-2025-10-23 09:05:23.061 - === MyForm constructor finished ===
-2025-10-23 09:05:23.306 - Initial view size: 740x511
-2025-10-23 09:05:23.343 - Current zoom level: 10/10
-2025-10-23 09:59:45.622 - === MyForm constructor started ===
-2025-10-23 09:59:45.625 - Setting up map area
-2025-10-23 09:59:45.637 - Creating TileMapManager
-2025-10-23 09:59:45.740 - TileMapManager created: 1
-2025-10-23 09:59:45.740 - Connecting regionDownloadProgress signal
-2025-10-23 09:59:45.741 - Signal connected
-2025-10-23 09:59:45.741 - Checking for local tiles...
-2025-10-23 09:59:45.807 - Local tiles check completed
-2025-10-23 09:59:46.632 - === MyForm constructor finished ===
-2025-10-23 09:59:46.821 - Initial view size: 740x511
-2025-10-23 09:59:46.853 - Current zoom level: 10/10
+2025-10-23 15:31:53.137 - === MyForm constructor started ===
+2025-10-23 15:31:53.171 - Setting up map area
+2025-10-23 15:31:53.171 - Creating TileMapManager
+2025-10-23 15:31:53.171 - TileMapManager created: 1
+2025-10-23 15:31:53.186 - Connecting regionDownloadProgress signal
+2025-10-23 15:31:53.187 - Signal connected
+2025-10-23 15:31:53.187 - Checking for local tiles...
+2025-10-23 15:31:53.222 - Local tiles check completed
+2025-10-23 15:31:53.916 - === MyForm constructor finished ===
+2025-10-23 15:31:54.141 - Initial view size: 753x524
+2025-10-23 15:31:54.157 - Current zoom level: 10/10
+2025-10-23 15:34:42.097 - === MyForm constructor started ===
+2025-10-23 15:34:42.130 - Setting up map area
+2025-10-23 15:34:42.130 - Creating TileMapManager
+2025-10-23 15:34:42.130 - TileMapManager created: 1
+2025-10-23 15:34:42.130 - Connecting regionDownloadProgress signal
+2025-10-23 15:34:42.130 - Signal connected
+2025-10-23 15:34:42.130 - Checking for local tiles...
+2025-10-23 15:34:42.163 - Local tiles check completed
+2025-10-23 15:34:42.721 - === MyForm constructor finished ===
+2025-10-23 15:34:42.894 - Initial view size: 753x524
+2025-10-23 15:34:42.896 - Current zoom level: 10/10
+2025-10-23 15:39:12.881 - === MyForm constructor started ===
+2025-10-23 15:39:12.905 - Setting up map area
+2025-10-23 15:39:12.918 - Creating TileMapManager
+2025-10-23 15:39:12.922 - TileMapManager created: 1
+2025-10-23 15:39:12.923 - Connecting regionDownloadProgress signal
+2025-10-23 15:39:12.924 - Signal connected
+2025-10-23 15:39:12.924 - Checking for local tiles...
+2025-10-23 15:39:12.955 - Local tiles check completed
+2025-10-23 15:39:13.516 - === MyForm constructor finished ===
+2025-10-23 15:39:13.694 - Initial view size: 753x524
+2025-10-23 15:39:13.704 - Current zoom level: 10/10
+2025-10-23 15:52:56.345 - === MyForm constructor started ===
+2025-10-23 15:52:56.379 - Setting up map area
+2025-10-23 15:52:56.380 - Creating TileMapManager
+2025-10-23 15:52:56.382 - TileMapManager created: 1
+2025-10-23 15:52:56.383 - Connecting regionDownloadProgress signal
+2025-10-23 15:52:56.383 - Signal connected
+2025-10-23 15:52:56.384 - Checking for local tiles...
+2025-10-23 15:52:56.414 - Local tiles check completed
+2025-10-23 15:52:56.919 - === MyForm constructor finished ===
+2025-10-23 15:52:57.099 - Initial view size: 753x524
+2025-10-23 15:52:57.109 - Current zoom level: 10/10
+2025-10-23 17:56:42.864 - === MyForm constructor started ===
+2025-10-23 17:56:42.898 - Setting up map area
+2025-10-23 17:56:42.899 - Creating TileMapManager
+2025-10-23 17:56:42.901 - TileMapManager created: 1
+2025-10-23 17:56:42.901 - Connecting regionDownloadProgress signal
+2025-10-23 17:56:42.902 - Signal connected
+2025-10-23 17:56:42.902 - Checking for local tiles...
+2025-10-23 17:56:43.117 - Local tiles check completed
+2025-10-23 17:56:43.912 - === MyForm constructor finished ===
+2025-10-23 17:56:44.087 - Initial view size: 753x524
+2025-10-23 17:56:44.090 - Current zoom level: 10/10
+2025-10-23 18:01:20.137 - === MyForm constructor started ===
+2025-10-23 18:01:20.174 - Setting up map area
+2025-10-23 18:01:20.175 - Creating TileMapManager
+2025-10-23 18:01:20.177 - TileMapManager created: 1
+2025-10-23 18:01:20.178 - Connecting regionDownloadProgress signal
+2025-10-23 18:01:20.179 - Signal connected
+2025-10-23 18:01:20.180 - Checking for local tiles...
+2025-10-23 18:01:20.217 - Local tiles check completed
+2025-10-23 18:01:21.009 - === MyForm constructor finished ===
+2025-10-23 18:01:21.191 - Initial view size: 753x524
+2025-10-23 18:01:21.204 - Current zoom level: 10/10
+2025-10-23 18:30:49.734 - === MyForm constructor started ===
+2025-10-23 18:30:49.770 - Setting up map area
+2025-10-23 18:30:49.772 - Creating TileMapManager
+2025-10-23 18:30:49.774 - TileMapManager created: 1
+2025-10-23 18:30:49.774 - Connecting regionDownloadProgress signal
+2025-10-23 18:30:49.775 - Signal connected
+2025-10-23 18:30:49.775 - Checking for local tiles...
+2025-10-23 18:30:49.805 - Local tiles check completed
+2025-10-23 18:30:50.595 - === MyForm constructor finished ===
+2025-10-23 18:30:50.768 - Initial view size: 753x524
+2025-10-23 18:30:50.781 - Current zoom level: 10/10
+2025-10-23 18:33:44.767 - === MyForm constructor started ===
+2025-10-23 18:33:44.803 - Setting up map area
+2025-10-23 18:33:44.804 - Creating TileMapManager
+2025-10-23 18:33:44.808 - TileMapManager created: 1
+2025-10-23 18:33:44.809 - Connecting regionDownloadProgress signal
+2025-10-23 18:33:44.810 - Signal connected
+2025-10-23 18:33:44.810 - Checking for local tiles...
+2025-10-23 18:33:44.844 - Local tiles check completed
+2025-10-23 18:33:45.640 - === MyForm constructor finished ===
+2025-10-23 18:33:45.819 - Initial view size: 753x524
+2025-10-23 18:33:45.832 - Current zoom level: 10/10
+2025-10-23 19:07:22.498 - === MyForm constructor started ===
+2025-10-23 19:07:22.535 - Setting up map area
+2025-10-23 19:07:22.536 - Creating TileMapManager
+2025-10-23 19:07:22.538 - TileMapManager created: 1
+2025-10-23 19:07:22.539 - Connecting regionDownloadProgress signal
+2025-10-23 19:07:22.539 - Signal connected
+2025-10-23 19:07:22.540 - Checking for local tiles...
+2025-10-23 19:07:22.578 - Local tiles check completed
+2025-10-23 19:07:32.937 - === MyForm constructor finished ===
+2025-10-23 19:07:33.123 - Initial view size: 753x524
+2025-10-23 19:07:33.137 - Current zoom level: 10/10
+2025-10-23 19:21:50.889 - === MyForm constructor started ===
+2025-10-23 19:21:50.921 - Setting up map area
+2025-10-23 19:21:50.922 - Creating TileMapManager
+2025-10-23 19:21:50.924 - TileMapManager created: 1
+2025-10-23 19:21:50.925 - Connecting regionDownloadProgress signal
+2025-10-23 19:21:50.926 - Signal connected
+2025-10-23 19:21:50.926 - Checking for local tiles...
+2025-10-23 19:21:50.955 - Local tiles check completed
+2025-10-23 19:21:51.745 - === MyForm constructor finished ===
+2025-10-23 19:21:51.922 - Initial view size: 753x524
+2025-10-23 19:21:51.936 - Current zoom level: 10/10
+2025-10-23 19:24:56.523 - === MyForm constructor started ===
+2025-10-23 19:24:56.557 - Setting up map area
+2025-10-23 19:24:56.558 - Creating TileMapManager
+2025-10-23 19:24:56.560 - TileMapManager created: 1
+2025-10-23 19:24:56.561 - Connecting regionDownloadProgress signal
+2025-10-23 19:24:56.561 - Signal connected
+2025-10-23 19:24:56.562 - Checking for local tiles...
+2025-10-23 19:24:56.593 - Local tiles check completed
+2025-10-23 19:24:57.389 - === MyForm constructor finished ===
+2025-10-23 19:24:57.587 - Initial view size: 753x524
+2025-10-23 19:24:57.597 - Current zoom level: 10/10
+2025-10-23 20:37:00.540 - === MyForm constructor started ===
+2025-10-23 20:37:00.572 - Setting up map area
+2025-10-23 20:37:00.574 - Creating TileMapManager
+2025-10-23 20:37:00.576 - TileMapManager created: 1
+2025-10-23 20:37:00.577 - Connecting regionDownloadProgress signal
+2025-10-23 20:37:00.578 - Signal connected
+2025-10-23 20:37:00.580 - Checking for local tiles...
+2025-10-23 20:37:00.608 - Local tiles check completed
+2025-10-23 20:37:01.413 - === MyForm constructor finished ===
+2025-10-23 20:37:01.599 - Initial view size: 753x524
+2025-10-23 20:37:01.613 - Current zoom level: 10/10

@@ -4,6 +4,10 @@ release/main.o
 release/myform.o
 release/tilemapmanager.o
 release/tileworker.o
+release/mapmanagersettings.o
+release/manifeststore.o
+release/downloadscheduler.o
+release/mapmanagerdialog.o
 release/qrc_image.o
 release/qrc_style.o
 release/moc_basewindow.o
@@ -11,3 +15,5 @@ release/moc_customtitlebar.o
 release/moc_myform.o
 release/moc_tilemapmanager.o
 release/moc_tileworker.o
+release/moc_downloadscheduler.o
+release/moc_mapmanagerdialog.o
