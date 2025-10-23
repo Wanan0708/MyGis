@@ -20,6 +20,9 @@ struct MapManagerSettings {
 
     int prefetchRing = 1; // 0/1/2
 
+    bool useAsyncNetwork = false; // 是否使用全异步网络下载
+    bool browseDownload = true;    // 边看边下：可视区域缺失瓦片自动下载
+
     static MapManagerSettings load(const QString &path, bool *ok = nullptr);
     bool save(const QString &path) const;
 };

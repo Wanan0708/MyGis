@@ -96,6 +96,8 @@ void ManifestStore::updateProgress(const QString &id, int completedDelta, int fa
         if (t.id == id) {
             t.completedTiles += completedDelta;
             t.failedTiles += failedDelta;
+            if (t.completedTiles < 0) t.completedTiles = 0;
+            if (t.totalTiles > 0 && t.completedTiles > t.totalTiles) t.completedTiles = t.totalTiles;
             t.updatedAt = QDateTime::currentDateTime();
             return;
         }

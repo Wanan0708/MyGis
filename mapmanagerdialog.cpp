@@ -8,6 +8,8 @@
 #include <QSpinBox>
 #include <QListWidget>
 #include <QGridLayout>
+#include <QFileDialog>
+#include <QCheckBox>
 
 MapManagerDialog::MapManagerDialog(QWidget *parent)
     : QDialog(parent)
@@ -22,7 +24,22 @@ MapManagerDialog::MapManagerDialog(QWidget *parent)
     int r = 0;
     grid->addWidget(new QLabel(tr("源模板")), r, 0); m_editUrl = new QLineEdit(this); grid->addWidget(m_editUrl, r++, 1);
     grid->addWidget(new QLabel(tr("服务器列表(a,b,c)")), r, 0); m_editServers = new QLineEdit(this); grid->addWidget(m_editServers, r++, 1);
-    grid->addWidget(new QLabel(tr("缓存路径")), r, 0); m_editCacheDir = new QLineEdit(this); grid->addWidget(m_editCacheDir, r++, 1);
+    grid->addWidget(new QLabel(tr("缓存路径")), r, 0);
+    {
+        QWidget *w = new QWidget(this);
+        QHBoxLayout *hl = new QHBoxLayout(w);
+        hl->setContentsMargins(0,0,0,0);
+        hl->setSpacing(6);
+        m_editCacheDir = new QLineEdit(w);
+        m_btnBrowseCache = new QPushButton(tr("浏览..."), w);
+        hl->addWidget(m_editCacheDir, /*stretch*/1);
+        hl->addWidget(m_btnBrowseCache);
+        grid->addWidget(w, r++, 1);
+        connect(m_btnBrowseCache, &QPushButton::clicked, this, [this]() {
+            QString dir = QFileDialog::getExistingDirectory(this, tr("选择缓存目录"), m_editCacheDir ? m_editCacheDir->text() : QString());
+            if (!dir.isEmpty() && m_editCacheDir) m_editCacheDir->setText(dir);
+        });
+    }
     // 区域（可选），默认中国
     grid->addWidget(new QLabel(tr("最小纬度")), r, 0); m_editMinLat = new QLineEdit(this); m_editMinLat->setText("18"); grid->addWidget(m_editMinLat, r++, 1);
     grid->addWidget(new QLabel(tr("最大纬度")), r, 0); m_editMaxLat = new QLineEdit(this); m_editMaxLat->setText("54"); grid->addWidget(m_editMaxLat, r++, 1);
@@ -35,6 +52,10 @@ MapManagerDialog::MapManagerDialog(QWidget *parent)
     grid->addWidget(new QLabel(tr("最大重试")), r, 0); m_spinRetry = new QSpinBox(this); m_spinRetry->setRange(0, 10); grid->addWidget(m_spinRetry, r++, 1);
     grid->addWidget(new QLabel(tr("退避毫秒")), r, 0); m_spinBackoff = new QSpinBox(this); m_spinBackoff->setRange(0, 600000); grid->addWidget(m_spinBackoff, r++, 1);
     grid->addWidget(new QLabel(tr("预取环")), r, 0); m_spinPrefetch = new QSpinBox(this); m_spinPrefetch->setRange(0, 2); grid->addWidget(m_spinPrefetch, r++, 1);
+    m_chkAsyncNetwork = new QCheckBox(tr("启用全异步网络下载"), this);
+    grid->addWidget(m_chkAsyncNetwork, r++, 1);
+    m_chkBrowseDownload = new QCheckBox(tr("边看边下（可视区域缺失瓦片自动下载）"), this);
+    grid->addWidget(m_chkBrowseDownload, r++, 1);
     lay->addLayout(grid);
     m_progressBar = new QProgressBar(this);
     m_progressBar->setRange(0, 100);
@@ -92,6 +113,8 @@ MapManagerSettings MapManagerDialog::getSettings() const
     if (m_spinRetry) s.retryMax = m_spinRetry->value();
     if (m_spinBackoff) s.backoffInitialMs = m_spinBackoff->value();
     if (m_spinPrefetch) s.prefetchRing = m_spinPrefetch->value();
+    if (m_chkAsyncNetwork) s.useAsyncNetwork = m_chkAsyncNetwork->isChecked();
+    if (m_chkBrowseDownload) s.browseDownload = m_chkBrowseDownload->isChecked();
     return s;
 }
 
@@ -107,6 +130,8 @@ void MapManagerDialog::setSettings(const MapManagerSettings &s)
     if (m_spinRetry) m_spinRetry->setValue(s.retryMax);
     if (m_spinBackoff) m_spinBackoff->setValue(s.backoffInitialMs);
     if (m_spinPrefetch) m_spinPrefetch->setValue(s.prefetchRing);
+    if (m_chkAsyncNetwork) m_chkAsyncNetwork->setChecked(s.useAsyncNetwork);
+    if (m_chkBrowseDownload) m_chkBrowseDownload->setChecked(s.browseDownload);
 }
 
 

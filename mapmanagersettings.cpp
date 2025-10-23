@@ -19,6 +19,8 @@ static QJsonObject toJson(const MapManagerSettings &s)
     o["retryMax"] = s.retryMax;
     o["backoffInitialMs"] = s.backoffInitialMs;
     o["prefetchRing"] = s.prefetchRing;
+    o["useAsyncNetwork"] = s.useAsyncNetwork;
+    o["browseDownload"] = s.browseDownload;
     return o;
 }
 
@@ -38,6 +40,8 @@ static MapManagerSettings fromJson(const QJsonObject &o)
     if (o.contains("retryMax")) s.retryMax = o.value("retryMax").toInt(s.retryMax);
     if (o.contains("backoffInitialMs")) s.backoffInitialMs = o.value("backoffInitialMs").toInt(s.backoffInitialMs);
     if (o.contains("prefetchRing")) s.prefetchRing = o.value("prefetchRing").toInt(s.prefetchRing);
+    if (o.contains("useAsyncNetwork")) s.useAsyncNetwork = o.value("useAsyncNetwork").toBool();
+    if (o.contains("browseDownload")) s.browseDownload = o.value("browseDownload").toBool();
     return s;
 }
 

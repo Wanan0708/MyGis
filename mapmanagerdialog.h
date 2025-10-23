@@ -9,6 +9,7 @@ class QLineEdit;
 class QSpinBox;
 class QPushButton;
 class QListWidget;
+class QCheckBox;
 template <typename K, typename V> class QHash;
 #include "mapmanagersettings.h"
 
@@ -45,6 +46,7 @@ private:
     QLineEdit *m_editUrl = nullptr;
     QLineEdit *m_editServers = nullptr;
     QLineEdit *m_editCacheDir = nullptr;
+    QPushButton *m_btnBrowseCache = nullptr;
     QLineEdit *m_editMinLat = nullptr;
     QLineEdit *m_editMaxLat = nullptr;
     QLineEdit *m_editMinLon = nullptr;
@@ -56,6 +58,8 @@ private:
     QSpinBox  *m_spinRetry = nullptr;
     QSpinBox  *m_spinBackoff = nullptr;
     QSpinBox  *m_spinPrefetch = nullptr;
+    QCheckBox *m_chkAsyncNetwork = nullptr;
+    QCheckBox *m_chkBrowseDownload = nullptr;
     QPushButton *m_btnSave = nullptr;
     QPushButton *m_btnStart = nullptr;
     QPushButton *m_btnPauseResume = nullptr;

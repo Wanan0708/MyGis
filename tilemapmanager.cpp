@@ -22,23 +22,39 @@ void TileMapManager::flushPendingInserts()
         return;
     }
     int batch = 0;
+    int inserted = 0;
     const int kMaxPerBatch = 24; // 限制单批量，减小抖动
     while (!m_pendingInsert.isEmpty() && batch < kMaxPerBatch) {
         PendingInsert pi = m_pendingInsert.dequeue();
         // 仅插入当前缩放级别
         if (pi.z != m_zoom) continue;
-        QGraphicsPixmapItem *item = m_scene->addPixmap(pi.pixmap);
+        QGraphicsPixmapItem *item = nullptr;
+        if (!m_itemPool.isEmpty()) {
+            item = m_itemPool.dequeue();
+            item->setPixmap(pi.pixmap);
+            if (item->scene() != m_scene) {
+                m_scene->addItem(item);
+            }
+            item->setVisible(true);
+            item->setOpacity(1.0);
+        } else {
+            item = m_scene->addPixmap(pi.pixmap);
+        }
         double tileXScene = pi.x * m_tileSize;
         double tileYScene = pi.y * m_tileSize;
         item->setPos(tileXScene, tileYScene);
         TileKey key = {pi.x, pi.y, pi.z};
         m_tileItems[key] = item;
         batch++;
+        inserted++;
     }
     if (!m_pendingInsert.isEmpty()) {
         // 继续下一批
         m_insertTimer->start();
     }
+    // 强制刷新视图和状态栏（在途数量可能变化）
+    if (m_scene) m_scene->update();
+    emit viewportActivity(m_pendingTiles.size() + m_currentRequests, inserted, true);
 }
 #include "tileworker.h"
 #include <QGraphicsScene>
@@ -208,10 +224,21 @@ void TileMapManager::startWorkerThread()
         
         // 连接工作线程的信号和槽
         connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
-        connect(this, &TileMapManager::requestDownloadTile, m_worker, &TileWorker::downloadAndSaveTile);
+        if (m_useAsyncNetwork) {
+            connect(this, &TileMapManager::requestDownloadTile, m_worker, &TileWorker::downloadAsync);
+            // 将重试参数传给 worker
+            QMetaObject::invokeMethod(m_worker, "configureNetworkRetries", Qt::QueuedConnection,
+                                      Q_ARG(int,  qMax(1, 3)),
+                                      Q_ARG(int, 3000));
+        } else {
+            connect(this, &TileMapManager::requestDownloadTile, m_worker, &TileWorker::downloadAndSaveTile);
+        }
         connect(this, &TileMapManager::requestLoadTile, m_worker, &TileWorker::loadTileFromFile);
         connect(m_worker, &TileWorker::tileDownloaded, this, &TileMapManager::onTileDownloaded);
-        connect(m_worker, &TileWorker::tileLoaded, this, &TileMapManager::onTileLoaded);
+        // 为避免跨线程 QPixmap 风险，优先使用字节流处理；保留旧信号以兼容。
+        // connect(m_worker, &TileWorker::tileLoaded, this, &TileMapManager::onTileLoaded);
+        // 新增：使用字节流跨线程传递，再在主线程构建 QPixmap
+        connect(m_worker, &TileWorker::tileLoadedBytes, this, &TileMapManager::onTileLoadedBytes);
         
         m_workerThread->start();
         qDebug() << "Worker thread started";
@@ -331,7 +358,7 @@ void TileMapManager::setZoomAtMousePosition(int zoom, double sceneX, double scen
     int newMaxTiles = (1 << newZoom);
     int mapWidth = newMaxTiles * m_tileSize;
     int mapHeight = newMaxTiles * m_tileSize;
-    m_scene->setSceneRect(0, 0, mapWidth, mapHeight);
+    if (m_scene) m_scene->setSceneRect(0, 0, mapWidth, mapHeight);
     
     loadTiles();
 }
@@ -639,7 +666,7 @@ void TileMapManager::processNextBatch()
              << "pendingTiles:" << m_pendingTiles.size() 
              << "currentRequests:" << m_currentRequests;
     
-    if (!m_isProcessing) {
+    if (!m_isProcessing && m_pendingTiles.isEmpty()) {
         return;
     }
     
@@ -671,6 +698,8 @@ void TileMapManager::processNextBatch()
         qDebug() << "Downloading tile:" << info.x << info.y << info.z;
         m_currentRequests++;
         emit requestDownloadTile(info.x, info.y, info.z, info.url, info.filePath);
+        // 立刻通报视口下载状态（剩余待下 + 在途）
+        emit viewportActivity(m_pendingTiles.size() + m_currentRequests, /*loaded*/0, /*downloading*/ true);
         
         // 继续处理下一个批次
         if (!m_pendingTiles.isEmpty() || m_currentRequests > 0) {
@@ -685,6 +714,7 @@ void TileMapManager::processNextBatch()
 
 void TileMapManager::onTileDownloaded(int x, int y, int z, const QByteArray &data, bool success, const QString &errorString)
 {
+    QElapsedTimer t; if (m_verboseLogging) t.start();
     qDebug() << "TileMapManager::onTileDownloaded called for tile:" << x << y << z << "success:" << success;
     
     QMutexLocker locker(&m_mutex);
@@ -710,9 +740,8 @@ void TileMapManager::onTileDownloaded(int x, int y, int z, const QByteArray &dat
         saveTile(x, y, z, data);
         emit tileCached(x, y, z, true);
         
-        // 只有在非区域下载模式下，且瓦片是当前缩放级别时，才添加到场景
-        // 区域下载时不添加到场景，等用户切换到对应层级时再加载
-        if (m_scene && !isRegionDownloadMode && z == m_zoom) {
+        // 下载完成后，若与当前视图层级一致则立即显示
+        if (m_scene && z == m_zoom) {
             QPixmap pixmap;
             pixmap.loadFromData(data);
             if (!pixmap.isNull()) {
@@ -753,8 +782,13 @@ void TileMapManager::onTileDownloaded(int x, int y, int z, const QByteArray &dat
                     emit downloadFinished();
                 }
             }
+    // 非区域下载：也通报下载状态（剩余待下 + 在途），便于状态栏刷新
+    if (!isRegionDownloadMode) {
+        emit viewportActivity(m_pendingTiles.size() + m_currentRequests, /*loaded*/0, /*downloading*/ true);
+    }
         }
     }
+    if (m_verboseLogging) qDebug() << "onTileDownloaded elapsed(ms)=" << t.elapsed();
 }
 
 void TileMapManager::onTileLoaded(int x, int y, int z, const QPixmap &pixmap, bool success, const QString &errorString)
@@ -781,6 +815,32 @@ void TileMapManager::onTileLoaded(int x, int y, int z, const QPixmap &pixmap, bo
     
     // 注意：优化后，区域下载时已存在的瓦片不会进入队列，所以这里不需要处理进度
     // 此函数主要用于其他场景（如缩放时）的本地瓦片加载
+}
+
+void TileMapManager::onTileLoadedBytes(int x, int y, int z, const QByteArray &data, bool success, const QString &errorString)
+{
+    QElapsedTimer t; if (m_verboseLogging) t.start();
+    qDebug() << "onTileLoadedBytes called for tile:" << x << y << z << "success:" << success;
+    QMutexLocker locker(&m_mutex);
+    m_currentRequests = qMax(0, m_currentRequests - 1);
+    if (success && !data.isEmpty()) {
+        // 主线程中构建 QPixmap
+        QPixmap pixmap;
+        bool ok = pixmap.loadFromData(data);
+        if (!ok || pixmap.isNull()) {
+            qDebug() << "Decoded pixmap is null for tile:" << x << y << z;
+            emit tileCached(x, y, z, false);
+        } else {
+            if (m_scene) {
+                enqueueInsert(x, y, z, pixmap);
+            }
+            emit tileCached(x, y, z, true);
+        }
+    } else {
+        qDebug() << "Tile load bytes failed:" << errorString;
+        emit tileCached(x, y, z, false);
+    }
+    if (m_verboseLogging) qDebug() << "onTileLoadedBytes elapsed(ms)=" << t.elapsed();
 }
 
 void TileMapManager::checkAndEmitDownloadFinished()
@@ -854,6 +914,10 @@ void TileMapManager::checkAndEmitDownloadFinished()
     if (!m_isProcessing && m_regionDownloadTotal > 0 && m_regionDownloadCurrent >= m_regionDownloadTotal && !m_downloadFinishedEmitted) {
         m_downloadFinishedEmitted = true;
         emit downloadFinished();
+    }
+    // 若所有下载任务完成（包括非区域下载），刷新状态栏为 0
+    if (!m_isProcessing && m_currentRequests == 0 && m_pendingTiles.isEmpty()) {
+        emit viewportActivity(0, 0, true);
     }
 }
 
@@ -955,13 +1019,11 @@ QString TileMapManager::getTileUrl(int x, int y, int z)
     url.replace("{z}", QString::number(z));
     
     // 循环使用不同的服务器 (a, b, c)
-    static QStringList servers = {"a", "b", "c"};
-    static int serverIndex = 0;
-    // 检查URL是否包含{server}占位符
-    if (url.contains("{server}")) {
-        QString server = servers[serverIndex];
+    // 轮转使用服务器列表（来自设置，可动态更新）
+    if (url.contains("{server}") && !m_servers.isEmpty()) {
+        QString server = m_servers[m_serverIndex % m_servers.size()];
         url.replace("{server}", server);
-        serverIndex = (serverIndex + 1) % servers.size();
+        m_serverIndex = (m_serverIndex + 1) % m_servers.size();
         if (m_verboseLogging) qDebug() << "Generated tile URL:" << url << "using server:" << server;
     } else {
         if (m_verboseLogging) qDebug() << "Generated tile URL:" << url;
@@ -982,7 +1044,20 @@ void TileMapManager::downloadTile(int x, int y, int z)
         return;
     }
     
-    // 请求下载并保存
+    // 并发门限：若已达到上限，入队等待，让 processNextBatch 统一调度
+    if (m_currentRequests >= m_maxConcurrentRequests) {
+        TileInfo info;
+        info.x = x; info.y = y; info.z = z;
+        info.url = getTileUrl(x, y, z);
+        info.filePath = getTilePath(x, y, z);
+        m_pendingTiles.enqueue(info);
+        m_isProcessing = true; // 浏览模式下也驱动批处理
+        if (!m_processTimer->isActive()) m_processTimer->start(50);
+        if (m_verboseLogging) qDebug() << "Concurrent limit reached, enqueue tile:" << x << y << z;
+        return;
+    }
+
+    // 直接请求下载并保存
     QString url = getTileUrl(x, y, z);
     QString filePath = getTilePath(x, y, z);
     m_currentRequests++;
@@ -1071,7 +1146,7 @@ void TileMapManager::calculateVisibleTiles(bool allowDownload)
         if (m_verboseLogging) qDebug() << "Adjusted tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
     }
     
-    // 统计需要下载的瓦片数量
+    // 统计需要下载/已从本地排队加载的瓦片数量
     int tilesToDownload = 0;
     int tilesLoaded = 0;
     
@@ -1133,10 +1208,10 @@ void TileMapManager::calculateVisibleTiles(bool allowDownload)
         qDebug() << "Tile offset:" << offsetX << "," << offsetY;
     }
     
-    // 只有在区域下载模式下才发送下载进度信号
-    if (m_regionDownloadTotal > 0) {
-        emit downloadProgress(tilesLoaded, tilesLoaded + tilesToDownload);
-    }
+    // 无论是否区域下载模式，都向上报视口活动，便于 UI 提示“正在下载/空白占位”
+    emit viewportActivity(tilesToDownload, tilesLoaded, /*downloadingEnabled*/ allowDownload);
+    // 区域下载模式下保留旧信号
+    if (m_regionDownloadTotal > 0) emit downloadProgress(tilesLoaded, tilesLoaded + tilesToDownload);
 }
 
 void TileMapManager::cleanupTiles()
@@ -1176,11 +1251,15 @@ void TileMapManager::cleanupTiles()
     for (const TileKey &key : keysToRemove) {
         QGraphicsPixmapItem *item = m_tileItems.take(key);
         if (item) {
-            // 检查图形项是否属于当前场景
+            // 回收到池：从场景移除但不销毁
             if (item->scene() == m_scene) {
                 m_scene->removeItem(item);
             }
-            delete item;
+            item->setPixmap(QPixmap());
+            item->setPos(-100000, -100000); // 放到视口外以避免误闪烁
+            item->setVisible(false);
+            item->setOpacity(1.0);
+            m_itemPool.enqueue(item);
         }
     }
     
@@ -1201,7 +1280,7 @@ void TileMapManager::repositionTiles()
     int startX, startY, endX, endY;
     
     if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
-        // 小地图模式
+        // 小地图模式：加载所有瓦片，确保整图完整显示
         startX = 0;
         startY = 0;
         endX = maxTilesAtZoom - 1;
@@ -1227,6 +1306,7 @@ void TileMapManager::repositionTiles()
     double offsetY = (m_viewportTilesY - totalTilesY) * m_tileSize / 2.0;
     
     if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        // 以视图中心为基准将整图居中显示
         offsetX = (m_viewWidth - maxTilesAtZoom * m_tileSize) / 2.0;
         offsetY = (m_viewHeight - maxTilesAtZoom * m_tileSize) / 2.0;
         offsetX = qMax(0.0, offsetX);

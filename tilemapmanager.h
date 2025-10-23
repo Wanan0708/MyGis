@@ -55,6 +55,12 @@ public:
     void setDragging(bool dragging) { m_isDragging = dragging; }
     QPointF getCenterScenePos() const; // 获取当前中心的场景像素坐标
     int getTileSize() const { return m_tileSize; }
+    QString getCacheDir() const { return m_cacheDir; }
+    // 运行期设置
+    void setCacheDir(const QString &dir) { m_cacheDir = dir; }
+    void setMaxConcurrentRequests(int n) { m_maxConcurrentRequests = qMax(1, n); }
+    void setServerList(const QStringList &servers) { m_servers = servers; m_serverIndex = 0; }
+    void setUseAsyncNetwork(bool enabled) { m_useAsyncNetwork = enabled; }
     // 日志控制
     void setVerboseLogging(bool enable) { m_verboseLogging = enable; }
     // 可开关设置
@@ -81,6 +87,8 @@ private:
     int m_tileSize;
     QString m_tileUrlTemplate;
     QString m_cacheDir;
+    QStringList m_servers = {"a","b","c"};
+    int m_serverIndex = 0;
     
     // 视图参数
     int m_viewportTilesX;
@@ -90,6 +98,8 @@ private:
     
     // 瓦片管理
     QHash<TileKey, QGraphicsPixmapItem*> m_tileItems;
+    // item 复用池：避免频繁创建/销毁
+    QQueue<QGraphicsPixmapItem*> m_itemPool;
     QMutex m_mutex;
     
     // 区域下载相关
@@ -116,6 +126,7 @@ private:
     bool m_enableGenerationDiscard = false;
     int m_generationId = 0;
     int m_prefetchRing = 0; // 0=关闭，1=一圈，2=两圈
+    bool m_useAsyncNetwork = false;
 
     // 最近一次布局参数（用于准确的 scene<->tile 变换）
     int m_lastStartX = 0;
@@ -169,6 +180,7 @@ private slots:
     void processNextBatch();
     void onTileDownloaded(int x, int y, int z, const QByteArray &data, bool success, const QString &errorString);
     void onTileLoaded(int x, int y, int z, const QPixmap &pixmap, bool success, const QString &errorString);
+    void onTileLoadedBytes(int x, int y, int z, const QByteArray &data, bool success, const QString &errorString);
     void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
 signals:
@@ -177,6 +189,8 @@ signals:
     void downloadFinished();
     void localTilesFound(int zoomLevel, int tileCount);
     void noLocalTilesFound();
+    // 视口活动：告知当前可视范围需要下载/已从本地加载的数量，以及是否允许下载
+    void viewportActivity(int tilesToDownload, int tilesLoaded, bool downloadingEnabled);
     // 新增：单瓦片写入缓存完成（供调度层统计进度）
     void tileCached(int x, int y, int z, bool success);
     void requestDownloadTile(int x, int y, int z, const QString &url, const QString &filePath);

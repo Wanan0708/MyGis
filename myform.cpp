@@ -414,6 +414,26 @@ void MyForm::setupMapArea() {
     logMessage(QString("TileMapManager created: %1").arg(tileMapManager != nullptr));
     tileMapManager->initScene(mapScene);
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+
+    // 应用可配置设置（若存在 settings.json）
+    bool ok = false;
+    MapManagerSettings s = MapManagerSettings::load("settings.json", &ok);
+    if (ok) {
+        if (!s.tileUrlTemplate.isEmpty()) tileMapManager->setTileSource(s.tileUrlTemplate);
+        // 若 settings 未提供 cacheDir，则使用 TileMapManager 默认的项目根 tilemap
+        if (!s.cacheDir.isEmpty()) tileMapManager->setCacheDir(s.cacheDir);
+        tileMapManager->setMaxConcurrentRequests(qMax(1, s.maxConcurrent));
+        if (!s.servers.isEmpty()) tileMapManager->setServerList(s.servers);
+        tileMapManager->setPrefetchRing(s.prefetchRing);
+        tileMapManager->setUseAsyncNetwork(s.useAsyncNetwork);
+        // 边看边下控制：在可视区域更新逻辑中启用允许下载
+        // 如果关闭，则拖拽/缩放只加载本地瓦片
+        // 这里不需额外设置，逻辑在 TileMapManager::calculateVisibleTiles 中通过 allowDownload 参数控制
+        if (!s.browseDownload) {
+            // 若关闭边看边下，我们在滚动/缩放触发的更新中用 allowDownload=false
+            // 由事件回调里判断该设置
+        }
+    }
     
     // 创建视图更新定时器（用于拖动时延迟更新瓦片）
     viewUpdateTimer = new QTimer(this);
@@ -424,22 +444,29 @@ void MyForm::setupMapArea() {
     // 连接滚动条变化信号，实现拖拽时的瓦片更新
     connect(ui->graphicsView->horizontalScrollBar(), &QScrollBar::valueChanged, 
             this, [this]() {
-        if (tileMapManager && !isDownloading) {
-            viewUpdateTimer->start();  // 重启定时器，实现防抖更新
-        }
+        if (tileMapManager && !isDownloading) { viewUpdateTimer->start(); }
         positionGraphicsOverlay();
     });
     connect(ui->graphicsView->verticalScrollBar(), &QScrollBar::valueChanged, 
             this, [this]() {
-        if (tileMapManager && !isDownloading) {
-            viewUpdateTimer->start();  // 重启定时器，实现防抖更新
-        }
+        if (tileMapManager && !isDownloading) { viewUpdateTimer->start(); }
         positionGraphicsOverlay();
     });
     
     // 连接下载进度信号（在这里连接，因为tileMapManager已经创建）
     logMessage("Connecting regionDownloadProgress signal");
     connect(tileMapManager, &TileMapManager::regionDownloadProgress, this, &MyForm::onRegionDownloadProgress);
+    connect(tileMapManager, &TileMapManager::viewportActivity, this, [this](int toDownload, int loaded, bool enabled){
+        QString tip;
+        if (enabled) {
+            if (toDownload > 0) tip = tr("正在下载可视区域: 需下%1, 本地%2").arg(toDownload).arg(loaded);
+            else tip = tr("可视区域已在本地缓存");
+        } else {
+            if (toDownload > 0) tip = tr("边看边下已关闭，仅显示本地: 本地%1, 缺失%2").arg(loaded).arg(toDownload);
+            else tip = tr("本地已完整");
+        }
+        updateStatus(tip);
+    });
     connect(tileMapManager, &TileMapManager::downloadFinished, this, [this]() {
         updateStatus("Tile map download completed");
         // 隐藏进度条
@@ -1193,7 +1220,55 @@ void MyForm::startRegionDownload()
     // 下载缩放级别：1-10级，提供良好的缩放体验
     logMessage("Calling tileMapManager->downloadRegion for China region");
     logMessage("Parameters: minLat=18.0, maxLat=54.0, minLon=73.0, maxLon=135.0, minZoom=3, maxZoom=10");
-    tileMapManager->downloadRegion(18.0, 54.0, 73.0, 135.0, 3, 10);
+
+    // —— 预估瓦片数量并进行阈值保护 ——
+    const double minLat = 18.0, maxLat = 54.0, minLon = 73.0, maxLon = 135.0;
+    const int minZoom = 3, maxZoom = 10;
+    const int SOFT_LIMIT = 50000;   // 超过提示确认
+    const int HARD_LIMIT = 200000;  // 超过直接禁止
+
+    auto clamp = [](int v, int lo, int hi){ return qMax(lo, qMin(hi, v)); };
+    auto latToY = [](double lat, int n){
+        const double PI = 3.14159265358979323846;
+        double r = lat * PI / 180.0;
+        return (int)((1.0 - log(tan(r) + 1.0 / cos(r)) / PI) / 2.0 * n);
+    };
+
+    qint64 estimatedTiles = 0;
+    for (int z = minZoom; z <= maxZoom; ++z) {
+        int n = 1 << z;
+        int minX = (int)((minLon + 180.0) / 360.0 * n);
+        int maxX = (int)((maxLon + 180.0) / 360.0 * n);
+        int minY = latToY(maxLat, n); // 注意：Y 向下
+        int maxY = latToY(minLat, n);
+        minX = clamp(minX, 0, n - 1);
+        maxX = clamp(maxX, 0, n - 1);
+        minY = clamp(minY, 0, n - 1);
+        maxY = clamp(maxY, 0, n - 1);
+        if (maxX < minX || maxY < minY) continue;
+        estimatedTiles += (qint64)(maxX - minX + 1) * (qint64)(maxY - minY + 1);
+        if (estimatedTiles > (qint64)HARD_LIMIT * 2) break; // 提前中断估算
+    }
+
+    if (estimatedTiles > HARD_LIMIT) {
+        QMessageBox::critical(this, tr("任务过大"),
+            tr("预计将下载约 %1 张瓦片，超过上限 %2。已阻止此次下载。\n\n请缩小范围或降低层级再试。")
+                .arg(estimatedTiles).arg(HARD_LIMIT));
+        updateStatus(tr("下载任务被阻止：规模超限"));
+        return;
+    }
+    if (estimatedTiles > SOFT_LIMIT) {
+        auto ret = QMessageBox::question(this, tr("确认大规模下载"),
+            tr("预计将下载约 %1 张瓦片，可能耗时较长并占用较多存储。是否继续？")
+                .arg(estimatedTiles),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (ret != QMessageBox::Yes) {
+            updateStatus(tr("已取消大规模下载"));
+            return;
+        }
+    }
+
+    tileMapManager->downloadRegion(minLat, maxLat, minLon, maxLon, minZoom, maxZoom);
     
     updateStatus("Starting China region map download (levels 3-10)...");
     logMessage("China region map download initiated - Levels 3-10");
@@ -1216,12 +1291,22 @@ void MyForm::updateVisibleTiles()
     qDebug() << "updateVisibleTiles: View center in scene:" << viewCenter;
     
     // 通知瓦片地图管理器根据新的视图中心加载瓦片
-    tileMapManager->updateTilesForView(viewCenter.x(), viewCenter.y());
+    // 根据设置决定是否边看边下
+    bool ok = false; auto s = MapManagerSettings::load("settings.json", &ok);
+    // 若未找到 settings.json，仍然使用默认：边看边下开启，缓存目录在项目根 tilemap
+    if (ok && !s.browseDownload) {
+        // 仅加载本地（不触发下载）
+        // 通过立即计算但禁止下载来刷新本地可视瓦片
+        tileMapManager->calculateVisibleTiles(false);
+    } else {
+        // 允许下载缺失瓦片
+        tileMapManager->updateTilesForView(viewCenter.x(), viewCenter.y());
+    }
     
     // 重定位由 TileMapManager::loadTiles 内部负责（其会调用 repositionTiles）
     
     // 更新状态显示
-    updateStatus("Updating visible tiles...");
+    //updateStatus("Updating visible tiles...");
 }
 
 void MyForm::logMessage(const QString &message)

@@ -2,6 +2,8 @@
 #include <QtGlobal>
 #include <QtMath>
 #include "tilemapmanager.h"
+#include <QDir>
+#include <QFile>
 
 DownloadScheduler::DownloadScheduler(QObject *parent)
     : QObject(parent)
@@ -104,8 +106,12 @@ void DownloadScheduler::buildQueueFromTasks()
     m_queue.clear();
     if (!m_store) return;
     auto tasks = m_store->tasks();
+    const int HARD_LIMIT = 200000; // 与 UI 层一致的硬阈值保护（按“需要下载”的数量衡量）
+    QDir cacheDir(m_settings.cacheDir);
     for (const auto &t : tasks) {
-        int taskTotal = 0;
+        int enqueued = 0;            // 需要下载的数量
+        int preExisting = 0;         // 已存在数量
+        int taskTotal = 0;           // 任务总瓦片数量（保持为所有范围内的总数）
         for (int z = t.minZoom; z <= t.maxZoom; ++z) {
             int n = 1 << z;
             int minX = int((t.minLon + 180.0) / 360.0 * n);
@@ -116,10 +122,23 @@ void DownloadScheduler::buildQueueFromTasks()
             clampTileRange(z, minX, maxX, minY, maxY);
             for (int x = minX; x <= maxX; ++x) {
                 for (int y = minY; y <= maxY; ++y) {
-                    m_queue.enqueue({t.id, x, y, z});
+                    // 判断是否已存在
+                    QString fp = cacheDir.absoluteFilePath(QString::number(z) + "/" + QString::number(x) + "/" + QString::number(y) + ".png");
+                    if (QFile::exists(fp)) {
+                        preExisting++;
+                    } else {
+                        if (enqueued >= HARD_LIMIT) {
+                            if (m_store) const_cast<ManifestStore*>(m_store)->setStatus(t.id, "cancelled");
+                            break;
+                        }
+                        m_queue.enqueue({t.id, x, y, z});
+                        enqueued++;
+                    }
                     taskTotal++;
                 }
+                if (enqueued >= HARD_LIMIT) break;
             }
+            if (enqueued >= HARD_LIMIT) break;
         }
         if (m_store) const_cast<ManifestStore*>(m_store)->setTotalTiles(t.id, taskTotal);
     }
