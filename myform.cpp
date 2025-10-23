@@ -25,10 +25,12 @@ MyForm::MyForm(QWidget *parent)
     , mapScene(nullptr)
     , mapItem(nullptr)
     , currentScale(1.0)
+    , currentZoomLevel(1)  // 初始化为第1层级
     , isRightClickDragging(false)  // 初始化右键拖拽状态
     , tileMapManager(nullptr)  // 初始化瓦片地图管理器
     , progressBar(nullptr)  // 初始化进度条
     , isDownloading(false)  // 初始化下载状态
+    , viewUpdateTimer(nullptr)  // 初始化更新定时器
 {
     logMessage("=== MyForm constructor started ===");
     ui->setupUi(this);
@@ -58,6 +60,12 @@ void MyForm::resizeEvent(QResizeEvent *event)
     // 窗口大小改变时重新设置splitter比例
     QWidget::resizeEvent(event);
     setupSplitter();
+    
+    // 更新瓦片地图管理器的视图大小
+    if (tileMapManager && ui->graphicsView) {
+        QSize viewSize = ui->graphicsView->viewport()->size();
+        tileMapManager->setViewSize(viewSize.width(), viewSize.height());
+    }
 }
 
 void MyForm::setupSplitter()
@@ -139,6 +147,26 @@ void MyForm::setupMapArea() {
     logMessage(QString("TileMapManager created: %1").arg(tileMapManager != nullptr));
     tileMapManager->initScene(mapScene);
     
+    // 创建视图更新定时器（用于拖动时延迟更新瓦片）
+    viewUpdateTimer = new QTimer(this);
+    viewUpdateTimer->setSingleShot(true);
+    viewUpdateTimer->setInterval(100);  // 拖动停止100ms后更新，提升响应速度
+    connect(viewUpdateTimer, &QTimer::timeout, this, &MyForm::updateVisibleTiles);
+    
+    // 连接滚动条变化信号，实现拖拽时的瓦片更新
+    connect(ui->graphicsView->horizontalScrollBar(), &QScrollBar::valueChanged, 
+            this, [this]() {
+        if (tileMapManager && !isDownloading) {
+            viewUpdateTimer->start();  // 重启定时器，实现防抖更新
+        }
+    });
+    connect(ui->graphicsView->verticalScrollBar(), &QScrollBar::valueChanged, 
+            this, [this]() {
+        if (tileMapManager && !isDownloading) {
+            viewUpdateTimer->start();  // 重启定时器，实现防抖更新
+        }
+    });
+    
     // 连接下载进度信号（在这里连接，因为tileMapManager已经创建）
     logMessage("Connecting regionDownloadProgress signal");
     connect(tileMapManager, &TileMapManager::regionDownloadProgress, this, &MyForm::onRegionDownloadProgress);
@@ -155,6 +183,24 @@ void MyForm::setupMapArea() {
     connect(tileMapManager, &TileMapManager::noLocalTilesFound, this, [this]() {
         updateStatus("No local tiles found - Use 'Load Tile Map' to download");
     });
+    
+    // 连接缩放完成信号，用于调整视图位置
+    connect(tileMapManager, &TileMapManager::zoomChanged, this, 
+            [this](int oldZoom, int newZoom, double mouseLat, double mouseLon) {
+        Q_UNUSED(oldZoom);
+        Q_UNUSED(newZoom);
+        
+        // 缩放完成后，计算鼠标地理坐标在新场景中的位置
+        // 然后调整滚动条，让这个位置仍然在视口中心
+        
+        // 将地理坐标转换为新缩放级别的瓦片坐标
+        int mouseTileX, mouseTileY;
+        // 这里需要调用TileMapManager的latLonToTile，但它是private
+        // 暂时跳过，让瓦片地图自然加载
+        
+        qDebug() << "Zoom changed, mouse was at GEO:" << mouseLat << mouseLon;
+    });
+    
     logMessage("Signal connected");
     
     // 检查本地是否有已下载的瓦片，如果有则自动显示
@@ -166,14 +212,28 @@ void MyForm::setupMapArea() {
     // 显示本地瓦片信息
     tileMapManager->getLocalTilesInfo();
     
-    // 显示当前可用的最大缩放级别
-    int maxZoom = tileMapManager->getMaxAvailableZoom();
-    if (maxZoom > 0) {
-        updateStatus(QString("Ready - Max zoom level: %1").arg(maxZoom));
-        logMessage(QString("Maximum available zoom level: %1").arg(maxZoom));
-    } else {
-        updateStatus("Ready - Use 'Load Tile Map' to download new tiles");
-    }
+    // 初始化视图大小
+    QTimer::singleShot(100, this, [this]() {
+        // 延迟执行以确保视图已经正确初始化
+        QSize viewSize = ui->graphicsView->viewport()->size();
+        tileMapManager->setViewSize(viewSize.width(), viewSize.height());
+        logMessage(QString("Initial view size: %1x%2").arg(viewSize.width()).arg(viewSize.height()));
+        
+        // 显示当前可用的最大缩放级别
+        int maxZoom = tileMapManager->getMaxAvailableZoom();
+        if (maxZoom > 0) {
+            // 设置当前层级为可用的最大层级（但不超过10）
+            currentZoomLevel = qMin(maxZoom, MAX_ZOOM_LEVEL);
+            tileMapManager->setZoom(currentZoomLevel);
+            // 将视图中心定位到当前地图中心对应的全图绝对坐标
+            QPointF centerScene = tileMapManager->getCenterScenePos();
+            ui->graphicsView->centerOn(centerScene);
+            updateStatus(QString("Ready - Current zoom level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+            logMessage(QString("Current zoom level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+        } else {
+            updateStatus("Ready - Use 'Load Tile Map' to download new tiles");
+        }
+    });
 }
 
 bool MyForm::eventFilter(QObject *obj, QEvent *event)
@@ -181,26 +241,60 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
     if (obj == ui->graphicsView->viewport()) {
         if (event->type() == QEvent::Wheel) {
             QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
-            // 滚轮缩放（无需Ctrl键）
-            qreal scaleFactor = 1.15;
-            if (wheelEvent->angleDelta().y() > 0) {
-                // 检查是否超过最大缩放限制
-                if (currentScale * scaleFactor <= MAX_SCALE) {
-                    // 设置变换锚点为鼠标位置
+            
+            // 如果瓦片地图管理器存在，使用离散的层级缩放
+            if (tileMapManager) {
+                int newZoomLevel = currentZoomLevel;
+                
+                if (wheelEvent->angleDelta().y() > 0) {
+                    // 放大：增加层级
+                    newZoomLevel = qMin(currentZoomLevel + 1, MAX_ZOOM_LEVEL);
+                } else {
+                    // 缩小：减少层级
+                    newZoomLevel = qMax(currentZoomLevel - 1, MIN_ZOOM_LEVEL);
+                }
+                
+                // 如果层级发生变化，更新瓦片地图
+                if (newZoomLevel != currentZoomLevel) {
+                    // 获取鼠标在视口中的位置
+                    QPoint mouseViewportPos = wheelEvent->position().toPoint();
+                    QPointF mouseScenePos = ui->graphicsView->mapToScene(mouseViewportPos);
+                    
+                    qDebug() << "Zoom from" << currentZoomLevel << "to" << newZoomLevel 
+                             << "at viewport:" << mouseViewportPos 
+                             << "scene:" << mouseScenePos;
+                    
+                    // 更新缩放级别
+                    currentZoomLevel = newZoomLevel;
+                    
+                    // 关键：以鼠标位置为中心进行缩放
+                    // 传递鼠标在视口中的位置（像素坐标）
+                    tileMapManager->setZoomAtMousePosition(
+                        currentZoomLevel, 
+                        mouseScenePos.x(), 
+                        mouseScenePos.y(),
+                        mouseViewportPos.x(),
+                        mouseViewportPos.y(),
+                        ui->graphicsView->viewport()->width(),
+                        ui->graphicsView->viewport()->height()
+                    );
+                    
+                    updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+                }
+            } else {
+                // 如果没有瓦片地图管理器，使用原来的连续缩放
+                qreal scaleFactor = 1.15;
+                if (wheelEvent->angleDelta().y() > 0) {
                     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
                     ui->graphicsView->scale(scaleFactor, scaleFactor);
                     currentScale *= scaleFactor;
-                }
-            } else {
-                // 检查是否低于最小缩放限制
-                if (currentScale / scaleFactor >= MIN_SCALE) {
-                    // 设置变换锚点为鼠标位置
+                } else {
                     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
                     ui->graphicsView->scale(1/scaleFactor, 1/scaleFactor);
                     currentScale /= scaleFactor;
                 }
+                updateStatus(QString("Zoom: %1x").arg(currentScale, 0, 'f', 2));
             }
-            updateStatus(QString("Zoom: %1x").arg(currentScale, 0, 'f', 2));
             return true; // 事件已处理
         } else if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -211,7 +305,9 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
                 QRect viewRect = ui->graphicsView->rect();
                 if (viewRect.contains(mousePos)) {
                     lastRightClickPos = mouseEvent->pos();
+                    lastRightClickScenePos = ui->graphicsView->mapToScene(lastRightClickPos);
                     isRightClickDragging = true;
+                    if (tileMapManager) tileMapManager->setDragging(true);
                     ui->graphicsView->setCursor(Qt::ClosedHandCursor);
                     return true; // 事件已处理
                 }
@@ -220,18 +316,21 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             // 只有当鼠标在QGraphicsView区域时，右键拖拽才生效
             if (isRightClickDragging && (mouseEvent->buttons() & Qt::RightButton)) {
-                // 检查鼠标是否在graphicsView区域内
-                QPoint mousePos = ui->graphicsView->mapFromGlobal(QCursor::pos());
-                QRect viewRect = ui->graphicsView->rect();
-                if (viewRect.contains(mousePos)) {
-                    QPointF delta = mouseEvent->pos() - lastRightClickPos;
-                    ui->graphicsView->horizontalScrollBar()->setValue(
-                        ui->graphicsView->horizontalScrollBar()->value() - delta.x());
-                    ui->graphicsView->verticalScrollBar()->setValue(
-                        ui->graphicsView->verticalScrollBar()->value() - delta.y());
-                    lastRightClickPos = mouseEvent->pos();
-                    return true; // 事件已处理
+                // 使用滚动条实现 1:1 平移，避免映射误差与轴向耦合
+                QPointF delta = mouseEvent->pos() - lastRightClickPos;
+                QScrollBar *h = ui->graphicsView->horizontalScrollBar();
+                QScrollBar *v = ui->graphicsView->verticalScrollBar();
+                // 方向修正：拖拽左（delta<0）应显示右侧 → 滚动值增加
+                h->setValue(h->value() - (int)delta.x());
+                v->setValue(v->value() - (int)delta.y());
+                lastRightClickPos = mouseEvent->pos();
+                lastRightClickScenePos = ui->graphicsView->mapToScene(mouseEvent->pos());
+
+                if (tileMapManager && !isDownloading) {
+                    QPointF centeredScene = ui->graphicsView->mapToScene(ui->graphicsView->viewport()->rect().center());
+                    tileMapManager->updateTilesForViewImmediate(centeredScene.x(), centeredScene.y());
                 }
+                return true; // 事件已处理
             }
         } else if (event->type() == QEvent::MouseButtonRelease) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -239,6 +338,14 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
             if (mouseEvent->button() == Qt::RightButton) {
                 isRightClickDragging = false;
                 ui->graphicsView->setCursor(Qt::ArrowCursor);
+                
+                if (tileMapManager && !isDownloading) {
+                    tileMapManager->setDragging(false);
+                    // 以松开时光标下的场景坐标作为新的视图中心来源
+                    QPointF sceneAtRelease = lastRightClickScenePos;
+                    tileMapManager->updateTilesForView(sceneAtRelease.x(), sceneAtRelease.y());
+                    qDebug() << "Right-click drag ended, updating tiles using release scene pos:" << sceneAtRelease;
+                }
                 return true; // 事件已处理
             }
         }
@@ -385,30 +492,32 @@ void MyForm::handleLoadMapButtonClicked()
 void MyForm::handleZoomInButtonClicked()
 {
     qDebug() << "Zoom In button clicked";
-    if (mapItem) {
-        // 检查是否超过最大缩放限制
-        if (currentScale * 1.2 <= MAX_SCALE) {
-            // 设置变换锚点为鼠标位置
-            ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-            currentScale *= 1.2;
-            ui->graphicsView->scale(1.2, 1.2);
-            updateStatus(QString("Zoom: %1x").arg(currentScale, 0, 'f', 2));
-        }
+    
+    // 如果有瓦片地图管理器，使用层级缩放
+    if (tileMapManager) {
+        handleZoomInTileMapButtonClicked();
+    } else if (mapItem) {
+        // 如果只有普通地图，使用连续缩放
+        ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+        currentScale *= 1.2;
+        ui->graphicsView->scale(1.2, 1.2);
+        updateStatus(QString("Zoom: %1x").arg(currentScale, 0, 'f', 2));
     }
 }
 
 void MyForm::handleZoomOutButtonClicked()
 {
     qDebug() << "Zoom Out button clicked";
-    if (mapItem) {
-        // 检查是否低于最小缩放限制
-        if (currentScale / 1.2 >= MIN_SCALE) {
-            // 设置变换锚点为鼠标位置
-            ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-            currentScale /= 1.2;
-            ui->graphicsView->scale(1/1.2, 1/1.2);
-            updateStatus(QString("Zoom: %1x").arg(currentScale, 0, 'f', 2));
-        }
+    
+    // 如果有瓦片地图管理器，使用层级缩放
+    if (tileMapManager) {
+        handleZoomOutTileMapButtonClicked();
+    } else if (mapItem) {
+        // 如果只有普通地图，使用连续缩放
+        ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+        currentScale /= 1.2;
+        ui->graphicsView->scale(1/1.2, 1/1.2);
+        updateStatus(QString("Zoom: %1x").arg(currentScale, 0, 'f', 2));
     }
 }
 
@@ -448,9 +557,10 @@ void MyForm::handleLoadTileMapButtonClicked()
     // 设置北京坐标为中心点
     logMessage("Setting center to Beijing coordinates: 39.9042, 116.4074");
     tileMapManager->setCenter(39.9042, 116.4074);
-    // 设置缩放级别为3，与startRegionDownload中的一致
-    logMessage("Setting zoom level to 3");
-    tileMapManager->setZoom(3);
+    // 设置缩放级别为1，从最小级别开始
+    logMessage("Setting zoom level to 1");
+    currentZoomLevel = 1;
+    tileMapManager->setZoom(currentZoomLevel);
     
     // 触发中国区域级别3的瓦片地图下载
     logMessage("Calling startRegionDownload");
@@ -464,20 +574,31 @@ void MyForm::handleZoomInTileMapButtonClicked()
 {
     qDebug() << "Zoom In Tile Map button clicked";
     
-    int currentZoom = tileMapManager->getZoom();
-    int maxAvailableZoom = tileMapManager->getMaxAvailableZoom();
-    
-    // 使用动态的最大缩放限制
-    if (currentZoom < maxAvailableZoom) {
-        int newZoom = currentZoom + 1;
-        tileMapManager->setZoom(newZoom);
+    // 使用固定的10级缩放限制
+    if (currentZoomLevel < MAX_ZOOM_LEVEL) {
+        currentZoomLevel++;
+        
+        // 按钮缩放：以视口中心为缩放点
+        QRect viewportRect = ui->graphicsView->viewport()->rect();
+        QPoint viewportCenter = viewportRect.center();
+        QPointF sceneCenter = ui->graphicsView->mapToScene(viewportCenter);
+        
+        tileMapManager->setZoomAtMousePosition(
+            currentZoomLevel,
+            sceneCenter.x(),
+            sceneCenter.y(),
+            viewportCenter.x(),
+            viewportCenter.y(),
+            viewportRect.width(),
+            viewportRect.height()
+        );
         
         // 更新状态显示
-        updateStatus(QString("Tile map zoom: level %1").arg(newZoom));
-        qDebug() << "Tile map zoom in to level:" << newZoom;
+        updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+        qDebug() << "Tile map zoom in to level:" << currentZoomLevel;
     } else {
-        updateStatus(QString("Maximum zoom level reached (%1) - No more tiles available").arg(maxAvailableZoom));
-        qDebug() << "Cannot zoom in further, max available zoom:" << maxAvailableZoom;
+        updateStatus(QString("Maximum zoom level reached (%1/%2)").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+        qDebug() << "Cannot zoom in further, already at max level:" << MAX_ZOOM_LEVEL;
     }
 }
 
@@ -485,19 +606,31 @@ void MyForm::handleZoomOutTileMapButtonClicked()
 {
     qDebug() << "Zoom Out Tile Map button clicked";
     
-    int currentZoom = tileMapManager->getZoom();
-    int maxAvailableZoom = tileMapManager->getMaxAvailableZoom();
-    
-    // 限制最小缩放级别为1，最大为可用缩放级别
-    if (currentZoom > 1) {
-        int newZoom = currentZoom - 1;
-        tileMapManager->setZoom(newZoom);
+    // 使用固定的10级缩放限制
+    if (currentZoomLevel > MIN_ZOOM_LEVEL) {
+        currentZoomLevel--;
+        
+        // 按钮缩放：以视口中心为缩放点
+        QRect viewportRect = ui->graphicsView->viewport()->rect();
+        QPoint viewportCenter = viewportRect.center();
+        QPointF sceneCenter = ui->graphicsView->mapToScene(viewportCenter);
+        
+        tileMapManager->setZoomAtMousePosition(
+            currentZoomLevel,
+            sceneCenter.x(),
+            sceneCenter.y(),
+            viewportCenter.x(),
+            viewportCenter.y(),
+            viewportRect.width(),
+            viewportRect.height()
+        );
         
         // 更新状态显示
-        updateStatus(QString("Tile map zoom: level %1 (max: %2)").arg(newZoom).arg(maxAvailableZoom));
-        qDebug() << "Tile map zoom out to level:" << newZoom;
+        updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+        qDebug() << "Tile map zoom out to level:" << currentZoomLevel;
     } else {
-        updateStatus(QString("Minimum zoom level reached (1) - Max available: %1").arg(maxAvailableZoom));
+        updateStatus(QString("Minimum zoom level reached (%1/%2)").arg(MIN_ZOOM_LEVEL).arg(MAX_ZOOM_LEVEL));
+        qDebug() << "Cannot zoom out further, already at min level:" << MIN_ZOOM_LEVEL;
     }
 }
 
@@ -550,6 +683,31 @@ void MyForm::startRegionDownload()
     
     updateStatus("Starting China region map download (levels 1-10)...");
     logMessage("China region map download initiated - Levels 1-10");
+}
+
+void MyForm::updateVisibleTiles()
+{
+    if (!tileMapManager || !ui->graphicsView || isDownloading) {
+        qDebug() << "updateVisibleTiles: Skipping update - tileMapManager:" << (tileMapManager != nullptr) 
+                 << "graphicsView:" << (ui->graphicsView != nullptr) 
+                 << "isDownloading:" << isDownloading;
+        return;
+    }
+    
+    // 获取当前视图中心在场景中的位置
+    QPointF viewCenter = ui->graphicsView->mapToScene(
+        ui->graphicsView->viewport()->rect().center()
+    );
+    
+    qDebug() << "updateVisibleTiles: View center in scene:" << viewCenter;
+    
+    // 通知瓦片地图管理器根据新的视图中心加载瓦片
+    tileMapManager->updateTilesForView(viewCenter.x(), viewCenter.y());
+    
+    // 重定位由 TileMapManager::loadTiles 内部负责（其会调用 repositionTiles）
+    
+    // 更新状态显示
+    updateStatus("Updating visible tiles...");
 }
 
 void MyForm::logMessage(const QString &message)

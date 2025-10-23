@@ -65,14 +65,16 @@ private:
     QGraphicsScene *mapScene;
     QGraphicsPixmapItem *mapItem;
     qreal currentScale;
+    int currentZoomLevel;  // 当前瓦片地图缩放层级 (1-10)
     
     // 右键拖拽相关成员
     bool isRightClickDragging;
     QPoint lastRightClickPos;
+    QPointF lastRightClickScenePos;
     
     // 缩放限制
-    static constexpr qreal MIN_SCALE = 0.1;  // 最小缩放比例
-    static constexpr qreal MAX_SCALE = 10.0; // 最大缩放比例
+    static constexpr int MIN_ZOOM_LEVEL = 1;   // 最小缩放层级
+    static constexpr int MAX_ZOOM_LEVEL = 10;  // 最大缩放层级
     
     // 瓦片地图管理器
     TileMapManager *tileMapManager;
@@ -81,8 +83,12 @@ private:
     QProgressBar *progressBar;
     bool isDownloading;
     
+    // 拖动更新相关
+    QTimer *viewUpdateTimer;  // 延迟更新定时器
+    
     // 日志记录函数
     void logMessage(const QString &message);
+    void updateVisibleTiles();  // 更新可见瓦片
     
     void setupFunctionalArea();
     void setupMapArea();

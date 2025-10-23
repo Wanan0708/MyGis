@@ -1,4 +1,45 @@
 #include "tilemapmanager.h"
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
+
+void TileMapManager::enqueueInsert(int x, int y, int z, const QPixmap &pixmap)
+{
+    PendingInsert pi;
+    pi.x = x;
+    pi.y = y;
+    pi.z = z;
+    pi.pixmap = pixmap;
+    m_pendingInsert.enqueue(pi);
+    if (!m_insertTimer->isActive()) {
+        m_insertTimer->start();
+    }
+}
+
+void TileMapManager::flushPendingInserts()
+{
+    if (!m_scene) {
+        m_pendingInsert.clear();
+        return;
+    }
+    int batch = 0;
+    const int kMaxPerBatch = 24; // 限制单批量，减小抖动
+    while (!m_pendingInsert.isEmpty() && batch < kMaxPerBatch) {
+        PendingInsert pi = m_pendingInsert.dequeue();
+        // 仅插入当前缩放级别
+        if (pi.z != m_zoom) continue;
+        QGraphicsPixmapItem *item = m_scene->addPixmap(pi.pixmap);
+        double tileXScene = pi.x * m_tileSize;
+        double tileYScene = pi.y * m_tileSize;
+        item->setPos(tileXScene, tileYScene);
+        TileKey key = {pi.x, pi.y, pi.z};
+        m_tileItems[key] = item;
+        batch++;
+    }
+    if (!m_pendingInsert.isEmpty()) {
+        // 继续下一批
+        m_insertTimer->start();
+    }
+}
 #include "tileworker.h"
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
@@ -56,11 +97,14 @@ TileMapManager::TileMapManager(QObject *parent)
     , m_tileUrlTemplate("https://{server}.tile.openstreetmap.org/{z}/{x}/{y}.png")
     , m_viewportTilesX(5)
     , m_viewportTilesY(5)
+    , m_viewWidth(800)   // 默认视图宽度
+    , m_viewHeight(600)  // 默认视图高度
     , m_regionDownloadTotal(0)
     , m_regionDownloadCurrent(0)
     , m_workerThread(nullptr)
     , m_worker(nullptr)
     , m_processTimer(new QTimer(this))
+    , m_insertTimer(new QTimer(this))
     , m_isProcessing(false)
     , m_downloadFinishedEmitted(false)
     , m_maxConcurrentRequests(10)  // 增加同时处理的请求数量到5，提高下载效率
@@ -105,6 +149,10 @@ TileMapManager::TileMapManager(QObject *parent)
     // 设置处理定时器
     m_processTimer->setSingleShot(true);
     connect(m_processTimer, &QTimer::timeout, this, &TileMapManager::processNextBatch);
+    // 批量插入定时器（合并下载/加载回调）
+    m_insertTimer->setSingleShot(true);
+    m_insertTimer->setInterval(16); // ~60fps 合并
+    connect(m_insertTimer, &QTimer::timeout, this, &TileMapManager::flushPendingInserts);
     
     // 启动工作线程
     startWorkerThread();
@@ -188,33 +236,268 @@ void TileMapManager::setCenter(double lat, double lon)
     loadTiles();
 }
 
+void TileMapManager::setZoomAtMousePosition(int zoom, double sceneX, double sceneY,
+                                            double mouseViewportX, double mouseViewportY,
+                                            int viewportWidth, int viewportHeight)
+{
+    Q_UNUSED(sceneX);
+    Q_UNUSED(sceneY);
+    
+    if (!m_scene) return;
+    
+    int oldZoom = m_zoom;
+    int newZoom = qBound(1, zoom, 19);
+    
+    logMessage(QString("=== ZOOM %1->%2 === Mouse:(%3,%4) Viewport:%5x%6")
+        .arg(oldZoom).arg(newZoom).arg(mouseViewportX).arg(mouseViewportY).arg(viewportWidth).arg(viewportHeight));
+    
+    // 关键修复：不使用场景坐标，直接用视口相对位置计算
+    // 
+    // 原理：
+    // 在旧缩放级别，地图中心对应 centerTile_old
+    // 鼠标相对于视口中心有一个偏移（瓦片单位）
+    // 所以鼠标指向的瓦片 = centerTile_old + offset
+    //
+    // 缩放后：
+    // mouseTile_new = mouseTile_old * 2^(newZoom - oldZoom)
+    // centerTile_new = mouseTile_new - offset (偏移保持不变，因为视口大小不变)
+    
+    // 步骤1：获取旧缩放级别的中心瓦片
+    int centerTileX_old, centerTileY_old;
+    latLonToTile(m_centerLat, m_centerLon, oldZoom, centerTileX_old, centerTileY_old);
+    
+    // 加上小数部分（高精度）
+    int n_old = 1 << oldZoom;
+    double centerTileX_old_precise = (m_centerLon + 180.0) / 360.0 * n_old;
+    double lat_rad_old = m_centerLat * M_PI / 180.0;
+    double centerTileY_old_precise = (1.0 - log(tan(lat_rad_old) + 1.0 / cos(lat_rad_old)) / M_PI) / 2.0 * n_old;
+    
+    // 步骤2：计算鼠标相对于视口中心的偏移（瓦片单位）
+    double mouseOffsetX_pixels = mouseViewportX - viewportWidth / 2.0;
+    double mouseOffsetY_pixels = mouseViewportY - viewportHeight / 2.0;
+    double mouseOffsetX_tiles = mouseOffsetX_pixels / m_tileSize;
+    double mouseOffsetY_tiles = mouseOffsetY_pixels / m_tileSize;
+    
+    // 步骤3：计算鼠标指向的瓦片（旧缩放级别）
+    double mouseTileX_old = centerTileX_old_precise + mouseOffsetX_tiles;
+    double mouseTileY_old = centerTileY_old_precise + mouseOffsetY_tiles;
+    
+    // 转换为地理坐标（验证用）
+    double mouseLon_old = mouseTileX_old / n_old * 360.0 - 180.0;
+    double lat_rad = atan(sinh(M_PI * (1.0 - 2.0 * mouseTileY_old / n_old)));
+    double mouseLat_old = lat_rad * 180.0 / M_PI;
+    
+    // 步骤4：缩放瓦片坐标
+    m_zoom = newZoom;
+    int zoomDiff = newZoom - oldZoom;
+    double zoomScale = pow(2.0, zoomDiff);
+    
+    double mouseTileX_new = mouseTileX_old * zoomScale;
+    double mouseTileY_new = mouseTileY_old * zoomScale;
+    
+    // 步骤5：计算新的中心瓦片
+    double centerTileX_new = mouseTileX_new - mouseOffsetX_tiles;
+    double centerTileY_new = mouseTileY_new - mouseOffsetY_tiles;
+    
+    // 步骤6：转换为地理坐标
+    int n_new = 1 << newZoom;
+    m_centerLon = centerTileX_new / n_new * 360.0 - 180.0;
+    double lat_rad_new = atan(sinh(M_PI * (1.0 - 2.0 * centerTileY_new / n_new)));
+    m_centerLat = lat_rad_new * 180.0 / M_PI;
+    
+    logMessage(QString("  Offset:(%1,%2) MouseGEO:(%3,%4) -> NewCenter:(%5,%6)")
+        .arg(mouseOffsetX_tiles, 0, 'f', 3)
+        .arg(mouseOffsetY_tiles, 0, 'f', 3)
+        .arg(mouseLat_old, 0, 'f', 4)
+        .arg(mouseLon_old, 0, 'f', 4)
+        .arg(m_centerLat, 0, 'f', 4)
+        .arg(m_centerLon, 0, 'f', 4));
+    
+    // 步骤7：更新场景并重新加载瓦片
+    cleanupTiles();
+    
+    int newMaxTiles = (1 << newZoom);
+    int mapWidth = newMaxTiles * m_tileSize;
+    int mapHeight = newMaxTiles * m_tileSize;
+    m_scene->setSceneRect(0, 0, mapWidth, mapHeight);
+    
+    loadTiles();
+}
+void TileMapManager::panByPixels(double deltaViewportX, double deltaViewportY)
+{
+    if (!m_scene) return;
+
+    // 视口像素 -> 瓦片位移
+    double deltaTilesX = deltaViewportX / m_tileSize;
+    double deltaTilesY = deltaViewportY / m_tileSize;
+
+    // 当前中心的瓦片小数坐标
+    int n = 1 << m_zoom;
+    double centerTileX = (m_centerLon + 180.0) / 360.0 * n;
+    double lat_rad = m_centerLat * M_PI / 180.0;
+    double centerTileY = (1.0 - log(tan(lat_rad) + 1.0 / cos(lat_rad)) / M_PI) / 2.0 * n;
+
+    // 平移后中心
+    double newTileX = centerTileX + deltaTilesX;
+    double newTileY = centerTileY + deltaTilesY;
+    newTileX = qBound(0.0, newTileX, (double)(n - 1));
+    newTileY = qBound(0.0, newTileY, (double)(n - 1));
+
+    // 转回经纬度
+    m_centerLon = newTileX / n * 360.0 - 180.0;
+    double lat_rad_new = atan(sinh(M_PI * (1.0 - 2.0 * newTileY / n)));
+    m_centerLat = lat_rad_new * 180.0 / M_PI;
+
+    // 立即重排并按新中心计算可见瓦片
+    repositionTiles();
+    calculateVisibleTiles();
+}
+
+void TileMapManager::sceneToLatLon(double sceneX, double sceneY, int zoom, double &lat, double &lon)
+{
+    // 安全检查
+    if (m_tileSize <= 0) {
+        qDebug() << "sceneToLatLon: invalid tile size";
+        lat = m_centerLat;
+        lon = m_centerLon;
+        return;
+    }
+    
+    // 绝对坐标：直接用场景像素换算为瓦片浮点坐标
+    int maxTilesAtZoom = (1 << zoom);
+    double tileX = sceneX / m_tileSize;
+    double tileY = sceneY / m_tileSize;
+    
+    // 限制在有效范围内
+    int maxTile = maxTilesAtZoom - 1;
+    tileX = qBound(0.0, tileX, (double)maxTile);
+    tileY = qBound(0.0, tileY, (double)maxTile);
+    
+    // 将瓦片坐标（小数）转换为经纬度
+    int n = 1 << zoom;
+    lon = tileX / n * 360.0 - 180.0;
+    double latRad = atan(sinh(M_PI * (1 - 2 * tileY / n)));
+    lat = latRad * 180.0 / M_PI;
+    
+    logMessage(QString("sceneToLatLon(abs): scene(%1,%2) -> tile(%3,%4) -> geo(%5,%6)")
+               .arg(sceneX, 0, 'f', 2).arg(sceneY, 0, 'f', 2)
+               .arg(tileX, 0, 'f', 4).arg(tileY, 0, 'f', 4)
+               .arg(lat, 0, 'f', 6).arg(lon, 0, 'f', 6));
+}
+
+void TileMapManager::updateTilesForView(double sceneX, double sceneY)
+{
+    if (!m_scene) return;
+    if (!shouldUpdateForSceneDelta(sceneX, sceneY)) return;
+    
+    // 根据场景坐标计算地理坐标
+    double newLat, newLon;
+    sceneToLatLon(sceneX, sceneY, m_zoom, newLat, newLon);
+    
+    // 检查是否需要更新（避免频繁刷新）
+    double latDiff = qAbs(newLat - m_centerLat);
+    double lonDiff = qAbs(newLon - m_centerLon);
+    
+    // 只有移动超过一定阈值才更新（减少不必要的刷新）
+    // 根据缩放级别动态调整阈值，高缩放级别需要更小的阈值
+    double threshold = 1.0 / (1 << m_zoom);  // 优化阈值计算
+    if (latDiff < threshold && lonDiff < threshold) {
+        qDebug() << "Movement within preloaded area, skipping update. Diff:" << latDiff << "," << lonDiff << "Threshold:" << threshold;
+        return;
+    }
+    
+    qDebug() << "Movement exceeded threshold, loading new tiles. Diff:" << latDiff << "," << lonDiff;
+    
+    // 更新中心点（使用最新视图几何来刷新布局缓存）
+    m_centerLat = newLat;
+    m_centerLon = newLon;
+    if (m_enableGenerationDiscard) {
+        m_generationId++;
+    }
+    
+    qDebug() << "Updating tiles for new center:" << m_centerLat << "," << m_centerLon;
+    
+    // 仅计算并加载可见瓦片（绝对定位无需重排，减少拖拽抖动）
+    calculateVisibleTiles();
+}
+
+void TileMapManager::updateTilesForViewImmediate(double sceneX, double sceneY)
+{
+    if (!m_scene) return;
+    if (!shouldUpdateForSceneDelta(sceneX, sceneY)) return;
+    double newLat, newLon;
+    sceneToLatLon(sceneX, sceneY, m_zoom, newLat, newLon);
+
+    // 直接更新中心，无阈值过滤
+    m_centerLat = newLat;
+    m_centerLon = newLon;
+    if (m_enableGenerationDiscard) {
+        m_generationId++;
+    }
+
+    // 仅计算并加载可见瓦片（绝对定位无需重排，减少拖拽抖动）
+    calculateVisibleTiles(true); // 拖拽中也触发下载并即时显示
+}
+
+bool TileMapManager::shouldUpdateForSceneDelta(double sceneX, double sceneY) const
+{
+    // 初次必更新
+    if (m_lastUpdateSceneX < 0 || m_lastUpdateSceneY < 0) {
+        m_lastUpdateSceneX = sceneX;
+        m_lastUpdateSceneY = sceneY;
+        return true;
+    }
+    double dx = qAbs(sceneX - m_lastUpdateSceneX);
+    double dy = qAbs(sceneY - m_lastUpdateSceneY);
+    // 阈值：跨过 1/3 瓦片或超过最小像素位移
+    double pixelThreshold = qMax(4.0, m_tileSize / 3.0);
+    if (dx >= pixelThreshold || dy >= pixelThreshold) {
+        m_lastUpdateSceneX = sceneX;
+        m_lastUpdateSceneY = sceneY;
+        return true;
+    }
+    return false;
+}
+
+void TileMapManager::setViewSize(int width, int height)
+{
+    m_viewWidth = width;
+    m_viewHeight = height;
+    
+    // 根据视图大小计算需要的瓦片数量（预加载更大范围，减少拖动时的刷新频率）
+    // 预加载视图大小的3倍范围，提供更好的拖拽体验
+    m_viewportTilesX = (width / m_tileSize) * 3 + 6;  // 3倍视图宽度 + 6个额外瓦片
+    m_viewportTilesY = (height / m_tileSize) * 3 + 6;  // 3倍视图高度 + 6个额外瓦片
+    
+    qDebug() << "View size updated:" << width << "x" << height 
+             << "Viewport tiles:" << m_viewportTilesX << "x" << m_viewportTilesY;
+    
+    // 重新加载瓦片以适应新的视图大小
+    if (m_scene) {
+        loadTiles();
+    }
+}
+
 void TileMapManager::setZoom(int zoom)
 {
     int oldZoom = m_zoom;
     m_zoom = qBound(0, zoom, 19);  // 限制缩放级别在0-19之间
     
-    qDebug() << "Changing zoom from" << oldZoom << "to" << m_zoom;
-    
     // 在设置新的缩放级别后，先清理不需要的瓦片
     cleanupTiles();
     
-    // 如果场景存在，调整视图中心以适应新的缩放级别
+    // 将场景矩形设置为整幅地图的绝对像素尺寸
     if (m_scene) {
-        // 计算当前中心点的瓦片坐标
-        int centerTileX, centerTileY;
-        latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
-        
-        // 设置场景矩形以包含当前视图的瓦片
-        int viewportTiles = qMax(m_viewportTilesX, m_viewportTilesY);
-        QRectF sceneRect(0, 0, viewportTiles * m_tileSize, viewportTiles * m_tileSize);
-        m_scene->setSceneRect(sceneRect);
-        
-        qDebug() << "Set scene rect:" << sceneRect << "for zoom:" << m_zoom;
+        int maxTilesAtZoom = (1 << m_zoom);
+        int mapWidth = maxTilesAtZoom * m_tileSize;
+        int mapHeight = maxTilesAtZoom * m_tileSize;
+        m_scene->setSceneRect(0, 0, mapWidth, mapHeight);
     }
     
     // 重新定位所有已加载的瓦片
     repositionTiles();
     
+    // 重新加载瓦片
     loadTiles();
     
     // 重置区域下载计数器，因为缩放级别改变后之前的区域下载任务已无效
@@ -227,7 +510,10 @@ void TileMapManager::loadTiles()
 {
     if (!m_scene) return;
     
-    // 计算当前视图范围内的瓦片
+    // 先根据当前中心重新定位已存在的瓦片，避免拖拽后旧瓦片位置错误
+    repositionTiles();
+
+    // 计算当前视图范围内的瓦片并按最新起始/偏移放置新瓦片
     calculateVisibleTiles();
 }
 
@@ -395,24 +681,13 @@ void TileMapManager::onTileDownloaded(int x, int y, int z, const QByteArray &dat
         // 保存瓦片到本地
         saveTile(x, y, z, data);
         
-        // 创建图片项（仅在场景存在时添加）
-        if (m_scene) {
+        // 只有在非区域下载模式下，且瓦片是当前缩放级别时，才添加到场景
+        // 区域下载时不添加到场景，等用户切换到对应层级时再加载
+        if (m_scene && !isRegionDownloadMode && z == m_zoom) {
             QPixmap pixmap;
             pixmap.loadFromData(data);
             if (!pixmap.isNull()) {
-                QGraphicsPixmapItem *item = m_scene->addPixmap(pixmap);
-                // 计算瓦片位置：根据当前缩放级别和瓦片坐标
-                // 需要将瓦片坐标转换为当前视图的坐标
-                int centerTileX, centerTileY;
-                latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
-                
-                // 计算瓦片相对于中心瓦片的位置
-                double tileX = (x - centerTileX + m_viewportTilesX/2) * m_tileSize;
-                double tileY = (y - centerTileY + m_viewportTilesY/2) * m_tileSize;
-                item->setPos(tileX, tileY);
-                TileKey key = {x, y, z};
-                m_tileItems[key] = item;
-                qDebug() << "Added tile at position:" << tileX << "," << tileY << "for zoom:" << z << "center:" << centerTileX << "," << centerTileY;
+                enqueueInsert(x, y, z, pixmap);
             }
         }
     } else {
@@ -465,20 +740,7 @@ void TileMapManager::onTileLoaded(int x, int y, int z, const QPixmap &pixmap, bo
         qDebug() << "Tile loaded successfully from local file";
         // 创建图片项（仅在场景存在时添加）
         if (m_scene) {
-            // 检查场景是否有效
-            QGraphicsPixmapItem *item = m_scene->addPixmap(pixmap);
-            // 计算瓦片位置：根据当前缩放级别和瓦片坐标
-            // 需要将瓦片坐标转换为当前视图的坐标
-            int centerTileX, centerTileY;
-            latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
-            
-            // 计算瓦片相对于中心瓦片的位置
-            double tileX = (x - centerTileX + m_viewportTilesX/2) * m_tileSize;
-            double tileY = (y - centerTileY + m_viewportTilesY/2) * m_tileSize;
-            item->setPos(tileX, tileY);
-            TileKey key = {x, y, z};
-            m_tileItems[key] = item;
-            qDebug() << "Loaded tile at position:" << tileX << "," << tileY << "for zoom:" << z;
+            enqueueInsert(x, y, z, pixmap);
         }
     } else {
         qDebug() << "Tile load failed:" << errorString;
@@ -565,6 +827,15 @@ void TileMapManager::checkAndEmitDownloadFinished()
 void TileMapManager::setTileSource(const QString &urlTemplate)
 {
     m_tileUrlTemplate = urlTemplate;
+}
+
+QPointF TileMapManager::getCenterScenePos() const
+{
+    int n = 1 << m_zoom;
+    double tileX = (m_centerLon + 180.0) / 360.0 * n;
+    double lat_rad = m_centerLat * M_PI / 180.0;
+    double tileY = (1.0 - log(tan(lat_rad) + 1.0 / cos(lat_rad)) / M_PI) / 2.0 * n;
+    return QPointF(tileX * m_tileSize, tileY * m_tileSize);
 }
 
 void TileMapManager::latLonToTile(double lat, double lon, int zoom, int &tileX, int &tileY)
@@ -688,36 +959,113 @@ void TileMapManager::downloadTile(int x, int y, int z)
     emit requestDownloadTile(x, y, z, url, filePath);
 }
 
-void TileMapManager::calculateVisibleTiles()
+void TileMapManager::calculateVisibleTiles(bool allowDownload)
 {
-    if (!m_scene) return;
+    if (!m_scene) {
+        qDebug() << "calculateVisibleTiles: scene is null";
+        return;
+    }
     
-    qDebug() << "Calculating visible tiles for zoom:" << m_zoom << "center:" << m_centerLat << "," << m_centerLon;
+    qDebug() << "=== calculateVisibleTiles ===";
+    qDebug() << "Zoom:" << m_zoom << "Center:" << m_centerLat << "," << m_centerLon;
+    qDebug() << "Viewport tiles:" << m_viewportTilesX << "x" << m_viewportTilesY;
     
     // 计算中心点的瓦片坐标
     int centerTileX, centerTileY;
     latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
     qDebug() << "Center tile coordinates:" << centerTileX << "," << centerTileY;
     
-    // 计算视图范围内的瓦片
-    int startX = centerTileX - m_viewportTilesX / 2;
-    int startY = centerTileY - m_viewportTilesY / 2;
-    int endX = centerTileX + m_viewportTilesX / 2;
-    int endY = centerTileY + m_viewportTilesY / 2;
+    // 计算这个缩放级别的最大瓦片数
+    int maxTilesAtZoom = (1 << m_zoom);  // 2^zoom
     
-    // 限制瓦片范围
-    int maxTile = (1 << m_zoom) - 1;
-    startX = qMax(0, startX);
-    startY = qMax(0, startY);
-    endX = qMin(maxTile, endX);
-    endY = qMin(maxTile, endY);
+    // 计算需要加载的瓦片范围
+    // 如果地图瓦片总数小于视图需要的瓦片数，则加载所有可用的瓦片
+    int startX, startY, endX, endY;
+    
+    if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        // 地图很小，加载所有瓦片
+        startX = 0;
+        startY = 0;
+        endX = maxTilesAtZoom - 1;
+        endY = maxTilesAtZoom - 1;
+        qDebug() << "Small map mode: loading all tiles (0,0) to" << endX << "," << endY;
+    } else {
+        // 正常模式：以中心点为基准加载周围的瓦片（确保窗口大小不超过viewportTiles）
+        startX = centerTileX - m_viewportTilesX / 2;
+        startY = centerTileY - m_viewportTilesY / 2;
+        endX = startX + m_viewportTilesX - 1;
+        endY = startY + m_viewportTilesY - 1;
+        
+        // 限制瓦片范围并保持窗口大小（尽量）
+        int maxTile = maxTilesAtZoom - 1;
+        if (startX < 0) { endX = qMin(maxTile, endX - startX); startX = 0; }
+        if (startY < 0) { endY = qMin(maxTile, endY - startY); startY = 0; }
+        if (endX > maxTile) { int diff = endX - maxTile; startX = qMax(0, startX - diff); endX = maxTile; }
+        if (endY > maxTile) { int diff = endY - maxTile; startY = qMax(0, startY - diff); endY = maxTile; }
+    }
     
     qDebug() << "Tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
+    
+    // 计算需要加载的瓦片总数
+    int totalTilesToLoad = (endX - startX + 1) * (endY - startY + 1);
+    qDebug() << "Total tiles in range:" << totalTilesToLoad;
+    
+    // 安全检查：避免一次性加载过多瓦片
+    // 注意：不要修改 m_viewportTilesX/Y，那是根据视口大小固定的！
+    const int MAX_TILES_PER_LOAD = 500;  // 限制每次最多加载500张瓦片
+    if (totalTilesToLoad > MAX_TILES_PER_LOAD) {
+        qDebug() << "WARNING: Too many tiles to load (" << totalTilesToLoad << "), limiting to" << MAX_TILES_PER_LOAD;
+        
+        // 使用局部变量，不修改全局的viewportTiles
+        int reduceBy = (int)sqrt(totalTilesToLoad / (double)MAX_TILES_PER_LOAD);
+        int adjustedViewportTilesX = m_viewportTilesX / reduceBy;
+        int adjustedViewportTilesY = m_viewportTilesY / reduceBy;
+        adjustedViewportTilesX = qMax(5, adjustedViewportTilesX);
+        adjustedViewportTilesY = qMax(5, adjustedViewportTilesY);
+        
+        // 使用调整后的范围重新计算（保持窗口大小）
+        startX = centerTileX - adjustedViewportTilesX / 2;
+        startY = centerTileY - adjustedViewportTilesY / 2;
+        endX = startX + adjustedViewportTilesX - 1;
+        endY = startY + adjustedViewportTilesY - 1;
+        
+        int maxTile = (1 << m_zoom) - 1;
+        if (startX < 0) { endX = qMin(maxTile, endX - startX); startX = 0; }
+        if (startY < 0) { endY = qMin(maxTile, endY - startY); startY = 0; }
+        if (endX > maxTile) { int diff = endX - maxTile; startX = qMax(0, startX - diff); endX = maxTile; }
+        if (endY > maxTile) { int diff = endY - maxTile; startY = qMax(0, startY - diff); endY = maxTile; }
+        
+        qDebug() << "Adjusted tile range: (" << startX << "," << startY << ") to (" << endX << "," << endY << ")";
+    }
     
     // 统计需要下载的瓦片数量
     int tilesToDownload = 0;
     int tilesLoaded = 0;
     
+    // 计算瓦片起始位置（确保小地图居中显示）
+    int totalTilesX = endX - startX + 1;
+    int totalTilesY = endY - startY + 1;
+    double offsetX = (m_viewportTilesX - totalTilesX) * m_tileSize / 2.0;
+    double offsetY = (m_viewportTilesY - totalTilesY) * m_tileSize / 2.0;
+    
+    // 如果是小地图，确保居中
+    if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        offsetX = (m_viewWidth - maxTilesAtZoom * m_tileSize) / 2.0;
+        offsetY = (m_viewHeight - maxTilesAtZoom * m_tileSize) / 2.0;
+        offsetX = qMax(0.0, offsetX);
+        offsetY = qMax(0.0, offsetY);
+    }
+    
+    // 保存最近一次布局参数，供 onTileLoaded/onTileDownloaded 使用
+    m_lastStartX = startX;
+    m_lastStartY = startY;
+    m_lastEndX = endX;
+    m_lastEndY = endY;
+    m_lastOffsetX = offsetX;
+    m_lastOffsetY = offsetY;
+    m_lastZoomForLayout = m_zoom;
+    m_layoutValid = true;
+
     // 加载或下载瓦片
     for (int x = startX; x <= endX; x++) {
         for (int y = startY; y <= endY; y++) {
@@ -731,34 +1079,24 @@ void TileMapManager::calculateVisibleTiles()
             
             // 检查本地是否存在瓦片
             if (tileExists(x, y, m_zoom)) {
-                // 直接从本地加载，不通过工作线程
-                QPixmap pixmap = loadTile(x, y, m_zoom);
-                if (!pixmap.isNull()) {
-                    QGraphicsPixmapItem *item = m_scene->addPixmap(pixmap);
-                    
-                    // 计算瓦片位置
-                    double tileX = (x - centerTileX + m_viewportTilesX/2) * m_tileSize;
-                    double tileY = (y - centerTileY + m_viewportTilesY/2) * m_tileSize;
-                    item->setPos(tileX, tileY);
-                    
-                    m_tileItems[key] = item;
-                    tilesLoaded++;
-                    
-                    qDebug() << "Loaded local tile directly:" << x << y << m_zoom;
-                }
-            } else {
-                // 请求下载
-                tilesToDownload++;
-                QString url = getTileUrl(x, y, m_zoom);
+                // 改为异步从文件加载，避免UI线程IO
                 QString filePath = getTilePath(x, y, m_zoom);
                 m_currentRequests++;
-                emit requestDownloadTile(x, y, m_zoom, url, filePath);
+                emit requestLoadTile(x, y, m_zoom, filePath);
+                tilesLoaded++;
+            } else if (allowDownload) {
+                // 允许下载时统一走 downloadTile（内部决定本地/网络）
+                tilesToDownload++;
+                downloadTile(x, y, m_zoom);
+            } else {
+                // 拖拽中：跳过下载，避免大量异步回调插队导致抖动/崩溃
             }
         }
     }
     
     qDebug() << "Total tiles to download:" << tilesToDownload;
     qDebug() << "Total tiles loaded:" << tilesLoaded;
+    qDebug() << "Tile offset:" << offsetX << "," << offsetY;
     
     // 只有在区域下载模式下才发送下载进度信号
     if (m_regionDownloadTotal > 0) {
@@ -768,6 +1106,9 @@ void TileMapManager::calculateVisibleTiles()
 
 void TileMapManager::cleanupTiles()
 {
+    if (!m_scene) return;
+    if (m_isDragging) return; // 拖拽期间不清理，减少抖动
+    
     // 清理视图范围外的瓦片，包括不同缩放级别的瓦片
     QList<TileKey> keysToRemove;
     
@@ -787,28 +1128,28 @@ void TileMapManager::cleanupTiles()
         // 只移除不同缩放级别的瓦片，保留当前缩放级别的瓦片
         if (key.z != m_zoom) {
             keysToRemove.append(key);
-            qDebug() << "Removing tile from different zoom level:" << key.x << key.y << key.z << "current zoom:" << m_zoom;
         }
         // 对于当前缩放级别，只移除距离中心太远的瓦片
         else if (key.x < startX || key.x > endX || key.y < startY || key.y > endY) {
             keysToRemove.append(key);
-            qDebug() << "Removing distant tile:" << key.x << key.y << key.z;
         }
     }
     
-    // 移除瓦片
+    qDebug() << "Cleanup: removing" << keysToRemove.size() << "tiles, keeping" << m_tileItems.size() - keysToRemove.size();
+    
+    // 移除瓦片（批量操作，减少单个删除的开销）
     for (const TileKey &key : keysToRemove) {
         QGraphicsPixmapItem *item = m_tileItems.take(key);
         if (item) {
             // 检查图形项是否属于当前场景
-            if (item->scene() == m_scene && m_scene) {
+            if (item->scene() == m_scene) {
                 m_scene->removeItem(item);
             }
             delete item;
         }
     }
     
-    qDebug() << "Cleaned up" << keysToRemove.size() << "tiles, remaining:" << m_tileItems.size();
+    qDebug() << "Cleanup complete. Remaining tiles:" << m_tileItems.size();
 }
 
 void TileMapManager::repositionTiles()
@@ -817,24 +1158,61 @@ void TileMapManager::repositionTiles()
     
     qDebug() << "Repositioning tiles for zoom:" << m_zoom;
     
-    // 计算当前中心点的瓦片坐标
+    // 使用与 calculateVisibleTiles 和 sceneToLatLon 完全相同的逻辑
+    int maxTilesAtZoom = (1 << m_zoom);
     int centerTileX, centerTileY;
     latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
     
-    // 重新定位所有当前缩放级别的瓦片
+    int startX, startY, endX, endY;
+    
+    if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        // 小地图模式
+        startX = 0;
+        startY = 0;
+        endX = maxTilesAtZoom - 1;
+        endY = maxTilesAtZoom - 1;
+    } else {
+        // 正常模式
+        startX = centerTileX - m_viewportTilesX / 2;
+        startY = centerTileY - m_viewportTilesY / 2;
+        endX = centerTileX + m_viewportTilesX / 2;
+        endY = centerTileY + m_viewportTilesY / 2;
+        
+        int maxTile = maxTilesAtZoom - 1;
+        startX = qMax(0, startX);
+        startY = qMax(0, startY);
+        endX = qMin(maxTile, endX);
+        endY = qMin(maxTile, endY);
+    }
+    
+    // 计算偏移量
+    int totalTilesX = endX - startX + 1;
+    int totalTilesY = endY - startY + 1;
+    double offsetX = (m_viewportTilesX - totalTilesX) * m_tileSize / 2.0;
+    double offsetY = (m_viewportTilesY - totalTilesY) * m_tileSize / 2.0;
+    
+    if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        offsetX = (m_viewWidth - maxTilesAtZoom * m_tileSize) / 2.0;
+        offsetY = (m_viewHeight - maxTilesAtZoom * m_tileSize) / 2.0;
+        offsetX = qMax(0.0, offsetX);
+        offsetY = qMax(0.0, offsetY);
+    }
+    
+    // 绝对定位：无需随中心变化调整偏移
     for (auto it = m_tileItems.begin(); it != m_tileItems.end(); ++it) {
         const TileKey &key = it.key();
         if (key.z == m_zoom) {
             QGraphicsPixmapItem *item = it.value();
             if (item) {
-                // 计算瓦片相对于中心瓦片的位置
-                double tileX = (key.x - centerTileX + m_viewportTilesX/2) * m_tileSize;
-                double tileY = (key.y - centerTileY + m_viewportTilesY/2) * m_tileSize;
+                double tileX = key.x * m_tileSize;
+                double tileY = key.y * m_tileSize;
                 item->setPos(tileX, tileY);
-                qDebug() << "Repositioned tile" << key.x << key.y << "to" << tileX << tileY;
+                qDebug() << "Repositioned tile (" << key.x << "," << key.y << ") to scene(" << tileX << "," << tileY << ")";
             }
         }
     }
+    
+    qDebug() << "Reposition complete (absolute).";
 }
 
 void TileMapManager::checkLocalTiles()
@@ -897,22 +1275,45 @@ int TileMapManager::loadLocalTiles()
     
     logMessage(QString("Loading local tiles for zoom: %1").arg(m_zoom));
     
-    // 计算当前中心点的瓦片坐标
+    // 使用与其他方法完全一致的逻辑
+    int maxTilesAtZoom = (1 << m_zoom);
     int centerTileX, centerTileY;
     latLonToTile(m_centerLat, m_centerLon, m_zoom, centerTileX, centerTileY);
     
-    // 计算视图范围内的瓦片
-    int startX = centerTileX - m_viewportTilesX / 2;
-    int startY = centerTileY - m_viewportTilesY / 2;
-    int endX = centerTileX + m_viewportTilesX / 2;
-    int endY = centerTileY + m_viewportTilesY / 2;
+    int startX, startY, endX, endY;
     
-    // 限制瓦片范围
-    int maxTile = (1 << m_zoom) - 1;
-    startX = qMax(0, startX);
-    startY = qMax(0, startY);
-    endX = qMin(maxTile, endX);
-    endY = qMin(maxTile, endY);
+    if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        // 小地图模式
+        startX = 0;
+        startY = 0;
+        endX = maxTilesAtZoom - 1;
+        endY = maxTilesAtZoom - 1;
+    } else {
+        // 正常模式
+        startX = centerTileX - m_viewportTilesX / 2;
+        startY = centerTileY - m_viewportTilesY / 2;
+        endX = centerTileX + m_viewportTilesX / 2;
+        endY = centerTileY + m_viewportTilesY / 2;
+        
+        int maxTile = maxTilesAtZoom - 1;
+        startX = qMax(0, startX);
+        startY = qMax(0, startY);
+        endX = qMin(maxTile, endX);
+        endY = qMin(maxTile, endY);
+    }
+    
+    // 计算偏移量
+    int totalTilesX = endX - startX + 1;
+    int totalTilesY = endY - startY + 1;
+    double offsetX = (m_viewportTilesX - totalTilesX) * m_tileSize / 2.0;
+    double offsetY = (m_viewportTilesY - totalTilesY) * m_tileSize / 2.0;
+    
+    if (maxTilesAtZoom <= m_viewportTilesX || maxTilesAtZoom <= m_viewportTilesY) {
+        offsetX = (m_viewWidth - maxTilesAtZoom * m_tileSize) / 2.0;
+        offsetY = (m_viewHeight - maxTilesAtZoom * m_tileSize) / 2.0;
+        offsetX = qMax(0.0, offsetX);
+        offsetY = qMax(0.0, offsetY);
+    }
     
     int tilesLoaded = 0;
     
@@ -934,21 +1335,22 @@ int TileMapManager::loadLocalTiles()
                 if (!pixmap.isNull()) {
                     QGraphicsPixmapItem *item = m_scene->addPixmap(pixmap);
                     
-                    // 计算瓦片位置
-                    double tileX = (x - centerTileX + m_viewportTilesX/2) * m_tileSize;
-                    double tileY = (y - centerTileY + m_viewportTilesY/2) * m_tileSize;
+            // 绝对定位
+            double tileX = x * m_tileSize;
+            double tileY = y * m_tileSize;
                     item->setPos(tileX, tileY);
                     
                     m_tileItems[key] = item;
                     tilesLoaded++;
                     
-                    logMessage(QString("Loaded local tile: %1/%2/%3").arg(x).arg(y).arg(m_zoom));
+                    // logMessage(QString("Loaded local tile (%1,%2) at scene(%3,%4)").arg(x).arg(y).arg(tileX).arg(tileY));
                 }
             }
         }
     }
     
-    logMessage(QString("Loaded %1 local tiles").arg(tilesLoaded));
+    // logMessage(QString("Loaded %1 local tiles. StartTile:(%2,%3) Offset:(%4,%5)")
+    //            .arg(tilesLoaded).arg(startX).arg(startY).arg(offsetX).arg(offsetY));
     return tilesLoaded;
 }
 

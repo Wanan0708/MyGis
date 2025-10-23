@@ -1011,6 +1011,7 @@ debug/moc_tilemapmanager.cpp: ../../tilemapmanager.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QTimer \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qtimer.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qbasictimer.h \
+		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QPointF \
 		debug/moc_predefs.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/bin/moc.exe
 	E:\Softwore\Qt\6.8.1\mingw_64\bin\moc.exe $(DEFINES) --include E:/Project/CursorProject/CustomTitleBarApp/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/debug/moc_predefs.h -IE:/Softwore/Qt/6.8.1/mingw_64/mkspecs/win32-g++ -IE:/Project/CursorProject/CustomTitleBarApp -IE:/Softwore/Qt/6.8.1/mingw_64/include -IE:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets -IE:/Softwore/Qt/6.8.1/mingw_64/include/QtGui -IE:/Softwore/Qt/6.8.1/mingw_64/include/QtNetwork -IE:/Softwore/Qt/6.8.1/mingw_64/include/QtCore -I. -IE:/Softwore/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -IE:/Softwore/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -IE:/Softwore/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -IE:/Softwore/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -IE:/Softwore/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -IE:/Softwore/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\tilemapmanager.h -o debug\moc_tilemapmanager.cpp
@@ -2111,18 +2112,7 @@ debug/myform.o: ../../myform.cpp ../../myform.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QPoint \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QProgressBar \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qprogressbar.h \
-		../../ui_myform.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QVariant \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QApplication \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qapplication.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QGridLayout \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qgridlayout.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qlayout.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qlayoutitem.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qboxlayout.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QSplitter \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qsplitter.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QVBoxLayout \
+		ui_myform.h \
 		../../tilemapmanager.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtNetwork/QNetworkAccessManager \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtNetwork/qnetworkaccessmanager.h \
@@ -2134,6 +2124,7 @@ debug/myform.o: ../../myform.cpp ../../myform.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QSharedDataPointer \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QString \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QUrl \
+		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QVariant \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/q26numeric.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtNetwork/QSslConfiguration \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtNetwork/qsslconfiguration.h \
@@ -2158,6 +2149,7 @@ debug/myform.o: ../../myform.cpp ../../myform.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QTimer \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qtimer.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qbasictimer.h \
+		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QPointF \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QDebug \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QFileDialog \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qfiledialog.h \
@@ -2371,11 +2363,12 @@ debug/tilemapmanager.o: ../../tilemapmanager.cpp ../../tilemapmanager.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QTimer \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qtimer.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qbasictimer.h \
-		../../tileworker.h \
-		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QByteArray \
+		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QPointF \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/QGraphicsPixmapItem \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtGui/qpainterpath.h \
+		../../tileworker.h \
+		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QByteArray \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtNetwork/QNetworkRequest \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/QFile \
 		E:/Softwore/Qt/6.8.1/mingw_64/include/QtCore/qfile.h \
