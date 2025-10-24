@@ -16,9 +16,11 @@
 #include <QScrollBar>
 #include <QToolButton>
 #include <QGraphicsProxyWidget>
+#include "maptools.h"
 
 // 添加TileMapManager的前置声明
 class TileMapManager;
+class QPropertyAnimation;
 
 namespace Ui {
 class MyForm;
@@ -36,6 +38,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
     void showEvent(QShowEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override { if (toolManager && toolManager->handleKeyPress(event)) return; QWidget::keyPressEvent(event);} 
 
 private slots:
     // 重命名槽函数，避免Qt自动连接
@@ -108,6 +111,22 @@ private:
     QToolButton *btnZoomIn = nullptr;
     QToolButton *btnZoomOut = nullptr;
     QToolButton *btnPanToggle = nullptr;
+
+    // 测量工具（功能区）
+    QPushButton *btnMeasureDistance = nullptr;
+    QPushButton *btnMeasureArea = nullptr;
+    QPushButton *btnMeasureClear = nullptr;
+
+    enum class MeasureMode { None, Distance, Area };
+    MeasureMode measureMode = MeasureMode::None;
+
+    // 工具系统
+    ToolManager *toolManager = nullptr;
+
+    // 图形视图左下角状态覆盖
+    QLabel *gvStatusLabel = nullptr;
+    QTimer *gvStatusDelayTimer = nullptr;
+    QPropertyAnimation *gvStatusFadeAnim = nullptr;
     
     // 日志记录函数
     void logMessage(const QString &message);
@@ -120,6 +139,7 @@ private:
     void loadMap(const QString &mapPath);
     void createGraphicsOverlay();               // viewport 方案
     void positionGraphicsOverlay();
+    void positionStatusOverlay();               // 左下角状态覆盖定位
     void createGraphicsOverlayScene();          // scene+proxy 方案（兜底）
     void positionGraphicsOverlayScene();
     

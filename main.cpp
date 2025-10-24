@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
     app.setApplicationName("CustomTitleBarApp");
     app.setOrganizationName("MyOrg");
 
-    // 设置窗口图标（替换为你的图标路径）
-    app.setWindowIcon(QIcon(":/new/prefix1/image/OrangeCat.png")); // 若使用资源文件
+    // 设置窗口图标（任务栏与标题栏使用同一图标）
+    app.setWindowIcon(QIcon(":/new/prefix1/image/OrangeCat.png"));
 
     // === 加载 QSS 样式表 ===
     QFile styleFile(":/new/prefix1/style.qss"); // 如果用资源文件

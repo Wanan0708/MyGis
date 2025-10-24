@@ -138,20 +138,8 @@
          <string>Redo</string>
         </property>
        </widget> -->
-       <widget class="QLabel" name="statusLabel">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>40</y>
-          <width>500</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Ready</string>
-        </property>
-       </widget>
-       <widget class="QProgressBar" name="progressBar">
+      
+      <widget class="QProgressBar" name="progressBar">
         <property name="geometry">
          <rect>
           <x>10</x>

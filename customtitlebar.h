@@ -30,6 +30,7 @@ private slots:
 
 private:
     QLabel *titleLabel;
+    QLabel *centerTitleLabel;
     QPushButton *minButton;
     QPushButton *maxButton;
     QPushButton *closeButton;

@@ -12,8 +12,15 @@ CustomTitleBar::CustomTitleBar(QWidget *parent)
 {
     setFixedHeight(32);
 
-    titleLabel = new QLabel("My App");
+    titleLabel = new QLabel();
     titleLabel->setObjectName("titleLabel");
+    // 使用应用图标代替文本标题
+    QIcon appIco = qApp->windowIcon();
+    QSize icoSize(20, 20);
+    QPixmap pm = appIco.pixmap(icoSize);
+    titleLabel->setPixmap(pm);
+    titleLabel->setFixedSize(icoSize.width() + 8, icoSize.height() + 8);
+    titleLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
 
     minButton = new QPushButton();
     maxButton = new QPushButton();
@@ -44,9 +51,16 @@ CustomTitleBar::CustomTitleBar(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    // 统一布局：标题在左，按钮在右（所有平台）
+    // 居中程序名
+    centerTitleLabel = new QLabel("MicroGis", this);
+    centerTitleLabel->setAlignment(Qt::AlignCenter);
+    centerTitleLabel->setStyleSheet("font-weight:600; color: orange;" );
+
+    // 布局：左侧图标，中间标题，右侧窗口控制按钮
     layout->addWidget(titleLabel);
-    layout->addStretch(); // 关键：弹性空间
+    layout->addStretch();
+    layout->addWidget(centerTitleLabel, /*stretch*/0, Qt::AlignCenter);
+    layout->addStretch();
     layout->addWidget(minButton);
     layout->addWidget(maxButton);
     layout->addWidget(closeButton);

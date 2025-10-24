@@ -28,6 +28,10 @@
 #include <QFontMetrics>
 #include <QVBoxLayout>
 #include <QPainter>
+#include <QGroupBox>
+#include <QGridLayout>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 #include <cmath>
 #include "mapmanagerdialog.h"
 #include "downloadscheduler.h"
@@ -343,6 +347,61 @@ void MyForm::setupFunctionalArea() {
     connect(actSaveAs, &QAction::triggered, this, &MyForm::handleSaveAsButtonClicked);
     connect(actUndo, &QAction::triggered, this, &MyForm::handleUndoButtonClicked);
     connect(actRedo, &QAction::triggered, this, &MyForm::handleRedoButtonClicked);
+
+    // === 测量工具分组 ===
+    QGroupBox *grpMeasure = new QGroupBox(tr("测量工具"), ui->functionalArea);
+    grpMeasure->setObjectName("grpMeasure");
+    grpMeasure->setFlat(false);
+    grpMeasure->setMaximumWidth(260);
+    grpMeasure->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    grpMeasure->setStyleSheet(
+        "QGroupBox#grpMeasure{margin-top:8px; border:1px solid #d9d9d9; border-radius:6px;}"
+        "QGroupBox#grpMeasure::title{subcontrol-origin: margin; left:8px; padding:0 6px; color:#333; background:#ffffff;}"
+    );
+    QGridLayout *grid = new QGridLayout(grpMeasure);
+    grid->setContentsMargins(6, 4, 6, 6);
+    grid->setHorizontalSpacing(6);
+    grid->setVerticalSpacing(4);
+
+    btnMeasureDistance = new QPushButton(tr("距离测量"), grpMeasure);
+    btnMeasureArea = new QPushButton(tr("面积测量"), grpMeasure);
+    btnMeasureClear = new QPushButton(tr("清除"), grpMeasure);
+    auto styleBtn = [](QPushButton *b){
+        b->setCheckable(false);
+        b->setMinimumWidth(88);
+        b->setFixedHeight(28);
+        b->setCursor(Qt::PointingHandCursor);
+        b->setStyleSheet(
+            "QPushButton{"
+            "background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #ffffff, stop:1 #f1f1f1);"
+            "border:1px solid #d0d0d0; border-radius:6px; padding:4px 10px; color:#333;"
+            "}"
+            "QPushButton:hover{background:#fafafa;}"
+            "QPushButton:pressed{background:#f0f0f0;}"
+            "QPushButton:disabled{background:#f7f7f7; color:#999; border-color:#e5e5e5;}"
+        );
+    };
+    styleBtn(btnMeasureDistance);
+    styleBtn(btnMeasureArea);
+    styleBtn(btnMeasureClear);
+    grid->addWidget(btnMeasureDistance, 0, 0);
+    grid->addWidget(btnMeasureArea,    0, 1);
+    grid->addWidget(btnMeasureClear,   1, 0);
+
+    if (auto layout = ui->functionalArea->layout()) {
+        layout->addWidget(grpMeasure);
+    } else {
+        auto vbl = new QVBoxLayout(ui->functionalArea);
+        vbl->setContentsMargins(8, 8, 8, 8);
+        vbl->setSpacing(8);
+        vbl->setMenuBar(menuBar);
+        vbl->addWidget(grpMeasure);
+    }
+
+    // 绑定测量事件
+    connect(btnMeasureDistance, &QPushButton::clicked, this, [this](){ if (toolManager) toolManager->activateTool("measure_distance"); });
+    connect(btnMeasureArea, &QPushButton::clicked, this, [this](){ if (toolManager) toolManager->activateTool("measure_area"); });
+    connect(btnMeasureClear, &QPushButton::clicked, this, [this](){ if (toolManager) { toolManager->deactivateTool(); toolManager->clearAllCommitted(); } updateStatus(tr("已清除测量")); });
 }
 
 void MyForm::setupMapArea() {
@@ -414,7 +473,19 @@ void MyForm::setupMapArea() {
     logMessage(QString("TileMapManager created: %1").arg(tileMapManager != nullptr));
     tileMapManager->initScene(mapScene);
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-
+    
+    // 初始化工具管理器与事件分发
+    toolManager = new ToolManager(this);
+    {
+        ToolContext tctx; tctx.scene = mapScene; tctx.view = ui->graphicsView; tctx.tileManager = tileMapManager;
+        toolManager->setContext(tctx);
+        auto tDist = new MeasureDistanceTool(toolManager);
+        auto tArea = new MeasureAreaTool(toolManager);
+        toolManager->registerTool(tDist);
+        toolManager->registerTool(tArea);
+        connect(toolManager, &ToolManager::requestStatus, this, [this](const QString &s){ updateStatus(s); });
+        connect(toolManager, &ToolManager::requestCursor, this, [this](const QCursor &c){ ui->graphicsView->viewport()->setCursor(c); });
+    }
     // 应用可配置设置（若存在 settings.json）
     bool ok = false;
     MapManagerSettings s = MapManagerSettings::load("settings.json", &ok);
@@ -446,11 +517,13 @@ void MyForm::setupMapArea() {
             this, [this]() {
         if (tileMapManager && !isDownloading) { viewUpdateTimer->start(); }
         positionGraphicsOverlay();
+        positionStatusOverlay();
     });
     connect(ui->graphicsView->verticalScrollBar(), &QScrollBar::valueChanged, 
             this, [this]() {
         if (tileMapManager && !isDownloading) { viewUpdateTimer->start(); }
         positionGraphicsOverlay();
+        positionStatusOverlay();
     });
     
     // 连接下载进度信号（在这里连接，因为tileMapManager已经创建）
@@ -533,6 +606,30 @@ void MyForm::setupMapArea() {
     });
     // 创建右上角浮动工具条（避免重复）
     if (!gvOverlay) createGraphicsOverlay();
+    // 创建左下角状态覆盖
+    if (!gvStatusLabel) {
+        gvStatusLabel = new QLabel(ui->graphicsView->viewport());
+        gvStatusLabel->setObjectName("gvStatusLabel");
+        // gvStatusLabel->setStyleSheet("color:#ff7a18;");
+        gvStatusLabel->setVisible(false);
+        auto *eff = new QGraphicsOpacityEffect(gvStatusLabel);
+        eff->setOpacity(1.0);
+        gvStatusLabel->setGraphicsEffect(eff);
+        gvStatusFadeAnim = new QPropertyAnimation(eff, "opacity", this);
+        gvStatusFadeAnim->setDuration(600);
+        gvStatusDelayTimer = new QTimer(this);
+        gvStatusDelayTimer->setSingleShot(true);
+        gvStatusDelayTimer->setInterval(3000);
+        connect(gvStatusDelayTimer, &QTimer::timeout, this, [this](){
+            if (gvStatusFadeAnim) {
+                gvStatusFadeAnim->stop();
+                gvStatusFadeAnim->setStartValue(1.0);
+                gvStatusFadeAnim->setEndValue(0.0);
+                gvStatusFadeAnim->start();
+                connect(gvStatusFadeAnim, &QPropertyAnimation::finished, this, [this](){ gvStatusLabel->setVisible(false); });
+            }
+        });
+    }
 }
 
 void MyForm::createGraphicsOverlay()
@@ -665,6 +762,16 @@ void MyForm::positionGraphicsOverlayScene()
 bool MyForm::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->graphicsView->viewport()) {
+        // 工具系统优先处理常规鼠标/键盘事件（滚轮缩放保持原逻辑）
+        if (event->type() == QEvent::MouseButtonPress) {
+            if (toolManager && toolManager->handleMousePress(static_cast<QMouseEvent*>(event))) return true;
+        } else if (event->type() == QEvent::MouseMove) {
+            if (toolManager && toolManager->handleMouseMove(static_cast<QMouseEvent*>(event))) return true;
+        } else if (event->type() == QEvent::MouseButtonRelease) {
+            if (toolManager && toolManager->handleMouseRelease(static_cast<QMouseEvent*>(event))) return true;
+        } else if (event->type() == QEvent::MouseButtonDblClick) {
+            if (toolManager && toolManager->handleMouseDoubleClick(static_cast<QMouseEvent*>(event))) return true;
+        }
         if (event->type() == QEvent::Wheel) {
             QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
             
@@ -711,6 +818,8 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
                 tileMapManager->updateTilesForViewImmediate(centerScene.x(), centerScene.y());
                     
                     updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
+                    // 通知工具系统视图改变，以重建叠加标记
+                    if (toolManager) toolManager->refreshForViewChange();
                 }
             } else {
                 // 如果没有瓦片地图管理器，使用原来的连续缩放
@@ -887,8 +996,29 @@ bool MyForm::eventFilter(QObject *obj, QEvent *event)
 }
 
 void MyForm::updateStatus(const QString &message) {
-    ui->statusLabel->setText(message);
+    if (gvStatusLabel) {
+        auto *eff = qobject_cast<QGraphicsOpacityEffect*>(gvStatusLabel->graphicsEffect());
+        if (eff) eff->setOpacity(1.0);
+        gvStatusLabel->setText(message);
+        gvStatusLabel->adjustSize();
+        positionStatusOverlay();
+        gvStatusLabel->setVisible(true);
+        if (gvStatusFadeAnim) gvStatusFadeAnim->stop();
+        if (gvStatusDelayTimer) gvStatusDelayTimer->start();
+    }
     qDebug() << "Status:" << message;
+}
+
+void MyForm::positionStatusOverlay()
+{
+    if (!gvStatusLabel || !ui->graphicsView) return;
+    const int margin = 10;
+    QSize vp = ui->graphicsView->viewport()->size();
+    QSize sz = gvStatusLabel->sizeHint();
+    if (sz.isEmpty()) sz = gvStatusLabel->size();
+    int x = margin;
+    int y = vp.height() - sz.height() - margin;
+    gvStatusLabel->setGeometry(x, y, sz.width(), sz.height());
 }
 
 void MyForm::loadMap(const QString &mapPath) {
@@ -1133,6 +1263,7 @@ void MyForm::handleZoomInTileMapButtonClicked()
         // 更新状态显示
         updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
         qDebug() << "Tile map zoom in to level:" << currentZoomLevel;
+        if (toolManager) toolManager->refreshForViewChange();
     } else {
         updateStatus(QString("Maximum zoom level reached (%1/%2)").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
         qDebug() << "Cannot zoom in further, already at max level:" << MAX_ZOOM_LEVEL;
@@ -1169,6 +1300,7 @@ void MyForm::handleZoomOutTileMapButtonClicked()
         // 更新状态显示
         updateStatus(QString("Tile Map Zoom Level: %1/%2").arg(currentZoomLevel).arg(MAX_ZOOM_LEVEL));
         qDebug() << "Tile map zoom out to level:" << currentZoomLevel;
+        if (toolManager) toolManager->refreshForViewChange();
     } else {
         updateStatus(QString("Minimum zoom level reached (%1/%2)").arg(MIN_ZOOM_LEVEL).arg(MAX_ZOOM_LEVEL));
         qDebug() << "Cannot zoom out further, already at min level:" << MIN_ZOOM_LEVEL;

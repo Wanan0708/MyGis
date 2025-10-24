@@ -18,7 +18,8 @@ SOURCES += \
     mapmanagersettings.cpp \
     manifeststore.cpp \
     downloadscheduler.cpp \
-    mapmanagerdialog.cpp
+    mapmanagerdialog.cpp \
+    maptools.cpp
 
 HEADERS += \
     basewindow.h \
@@ -29,7 +30,8 @@ HEADERS += \
     mapmanagersettings.h \
     manifeststore.h \
     downloadscheduler.h \
-    mapmanagerdialog.h
+    mapmanagerdialog.h \
+    maptools.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
